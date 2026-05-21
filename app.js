@@ -74,7 +74,7 @@ const DEFAULT_KURS = {
     {
       id: 3, title: "AI w sprzedaży", lessons: [
         { id:"3-1", title:"Bot na live sprzedażowy — wychwytuje zamówienia", time:"20 min", ytId:"", pdfs:[], homework:"", desc:"Dowiesz się jak zbudować bota który wychwytuje zamówienia." },
-        { id:"3-2", title:"Budowa chatbota do obsługi klienta krok po kroku", time:"25 min", ytId:"", pdfs:[], homework:"Zbuduj chatbota w Tidio i pokaż screenshot.", desc:"Krok po kroku zbudujesz chatbota w Tidio." },
+        { id:"3-2", title:"Budowa chatbota do obsługi klienta krok po krok", time:"25 min", ytId:"", pdfs:[], homework:"Zbuduj chatbota w Tidio i pokaż screenshot.", desc:"Krok po kroku zbudujesz chatbota w Tidio." },
         { id:"3-3", title:"Automatyczne odpowiedzi na maile", time:"18 min", ytId:"", pdfs:[], homework:"", desc:"Skonfigurujesz system automatycznych odpowiedzi na e-maile." },
       ]
     },
@@ -110,8 +110,8 @@ function getKursData(){
 }
 
 // ---- FIREBASE AUTH HELPERS ----
-// Sprawdza czy użytkownik jest adminem (custom claim lub email z listy)
-const ADMIN_EMAILS = [psp45rostyslav@gmail.com] // Wpisz tu swój email admina np. ["admin@przykład.pl"]
+// Poprawiono: adres e-mail ujęty w cudzysłów
+const ADMIN_EMAILS = ["psp45rostyslav@gmail.com"] 
 
 function isAdmin(user){
   if(!user) return false
@@ -125,6 +125,7 @@ function getUserDisplayName(user){
 
 function logout(){
   if(typeof firebase !== 'undefined'){
-    firebase.auth().signOut().then(()=>{ window.location.href = '/index.html' })
+    // Poprawiono: 'index.html' zamiart '/index.html' pod GitHub Pages
+    firebase.auth().signOut().then(()=>{ window.location.href = 'index.html' })
   }
 }
