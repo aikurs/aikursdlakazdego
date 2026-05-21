@@ -6,80 +6,23 @@
 <title>Panel ucznia — Naffy.ai</title>
 <link rel="stylesheet" href="style.css">
 <style>
-.mod-group { margin-bottom: .5rem; }
-.mod-toggle { display: flex; align-items: center; justify-content: space-between; padding: .5rem .75rem; cursor: pointer; border-radius: 8px; transition: background .15s; }
-.mod-toggle:hover { background: var(--surface2); }
-.mod-toggle-left { display: flex; align-items: center; gap: .6rem; }
-.mod-toggle-icon { font-size: .75rem; color: var(--muted); transition: transform .2s; }
-.mod-group.open .mod-toggle-icon { transform: rotate(90deg); }
-.mod-title-text { font-size: .82rem; font-weight: 600; color: rgba(255,255,255,0.8); }
-.mod-prog-text { font-size: .68rem; color: var(--green); }
-.mod-lessons { display: none; padding-left: .5rem; }
-.mod-group.open .mod-lessons { display: block; }
-.lesson-btn { display: flex; align-items: center; gap: .6rem; padding: .5rem .75rem; border-radius: 7px; cursor: pointer; transition: background .15s; border: none; background: transparent; width: 100%; text-align: left; font-family: 'DM Sans', sans-serif; font-size: .82rem; color: rgba(255,255,255,0.65); margin-bottom: 1px; }
-.lesson-btn:hover { background: var(--surface2); color: var(--white); }
-.lesson-btn.active { background: rgba(29,158,117,0.12); color: var(--green); }
-.lesson-btn.done .lesson-check { color: var(--green); }
-.lesson-btn .lesson-check { margin-left: auto; font-size: .75rem; color: rgba(255,255,255,0.15); flex-shrink: 0; }
-.lesson-btn .lesson-num { font-size: .68rem; color: rgba(255,255,255,0.25); flex-shrink: 0; width: 22px; }
-.dash-stats { display: grid; grid-template-columns: repeat(3,1fr); gap: 1rem; margin-bottom: 1.5rem; }
-.stat-card { text-align: center; padding: 1.25rem; }
-.stat-num { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 2rem; color: var(--green); }
-.stat-label { font-size: .75rem; color: var(--muted); margin-top: .3rem; }
-.next-card { background: rgba(29,158,117,0.05); border: 1px solid rgba(29,158,117,0.2); border-radius: var(--radius-lg); padding: 1.25rem 1.5rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 1.5rem; cursor: pointer; transition: border-color .2s; }
-.next-card:hover { border-color: rgba(29,158,117,0.45); }
-.next-tag { font-size: .7rem; color: var(--green); text-transform: uppercase; letter-spacing: .1em; margin-bottom: .3rem; }
-.next-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: .95rem; }
-.next-meta { font-size: .78rem; color: var(--muted); margin-top: .25rem; }
-.activity-list { display: grid; gap: .6rem; }
-.activity-item { display: flex; align-items: center; gap: .8rem; padding: .75rem 1rem; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); font-size: .85rem; }
-.activity-check { color: var(--green); flex-shrink: 0; }
-.activity-info { flex: 1; }
-.activity-title { font-weight: 500; }
-.activity-mod { font-size: .75rem; color: var(--muted); margin-top: .15rem; }
-.lesson-header { margin-bottom: 1.5rem; }
-.lesson-breadcrumb { font-size: .75rem; color: var(--muted); margin-bottom: .5rem; }
-.lesson-title-h { font-size: 1.5rem; margin-bottom: .4rem; }
-.lesson-meta-row { display: flex; align-items: center; gap: 1rem; }
-.video-container { background: #000; border-radius: var(--radius-lg); overflow: hidden; position: relative; padding-top: 56.25%; margin-bottom: 1.5rem; }
-.video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
-.video-placeholder { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1rem; background: rgba(255,255,255,0.02); cursor: pointer; border: 1px solid var(--border); border-radius: var(--radius-lg); }
-.play-circle { width: 72px; height: 72px; border-radius: 50%; background: var(--red); display: flex; align-items: center; justify-content: center; font-size: 2rem; transition: transform .2s; color:#fff; }
-.video-placeholder:hover .play-circle { transform: scale(1.08); }
-.video-placeholder p { font-size: .85rem; color: var(--muted); }
-.no-video { background: rgba(255,255,255,0.02); border: 1px dashed var(--border); border-radius: var(--radius-lg); padding: 3rem; text-align: center; margin-bottom: 1.5rem; }
-.no-video p { color: var(--muted); font-size: .88rem; margin-top: .5rem; }
-.tabs-bar { display: flex; gap: .3rem; border-bottom: 1px solid var(--border); margin-bottom: 1.5rem; }
-.tab-btn { background: transparent; border: none; color: var(--muted); font-family: 'DM Sans', sans-serif; font-size: .88rem; padding: .6rem 1.1rem; cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; transition: all .2s; }
-.tab-btn:hover { color: var(--white); }
-.tab-btn.active { color: var(--green); border-bottom-color: var(--green); }
-.tab-pane { display: none; }
-.tab-pane.active { display: block; }
-.pdf-list { display: grid; gap: .75rem; }
-.pdf-item { display: flex; align-items: center; gap: 1rem; padding: .9rem 1.1rem; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); text-decoration: none; color: var(--white); transition: border-color .2s; }
-.pdf-item:hover { border-color: rgba(29,158,117,0.35); }
-.pdf-icon { font-size: 1.4rem; flex-shrink: 0; }
-.pdf-name { font-size: .9rem; font-weight: 500; }
-.pdf-meta { font-size: .75rem; color: var(--muted); margin-top: .15rem; }
-.pdf-dl { margin-left: auto; color: var(--green); font-size: .8rem; flex-shrink: 0; }
-.no-pdfs { color: var(--muted); font-size: .88rem; text-align: center; padding: 2rem; }
-.homework-box { background: rgba(55,138,221,0.05); border: 1px solid rgba(55,138,221,0.2); border-radius: var(--radius); padding: 1.25rem; margin-bottom: 1rem; }
-.homework-label { font-size: .72rem; color: var(--blue); text-transform: uppercase; letter-spacing: .1em; margin-bottom: .5rem; }
-.homework-text { font-size: .9rem; line-height: 1.6; color: rgba(255,255,255,0.8); }
-.hw-answer { margin-top: 1rem; }
-.lesson-nav { display: flex; justify-content: space-between; align-items: center; margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--border); gap: 1rem; }
-.btn-complete-done { background: rgba(29,158,117,0.12) !important; color: var(--green) !important; border: 1px solid rgba(29,158,117,0.25) !important; }
-.cert-center { max-width: 540px; margin: 0 auto; text-align: center; }
-.cert-icon-big { font-size: 5rem; margin-bottom: 1.5rem; }
-.notes-saved { font-size: .78rem; color: var(--green); margin-left: .8rem; opacity: 0; transition: opacity .3s; }
-.notes-saved.show { opacity: 1; }
-.saving-indicator { font-size: .72rem; color: var(--muted); margin-left: .5rem; }
-@media(max-width:768px){ .dash-stats{grid-template-columns:repeat(2,1fr)} .next-card{flex-direction:column;align-items:flex-start} }
+.mod-group{margin-bottom:.4rem}.mod-toggle{display:flex;align-items:center;justify-content:space-between;padding:.48rem .75rem;cursor:pointer;border-radius:8px;transition:background .15s}.mod-toggle:hover{background:var(--surface2)}.mod-toggle-left{display:flex;align-items:center;gap:.6rem}.mod-toggle-icon{font-size:.72rem;color:var(--muted);transition:transform .2s}.mod-group.open .mod-toggle-icon{transform:rotate(90deg)}.mod-title-text{font-size:.8rem;font-weight:600;color:rgba(255,255,255,0.8)}.mod-prog-text{font-size:.67rem;color:var(--green)}.mod-lessons{display:none;padding-left:.4rem}.mod-group.open .mod-lessons{display:block}.lesson-btn{display:flex;align-items:center;gap:.6rem;padding:.48rem .75rem;border-radius:7px;cursor:pointer;transition:background .15s;border:none;background:transparent;width:100%;text-align:left;font-family:'DM Sans',sans-serif;font-size:.8rem;color:rgba(255,255,255,0.6);margin-bottom:1px}.lesson-btn:hover{background:var(--surface2);color:var(--white)}.lesson-btn.active{background:rgba(29,158,117,0.12);color:var(--green)}.lesson-btn.done .lesson-check{color:var(--green)}.lesson-btn .lesson-check{margin-left:auto;font-size:.72rem;color:rgba(255,255,255,0.12);flex-shrink:0}.lesson-btn .lesson-num{font-size:.66rem;color:rgba(255,255,255,0.22);flex-shrink:0;width:22px}
+.dash-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:1.5rem}.stat-card{text-align:center;padding:1.2rem}.stat-num{font-family:'Syne',sans-serif;font-weight:800;font-size:1.9rem;color:var(--green)}.stat-label{font-size:.73rem;color:var(--muted);margin-top:.3rem}
+.next-card{background:rgba(29,158,117,0.05);border:1px solid rgba(29,158,117,0.2);border-radius:var(--radius-lg);padding:1.2rem 1.4rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-bottom:1.5rem;cursor:pointer;transition:border-color .2s}.next-card:hover{border-color:rgba(29,158,117,0.45)}.next-tag{font-size:.68rem;color:var(--green);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.3rem}.next-title{font-family:'Syne',sans-serif;font-weight:700;font-size:.93rem}.next-meta{font-size:.76rem;color:var(--muted);margin-top:.25rem}
+.activity-list{display:grid;gap:.55rem}.activity-item{display:flex;align-items:center;gap:.8rem;padding:.7rem 1rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);font-size:.84rem}.activity-check{color:var(--green);flex-shrink:0}.activity-info{flex:1}.activity-title{font-weight:500}.activity-mod{font-size:.73rem;color:var(--muted);margin-top:.12rem}
+.lesson-breadcrumb{font-size:.73rem;color:var(--muted);margin-bottom:.5rem}.lesson-title-h{font-size:1.45rem;margin-bottom:.4rem}.lesson-meta-row{display:flex;align-items:center;gap:.8rem;flex-wrap:wrap}
+.video-container{background:#000;border-radius:var(--radius-lg);overflow:hidden;position:relative;padding-top:56.25%;margin-bottom:1.5rem}.video-container iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:none}.video-placeholder{position:absolute;top:0;left:0;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1rem;background:rgba(255,255,255,0.02);cursor:pointer;border:1px solid var(--border);border-radius:var(--radius-lg)}.play-circle{width:72px;height:72px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;font-size:2rem;transition:transform .2s;color:#fff}.video-placeholder:hover .play-circle{transform:scale(1.08)}.video-placeholder p{font-size:.84rem;color:var(--muted)}.no-video{background:rgba(255,255,255,0.02);border:1px dashed var(--border);border-radius:var(--radius-lg);padding:3rem;text-align:center;margin-bottom:1.5rem}.no-video p{color:var(--muted);font-size:.87rem;margin-top:.5rem}
+.tabs-bar{display:flex;gap:.3rem;border-bottom:1px solid var(--border);margin-bottom:1.5rem;overflow-x:auto}.tab-btn{background:transparent;border:none;color:var(--muted);font-family:'DM Sans',sans-serif;font-size:.86rem;padding:.58rem 1rem;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .2s;white-space:nowrap}.tab-btn:hover{color:var(--white)}.tab-btn.active{color:var(--green);border-bottom-color:var(--green)}.tab-pane{display:none}.tab-pane.active{display:block}
+.pdf-list{display:grid;gap:.7rem}.pdf-item{display:flex;align-items:center;gap:1rem;padding:.85rem 1.1rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);text-decoration:none;color:var(--white);transition:border-color .2s}.pdf-item:hover{border-color:rgba(29,158,117,0.35)}.pdf-icon{font-size:1.4rem;flex-shrink:0}.pdf-name{font-size:.88rem;font-weight:500}.pdf-meta{font-size:.73rem;color:var(--muted);margin-top:.12rem}.pdf-dl{margin-left:auto;color:var(--green);font-size:.78rem;flex-shrink:0}.no-pdfs{color:var(--muted);font-size:.87rem;text-align:center;padding:2rem}
+.homework-box{background:rgba(55,138,221,0.05);border:1px solid rgba(55,138,221,0.2);border-radius:var(--radius);padding:1.25rem;margin-bottom:1rem}.homework-label{font-size:.7rem;color:var(--blue);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.5rem}.homework-text{font-size:.9rem;line-height:1.6;color:rgba(255,255,255,0.8)}
+.lesson-nav{display:flex;justify-content:space-between;align-items:center;margin-top:2rem;padding-top:1.5rem;border-top:1px solid var(--border);gap:1rem}.btn-complete-done{background:rgba(29,158,117,0.12)!important;color:var(--green)!important;border:1px solid rgba(29,158,117,0.25)!important}
+.cert-center{max-width:540px;margin:0 auto;text-align:center}.cert-icon-big{font-size:5rem;margin-bottom:1.5rem}
+@media(max-width:768px){.dash-stats{grid-template-columns:repeat(2,1fr)}.next-card{flex-direction:column;align-items:flex-start}}
 </style>
 </head>
 <body>
-
 <div id="toast"></div>
+<div id="achievement-popup" class="achievement-popup"><div class="ach-icon" id="ach-popup-icon">🏆</div><div><div class="ach-title" id="ach-popup-title"></div><div class="ach-desc" id="ach-popup-desc"></div></div></div>
 
 <div class="loading-overlay" id="loading">
   <div class="spinner spinner-lg" style="color:var(--green)"></div>
@@ -87,163 +30,125 @@
 </div>
 
 <div class="app-layout" id="app" style="display:none">
-
-  <!-- SIDEBAR -->
-  <div class="sidebar">
+  <div class="sidebar" id="sidebar">
     <div class="sidebar-header">
       <a href="index.html" class="logo">Naffy<span>.ai</span></a>
+      <button class="theme-toggle" onclick="toggleTheme()" title="Zmień motyw" id="theme-btn">🌙</button>
     </div>
-
     <div class="sidebar-body">
-      <!-- Pasek postępu -->
-      <div class="card" style="margin-bottom:1rem;padding:1rem">
-        <div class="progress-wrap">
-          <div class="progress-meta">
-            <span>Twój postęp</span>
-            <span id="sb-pct" style="color:var(--green);font-weight:600">0%</span>
-          </div>
-          <div class="progress-track">
-            <div class="progress-fill" id="sb-bar" style="width:0%"></div>
-          </div>
+      <!-- Streak -->
+      <div class="streak-box" id="streak-box">
+        <div class="streak-icon">🔥</div>
+        <div>
+          <div class="streak-num" id="streak-num">0</div>
+          <div class="streak-label">dni z rzędu</div>
         </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-top:.75rem;text-align:center">
-          <div>
-            <div style="font-family:Syne,sans-serif;font-weight:800;font-size:1.2rem;color:var(--green)" id="sb-done">0</div>
-            <div style="font-size:.68rem;color:var(--muted)">ukończonych</div>
-          </div>
-          <div>
-            <div style="font-family:Syne,sans-serif;font-weight:800;font-size:1.2rem;color:var(--white)" id="sb-total">0</div>
-            <div style="font-size:.68rem;color:var(--muted)">lekcji total</div>
-          </div>
+        <div style="margin-left:auto;text-align:right">
+          <div style="font-size:.7rem;color:var(--muted)">Szacowany czas</div>
+          <div style="font-size:.8rem;color:var(--white);font-weight:500" id="time-left">— min</div>
         </div>
       </div>
 
-      <!-- Menu główne -->
+      <!-- Postęp -->
+      <div class="card" style="margin-bottom:1rem;padding:1rem">
+        <div class="progress-meta">
+          <span>Twój postęp</span>
+          <span id="sb-pct" style="color:var(--green);font-weight:600">0%</span>
+        </div>
+        <div class="progress-track"><div class="progress-fill" id="sb-bar" style="width:0%"></div></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-top:.75rem;text-align:center">
+          <div><div style="font-family:Syne,sans-serif;font-weight:800;font-size:1.2rem;color:var(--green)" id="sb-done">0</div><div style="font-size:.67rem;color:var(--muted)">ukończonych</div></div>
+          <div><div style="font-family:Syne,sans-serif;font-weight:800;font-size:1.2rem;color:var(--white)" id="sb-total">0</div><div style="font-size:.67rem;color:var(--muted)">lekcji total</div></div>
+        </div>
+      </div>
+
+      <!-- Wyszukiwarka -->
+      <div class="search-wrap">
+        <span class="search-icon">🔍</span>
+        <input class="search-input" type="text" id="search-input" placeholder="Szukaj lekcji..." oninput="doSearch(this.value)">
+        <div class="search-results" id="search-results"></div>
+      </div>
+
+      <!-- Menu -->
       <div class="nav-section">
         <div class="nav-label">Menu</div>
-        <button class="nav-item active" id="nav-dash" onclick="showView('dashboard')">
-          <span class="nav-icon">🏠</span> Dashboard
-        </button>
-        <button class="nav-item" id="nav-cert" onclick="showView('cert')">
-          <span class="nav-icon">🏆</span> Certyfikat
-        </button>
+        <button class="nav-item active" id="nav-dash" onclick="showView('dashboard')"><span class="nav-icon">🏠</span>Dashboard</button>
+        <button class="nav-item" id="nav-achievements" onclick="showView('achievements')"><span class="nav-icon">🏅</span>Osiągnięcia<span id="ach-count-badge" style="margin-left:auto;background:var(--yellow);color:#000;font-size:.65rem;padding:.1rem .45rem;border-radius:50px;font-weight:700;display:none">0</span></button>
+        <button class="nav-item" id="nav-cert" onclick="showView('cert')"><span class="nav-icon">🏆</span>Certyfikat</button>
       </div>
-
       <hr class="divider">
-
-      <!-- Moduły kursu -->
       <div class="nav-section">
         <div class="nav-label">Program kursu</div>
-        <div id="sb-modules">
-          <div style="color:var(--muted);font-size:.8rem;padding:.5rem .75rem">Ładowanie...</div>
-        </div>
+        <div id="sb-modules"><div style="color:var(--muted);font-size:.8rem;padding:.5rem .75rem">Ładowanie...</div></div>
       </div>
     </div>
-
-    <!-- Użytkownik + wyloguj -->
     <div class="sidebar-footer">
       <div class="user-box" style="margin-bottom:.75rem">
         <div class="avatar" id="sb-avatar">?</div>
-        <div>
-          <div class="user-name" id="sb-name">Ładowanie...</div>
-          <div class="user-role" id="sb-email"></div>
+        <div style="flex:1;min-width:0">
+          <div class="user-name" id="sb-name" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Ładowanie...</div>
+          <div class="user-role" id="sb-email" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis"></div>
         </div>
       </div>
-      <button class="btn btn-danger btn-sm btn-block" onclick="doLogout()">
-        Wyloguj się
-      </button>
+      <button class="btn btn-danger btn-sm btn-block" onclick="doLogout()">Wyloguj się</button>
     </div>
   </div>
 
-  <!-- MAIN CONTENT -->
-  <div class="main-content">
+  <div class="main-content" id="main-content">
     <div class="main-inner">
 
-      <!-- ===== DASHBOARD ===== -->
+      <!-- DASHBOARD -->
       <div id="view-dashboard">
         <div class="page-header">
           <h1 id="dash-greeting">Cześć!</h1>
           <p>Kontynuuj naukę od miejsca w którym skończyłeś.</p>
         </div>
-
         <div class="dash-stats">
-          <div class="card stat-card">
-            <div class="stat-num" id="ds-done">0</div>
-            <div class="stat-label">Ukończonych lekcji</div>
-          </div>
-          <div class="card stat-card">
-            <div class="stat-num" id="ds-pct">0%</div>
-            <div class="stat-label">Postęp kursu</div>
-          </div>
-          <div class="card stat-card">
-            <div class="stat-num" id="ds-mod">0/6</div>
-            <div class="stat-label">Modułów</div>
-          </div>
+          <div class="card stat-card"><div class="stat-num" id="ds-done">0</div><div class="stat-label">Ukończonych lekcji</div></div>
+          <div class="card stat-card"><div class="stat-num" id="ds-pct">0%</div><div class="stat-label">Postęp kursu</div></div>
+          <div class="card stat-card"><div class="stat-num" id="ds-mod">0/6</div><div class="stat-label">Modułów</div></div>
         </div>
-
         <div class="next-card" onclick="goNext()">
           <div>
-            <div class="next-tag">
-              <span class="pulse-dot" style="margin-right:.4rem"></span>Następna lekcja
-            </div>
+            <div class="next-tag"><span class="pulse-dot" style="margin-right:.4rem"></span>Następna lekcja</div>
             <div class="next-title" id="next-title">Ładowanie...</div>
             <div class="next-meta" id="next-meta"></div>
           </div>
           <button class="btn btn-green" style="flex-shrink:0">Zacznij →</button>
         </div>
-
-        <h3 style="font-size:.9rem;color:var(--muted);margin-bottom:.75rem;font-weight:500">Ostatnie aktywności</h3>
-        <div class="activity-list" id="activity-list">
-          <p style="color:var(--muted);font-size:.85rem">Jeszcze nie ukończyłeś żadnej lekcji. Zacznij teraz!</p>
-        </div>
+        <h3 style="font-size:.88rem;color:var(--muted);margin-bottom:.75rem;font-weight:500">Ostatnie aktywności</h3>
+        <div class="activity-list" id="activity-list"><p style="color:var(--muted);font-size:.84rem">Jeszcze nie ukończyłeś żadnej lekcji. Zacznij teraz!</p></div>
       </div>
 
-      <!-- ===== LEKCJA ===== -->
+      <!-- LEKCJA -->
       <div id="view-lesson" style="display:none">
-        <div class="lesson-header">
-          <div class="lesson-breadcrumb"><span id="l-breadcrumb"></span></div>
-          <h1 class="lesson-title-h" id="l-title"></h1>
-          <div class="lesson-meta-row">
-            <span class="badge badge-gray" id="l-time"></span>
-            <span class="badge" id="l-status"></span>
-          </div>
+        <div class="lesson-breadcrumb"><span id="l-breadcrumb"></span></div>
+        <h1 class="lesson-title-h" id="l-title"></h1>
+        <div class="lesson-meta-row" style="margin-bottom:1.5rem">
+          <span class="badge badge-gray" id="l-time"></span>
+          <span class="badge" id="l-status"></span>
         </div>
-
-        <!-- Wideo -->
         <div id="video-area"></div>
-
-        <!-- Zakładki -->
         <div class="tabs-bar">
           <button class="tab-btn active" onclick="switchTab('opis',this)">📋 Opis</button>
           <button class="tab-btn" onclick="switchTab('pdf',this)">📄 Materiały</button>
           <button class="tab-btn" onclick="switchTab('homework',this)">📝 Zadanie</button>
+          <button class="tab-btn" onclick="switchTab('quiz',this)">❓ Quiz</button>
+          <button class="tab-btn" onclick="switchTab('komentarze',this)">💬 Pytania</button>
           <button class="tab-btn" onclick="switchTab('notatki',this)">✏️ Notatki</button>
         </div>
-
-        <div class="tab-pane active" id="tab-opis">
-          <div id="l-desc" style="font-size:.9rem;color:rgba(255,255,255,0.7);line-height:1.8"></div>
-        </div>
-
-        <div class="tab-pane" id="tab-pdf">
-          <div class="pdf-list" id="l-pdfs"></div>
-        </div>
-
-        <div class="tab-pane" id="tab-homework">
-          <div id="hw-area"></div>
-        </div>
-
+        <div class="tab-pane active" id="tab-opis"><div id="l-desc" style="font-size:.9rem;color:rgba(255,255,255,0.7);line-height:1.8"></div></div>
+        <div class="tab-pane" id="tab-pdf"><div class="pdf-list" id="l-pdfs"></div></div>
+        <div class="tab-pane" id="tab-homework"><div id="hw-area"></div></div>
+        <div class="tab-pane" id="tab-quiz"><div id="quiz-area"></div></div>
+        <div class="tab-pane" id="tab-komentarze"><div id="comments-area"></div></div>
         <div class="tab-pane" id="tab-notatki">
-          <textarea class="input" id="notes-ta"
-            placeholder="Twoje notatki do tej lekcji..."
-            style="min-height:220px;width:100%;box-sizing:border-box;background:var(--surface);color:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:.75rem"></textarea>
+          <textarea class="input" id="notes-ta" placeholder="Twoje notatki do tej lekcji..." style="min-height:220px;width:100%;background:var(--surface);color:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:.75rem"></textarea>
           <div style="display:flex;align-items:center;margin-top:.75rem">
             <button class="btn btn-green btn-sm" onclick="saveNotes()">Zapisz notatki</button>
             <span class="notes-saved" id="notes-saved">✓ Zapisano!</span>
-            <span class="saving-indicator" id="notes-saving" style="display:none">Zapisuję...</span>
           </div>
         </div>
-
-        <!-- Nawigacja lekcji -->
         <div class="lesson-nav">
           <button class="btn btn-outline btn-sm" onclick="goPrev()" id="btn-prev">← Poprzednia</button>
           <button class="btn btn-sm" id="btn-complete" onclick="toggleComplete()">Oznacz jako ukończoną ✓</button>
@@ -251,29 +156,23 @@
         </div>
       </div>
 
-      <!-- ===== CERTYFIKAT ===== -->
+      <!-- OSIĄGNIĘCIA -->
+      <div id="view-achievements" style="display:none">
+        <div class="page-header"><h1>Osiągnięcia 🏅</h1><p>Odblokowuj odznaki ucząc się regularnie.</p></div>
+        <div class="achievements-grid" id="achievements-grid"></div>
+      </div>
+
+      <!-- CERTYFIKAT -->
       <div id="view-cert" style="display:none">
         <div class="cert-center">
-          <div class="page-header" style="text-align:center">
-            <h1>Certyfikat ukończenia</h1>
-            <p>Ukończ wszystkie lekcje żeby odblokować certyfikat.</p>
-          </div>
+          <div class="page-header" style="text-align:center"><h1>Certyfikat ukończenia</h1><p>Ukończ wszystkie lekcje żeby odblokować certyfikat.</p></div>
           <div class="card" style="text-align:center;padding:3rem">
             <div class="cert-icon-big" id="cert-icon">🔒</div>
             <h2 id="cert-title" style="margin-bottom:.5rem">Kurs w trakcie</h2>
             <p id="cert-sub" style="color:var(--muted);margin-bottom:2rem;font-size:.9rem"></p>
-            <div class="progress-wrap" style="max-width:300px;margin:0 auto 1.5rem">
-              <div class="progress-meta">
-                <span id="cert-done-text">0 / 0</span>
-                <span id="cert-pct-text">0%</span>
-              </div>
-              <div class="progress-track">
-                <div class="progress-fill" id="cert-bar" style="width:0%"></div>
-              </div>
-            </div>
-            <button class="btn btn-green btn-lg" id="cert-btn" disabled onclick="downloadCert()">
-              🏆 Pobierz certyfikat PDF
-            </button>
+            <div class="progress-meta" style="max-width:300px;margin:0 auto .5rem"><span id="cert-done-text">0 / 0</span><span id="cert-pct-text">0%</span></div>
+            <div class="progress-track" style="max-width:300px;margin:0 auto 1.5rem"><div class="progress-fill" id="cert-bar" style="width:0%"></div></div>
+            <button class="btn btn-green btn-lg" id="cert-btn" disabled onclick="downloadCert()">🏆 Pobierz certyfikat PDF</button>
           </div>
         </div>
       </div>
@@ -282,126 +181,133 @@
   </div>
 </div>
 
-<!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 <script src="app.js"></script>
 <script>
-// =============================================
-// INIT FIREBASE
-// =============================================
 const fbApp = firebase.initializeApp(FIREBASE_CONFIG)
 const db = firebase.firestore(fbApp)
 
-// =============================================
-// STATE
-// =============================================
 let currentUser = null
 let kursData = { modules: [] }
 let completed = new Set()
-let notesCache = {}       // { lessonId: string }
-let hwCache = {}          // { lessonId: string }
-let currentMod = 0
-let currentLes = 0
-let nextMod = 0
-let nextLes = 0
+let notesCache = {}
+let hwCache = {}
+let quizResults = {}
+let commentsCache = {}
+let unlockedAch = new Set()
+let currentMod = 0, currentLes = 0, nextMod = 0, nextLes = 0
+let streak = 0, notesCount = 0
 
-// =============================================
-// AUTH — sprawdź czy zalogowany
-// =============================================
+// ===== AUTH =====
 firebase.auth().onAuthStateChanged(async user => {
   if (!user) { window.location.href = 'index.html'; return }
   currentUser = user
-
   try {
-    // 1. Pobierz strukturę kursu z Firestore
     const kursDoc = await db.collection('konfiguracja').doc('kurs').get()
-    if (kursDoc.exists) {
-      kursData = kursDoc.data()
-    } else {
-      // Fallback — domyślna struktura z app.js
-      kursData = getKursData()
-    }
+    kursData = kursDoc.exists ? kursDoc.data() : getKursData()
 
-    // 2. Pobierz postęp ucznia z Firestore
     const userDoc = await db.collection('uczniowie').doc(user.uid).get()
     if (userDoc.exists) {
-      completed = new Set(userDoc.data().completed || [])
+      const d = userDoc.data()
+      completed = new Set(d.completed || [])
+      unlockedAch = new Set(d.achievements || [])
+      streak = d.streak || 0
     }
 
-    // 3. Pobierz notatki ucznia (jedna kolekcja)
-    const notesSnap = await db.collection('uczniowie').doc(user.uid)
-      .collection('notatki').get()
+    const notesSnap = await db.collection('uczniowie').doc(user.uid).collection('notatki').get()
     notesSnap.forEach(doc => { notesCache[doc.id] = doc.data().content || '' })
+    notesCount = notesSnap.size
 
-    // 4. Pobierz zadania domowe ucznia
-    const hwSnap = await db.collection('uczniowie').doc(user.uid)
-      .collection('zadania').get()
+    const hwSnap = await db.collection('uczniowie').doc(user.uid).collection('zadania').get()
     hwSnap.forEach(doc => { hwCache[doc.id] = doc.data().content || '' })
 
-  } catch(e) {
-    console.error('Błąd ładowania danych:', e)
-    // Fallback na localStorage jeśli brak połączenia
-    kursData = getKursData()
-    const saved = KV.get('completed_'+user.uid)
-    completed = new Set(saved || [])
-  }
+    const quizSnap = await db.collection('uczniowie').doc(user.uid).collection('quizy').get()
+    quizSnap.forEach(doc => { quizResults[doc.id] = doc.data() })
 
+    updateStreak()
+  } catch (e) {
+    kursData = getKursData()
+    const s = KV.get('completed_' + user.uid)
+    completed = new Set(s || [])
+    streak = KV.get('streak_' + user.uid) || 0
+  }
   document.getElementById('loading').style.display = 'none'
   document.getElementById('app').style.display = 'grid'
   initUI()
 })
 
-// =============================================
-// WYLOGUJ
-// =============================================
-function doLogout() {
-  firebase.auth().signOut().then(() => { window.location.href = 'index.html' })
+function doLogout() { firebase.auth().signOut().then(() => { window.location.href = 'index.html' }) }
+
+// ===== STREAK =====
+async function updateStreak() {
+  const today = new Date().toDateString()
+  const lastDay = KV.get('last_study_' + (currentUser ? currentUser.uid : ''))
+  const yesterday = new Date(Date.now() - 86400000).toDateString()
+  if (lastDay === today) return
+  if (lastDay === yesterday) streak++
+  else if (lastDay !== today) streak = 1
+  KV.set('last_study_' + currentUser.uid, today)
+  KV.set('streak_' + currentUser.uid, streak)
+  try {
+    await db.collection('uczniowie').doc(currentUser.uid).set({ streak }, { merge: true })
+  } catch (e) {}
+  document.getElementById('streak-num').textContent = streak
 }
 
-// =============================================
-// INIT UI
-// =============================================
+// ===== INIT =====
 function initUI() {
   const name = getUserDisplayName(currentUser)
   document.getElementById('sb-avatar').textContent = name[0].toUpperCase()
   document.getElementById('sb-name').textContent = name
   document.getElementById('sb-email').textContent = currentUser.email
   document.getElementById('dash-greeting').textContent = 'Cześć, ' + name.split(' ')[0] + '! 👋'
+  document.getElementById('streak-num').textContent = streak
+  calcTimeLeft()
   buildSidebar()
   updateProgress()
   updateDashboard()
+  renderAchievements()
+  checkAchievements()
+  loadTheme()
 }
 
-// =============================================
-// SIDEBAR — lista modułów i lekcji
-// =============================================
+// ===== CZAS DO KOŃCA =====
+function calcTimeLeft() {
+  const total = kursData.modules.reduce((a, m) => a + m.lessons.length, 0)
+  let mins = 0
+  kursData.modules.forEach(mod => mod.lessons.forEach(les => {
+    if (!completed.has(les.id)) {
+      const m = parseInt((les.time || '0').match(/\d+/)?.[0] || 0)
+      mins += m
+    }
+  }))
+  const h = Math.floor(mins / 60), m = mins % 60
+  document.getElementById('time-left').textContent = mins > 0 ? (h > 0 ? h + 'h ' : '') + m + ' min' : 'Kurs ukończony!'
+}
+
+// ===== SIDEBAR =====
 function buildSidebar() {
   const total = kursData.modules.reduce((a, m) => a + m.lessons.length, 0)
   document.getElementById('sb-total').textContent = total
-
   const wrap = document.getElementById('sb-modules')
   wrap.innerHTML = ''
-
   kursData.modules.forEach((mod, mi) => {
     const doneLes = mod.lessons.filter(l => completed.has(l.id)).length
-    const isOpen = mi === currentMod
+    const isOpen = mi === currentMod && document.getElementById('view-lesson').style.display !== 'none'
     const group = document.createElement('div')
     group.className = 'mod-group' + (isOpen ? ' open' : '')
     group.id = 'mod-group-' + mi
     group.innerHTML = `
       <div class="mod-toggle" onclick="toggleMod(${mi})">
-        <div class="mod-toggle-left">
-          <span class="mod-toggle-icon">▶</span>
-          <span class="mod-title-text">M${mod.id}: ${mod.title}</span>
-        </div>
+        <div class="mod-toggle-left"><span class="mod-toggle-icon">▶</span><span class="mod-title-text">M${mod.id}: ${mod.title}</span></div>
         <span class="mod-prog-text">${doneLes}/${mod.lessons.length}</span>
       </div>
       <div class="mod-lessons" id="mod-lessons-${mi}">
         ${mod.lessons.map((les, li) => `
           <button class="lesson-btn ${completed.has(les.id) ? 'done' : ''} ${(mi === currentMod && li === currentLes && document.getElementById('view-lesson').style.display !== 'none') ? 'active' : ''}"
-            id="les-btn-${mi}-${li}" onclick="openLesson(${mi},${li})">
+            onclick="openLesson(${mi},${li})">
             <span class="lesson-num">${mod.id}.${li + 1}</span>
             <span style="flex:1;line-height:1.3">${les.title}</span>
             <span class="lesson-check">${completed.has(les.id) ? '✓' : ''}</span>
@@ -411,18 +317,34 @@ function buildSidebar() {
   })
 }
 
-function toggleMod(mi) {
-  document.getElementById('mod-group-' + mi).classList.toggle('open')
+function toggleMod(mi) { document.getElementById('mod-group-' + mi).classList.toggle('open') }
+
+// ===== SEARCH =====
+function doSearch(q) {
+  const res = document.getElementById('search-results')
+  if (!q.trim()) { res.classList.remove('show'); return }
+  const hits = []
+  kursData.modules.forEach((mod, mi) => mod.lessons.forEach((les, li) => {
+    if (les.title.toLowerCase().includes(q.toLowerCase())) hits.push({ mod, mi, les, li })
+  }))
+  if (!hits.length) { res.innerHTML = '<div class="search-result-item" style="color:var(--muted)">Brak wyników</div>'; res.classList.add('show'); return }
+  res.innerHTML = hits.slice(0, 6).map(h => `
+    <div class="search-result-item" onclick="openLesson(${h.mi},${h.li});document.getElementById('search-input').value='';document.getElementById('search-results').classList.remove('show')">
+      ${h.les.title}
+      <div class="search-result-mod">Moduł ${h.mod.id}: ${h.mod.title}</div>
+    </div>`).join('')
+  res.classList.add('show')
 }
 
-// =============================================
-// POSTĘP
-// =============================================
+document.addEventListener('click', e => {
+  if (!e.target.closest('.search-wrap')) document.getElementById('search-results').classList.remove('show')
+})
+
+// ===== PROGRESS =====
 function updateProgress() {
   const total = kursData.modules.reduce((a, m) => a + m.lessons.length, 0)
   const done = completed.size
   const pct = total > 0 ? Math.round(done / total * 100) : 0
-
   document.getElementById('sb-pct').textContent = pct + '%'
   document.getElementById('sb-bar').style.width = pct + '%'
   document.getElementById('sb-done').textContent = done
@@ -430,194 +352,109 @@ function updateProgress() {
   document.getElementById('cert-bar').style.width = pct + '%'
   document.getElementById('cert-done-text').textContent = done + ' / ' + total
   document.getElementById('cert-pct-text').textContent = pct + '%'
-  document.getElementById('cert-sub').textContent = pct < 100
-    ? `Ukończ jeszcze ${total - done} lekcji żeby odblokować certyfikat.`
-    : 'Gratulacje! Ukończyłeś cały kurs. Certyfikat jest gotowy!'
-
+  document.getElementById('cert-sub').textContent = pct < 100 ? `Ukończ jeszcze ${total - done} lekcji żeby odblokować certyfikat.` : 'Gratulacje! Certyfikat jest gotowy!'
   if (done === total && total > 0) {
     document.getElementById('cert-icon').textContent = '🏆'
     document.getElementById('cert-title').textContent = 'Kurs ukończony!'
     document.getElementById('cert-btn').disabled = false
   }
+  calcTimeLeft()
 }
 
-// =============================================
-// DASHBOARD
-// =============================================
+// ===== DASHBOARD =====
 function updateDashboard() {
   const total = kursData.modules.reduce((a, m) => a + m.lessons.length, 0)
   const done = completed.size
   const pct = total > 0 ? Math.round(done / total * 100) : 0
   const modsDone = kursData.modules.filter(m => m.lessons.every(l => completed.has(l.id))).length
-
   document.getElementById('ds-done').textContent = done
   document.getElementById('ds-pct').textContent = pct + '%'
   document.getElementById('ds-mod').textContent = modsDone + '/' + kursData.modules.length
-
-  // Następna lekcja
   let foundNext = false
-  kursData.modules.forEach((mod, mi) => {
-    mod.lessons.forEach((les, li) => {
-      if (!foundNext && !completed.has(les.id)) {
-        foundNext = true
-        nextMod = mi; nextLes = li
-        document.getElementById('next-title').textContent = les.title
-        document.getElementById('next-meta').textContent = `Moduł ${mod.id}: ${mod.title} · ${les.time}`
-      }
-    })
-  })
-  if (!foundNext) {
-    document.getElementById('next-title').textContent = 'Ukończyłeś cały kurs! 🎉'
-    document.getElementById('next-meta').textContent = 'Czas odebrać certyfikat'
-  }
-
-  // Ostatnie aktywności
+  kursData.modules.forEach((mod, mi) => mod.lessons.forEach((les, li) => {
+    if (!foundNext && !completed.has(les.id)) {
+      foundNext = true; nextMod = mi; nextLes = li
+      document.getElementById('next-title').textContent = les.title
+      document.getElementById('next-meta').textContent = `Moduł ${mod.id}: ${mod.title} · ${les.time}`
+    }
+  }))
+  if (!foundNext) { document.getElementById('next-title').textContent = 'Ukończyłeś cały kurs! 🎉'; document.getElementById('next-meta').textContent = 'Czas odebrać certyfikat' }
   const al = document.getElementById('activity-list')
   const recent = [...completed].slice(-4).reverse()
-  if (!recent.length) {
-    al.innerHTML = '<p style="color:var(--muted);font-size:.85rem">Jeszcze nie ukończyłeś żadnej lekcji. Zacznij teraz!</p>'
-    return
-  }
+  if (!recent.length) { al.innerHTML = '<p style="color:var(--muted);font-size:.84rem">Jeszcze nie ukończyłeś żadnej lekcji. Zacznij teraz!</p>'; return }
   al.innerHTML = recent.map(id => {
     let found = null
     kursData.modules.forEach(m => m.lessons.forEach(l => { if (l.id === id) found = { l, m } }))
     if (!found) return ''
-    return `<div class="activity-item">
-      <span class="activity-check">✓</span>
-      <div class="activity-info">
-        <div class="activity-title">${found.l.title}</div>
-        <div class="activity-mod">Moduł ${found.m.id}: ${found.m.title}</div>
-      </div>
-    </div>`
+    return `<div class="activity-item"><span class="activity-check">✓</span><div class="activity-info"><div class="activity-title">${found.l.title}</div><div class="activity-mod">Moduł ${found.m.id}: ${found.m.title}</div></div></div>`
   }).join('')
 }
 
-// =============================================
-// WIDOKI
-// =============================================
+// ===== VIEWS =====
 function showView(name) {
-  ['dashboard', 'lesson', 'cert'].forEach(v => {
+  ['dashboard', 'lesson', 'achievements', 'cert'].forEach(v => {
     document.getElementById('view-' + v).style.display = v === name ? 'block' : 'none'
   })
   document.querySelectorAll('[id^="nav-"]').forEach(b => b.classList.remove('active'))
-  const navEl = document.getElementById('nav-' + name)
-  if (navEl) navEl.classList.add('active')
+  const n = document.getElementById('nav-' + name)
+  if (n) n.classList.add('active')
 }
 
 function goNext() {
-  if (document.getElementById('next-title').textContent.includes('Ukończyłeś')) {
-    showView('cert'); return
-  }
+  if (document.getElementById('next-title').textContent.includes('Ukończyłeś')) { showView('cert'); return }
   openLesson(nextMod, nextLes)
 }
 
-// =============================================
-// OTWÓRZ LEKCJĘ
-// =============================================
+// ===== OPEN LESSON =====
 function openLesson(mi, li) {
-  currentMod = mi
-  currentLes = li
-  const mod = kursData.modules[mi]
-  const les = mod.lessons[li]
-
+  currentMod = mi; currentLes = li
+  const mod = kursData.modules[mi], les = mod.lessons[li]
   document.getElementById('l-breadcrumb').textContent = `Moduł ${mod.id}: ${mod.title} › Lekcja ${mod.id}.${li + 1}`
   document.getElementById('l-title').textContent = les.title
   document.getElementById('l-time').textContent = '⏱ ' + les.time
   document.getElementById('l-desc').innerHTML = les.desc || ''
-
   const done = completed.has(les.id)
-  const statusEl = document.getElementById('l-status')
-  statusEl.textContent = done ? '✓ Ukończona' : 'W toku'
-  statusEl.className = done ? 'badge badge-green' : 'badge badge-gray'
-
-  // Wideo
+  const sEl = document.getElementById('l-status')
+  sEl.textContent = done ? '✓ Ukończona' : 'W toku'
+  sEl.className = done ? 'badge badge-green' : 'badge badge-gray'
   const va = document.getElementById('video-area')
   if (les.ytId) {
-    va.innerHTML = `<div class="video-container">
-      <div class="video-placeholder" onclick="loadVideo('${les.ytId}', this.parentElement)">
-        <div class="play-circle">▶</div>
-        <p>${les.title}</p>
-      </div>
-    </div>`
+    va.innerHTML = `<div class="video-container"><div class="video-placeholder" onclick="loadVideo('${les.ytId}',this.parentElement)"><div class="play-circle">▶</div><p>${les.title}</p></div></div>`
   } else {
-    va.innerHTML = `<div class="no-video">
-      <div style="font-size:2rem">🎬</div>
-      <p>Wideo będzie dostępne wkrótce. Sprawdź opis i materiały poniżej.</p>
-    </div>`
+    va.innerHTML = `<div class="no-video"><div style="font-size:2rem">🎬</div><p>Wideo będzie dostępne wkrótce.</p></div>`
   }
-
-  // PDF-y
   const pdfsEl = document.getElementById('l-pdfs')
   if (les.pdfs && les.pdfs.length) {
-    pdfsEl.innerHTML = les.pdfs.map(p => `
-      <a href="${p.url}" class="pdf-item" target="_blank">
-        <span class="pdf-icon">📄</span>
-        <div>
-          <div class="pdf-name">${p.name}</div>
-          <div class="pdf-meta">${p.size || ''}</div>
-        </div>
-        <span class="pdf-dl">↓ Pobierz</span>
-      </a>`).join('')
-  } else {
-    pdfsEl.innerHTML = '<div class="no-pdfs">Brak materiałów PDF do tej lekcji.</div>'
-  }
-
-  // Zadanie domowe
+    pdfsEl.innerHTML = les.pdfs.map(p => `<a href="${p.url}" class="pdf-item" target="_blank"><span class="pdf-icon">📄</span><div><div class="pdf-name">${p.name}</div><div class="pdf-meta">${p.size || ''}</div></div><span class="pdf-dl">↓ Pobierz</span></a>`).join('')
+  } else { pdfsEl.innerHTML = '<div class="no-pdfs">Brak materiałów PDF do tej lekcji.</div>' }
   const hwa = document.getElementById('hw-area')
   if (les.homework) {
     const savedHw = hwCache[les.id] || ''
-    hwa.innerHTML = `
-      <div class="homework-box">
-        <div class="homework-label">📋 Zadanie domowe</div>
-        <div class="homework-text">${les.homework}</div>
-      </div>
-      <div class="hw-answer">
-        <div class="input-group">
-          <label>Twoja odpowiedź / notatki do zadania</label>
-          <textarea class="input" id="hw-ta"
-            placeholder="Wpisz swoje odpowiedzi..."
-            style="min-height:160px;width:100%;box-sizing:border-box;background:var(--surface);color:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:.75rem;margin-top:.5rem">${savedHw}</textarea>
-        </div>
-        <div style="margin-top:.75rem">
-          <button class="btn btn-green btn-sm" onclick="saveHomework('${les.id}')">Zapisz odpowiedź</button>
-          <span class="notes-saved" id="hw-saved">✓ Zapisano!</span>
-        </div>
+    hwa.innerHTML = `<div class="homework-box"><div class="homework-label">📋 Zadanie domowe</div><div class="homework-text">${les.homework}</div></div>
+      <div style="margin-top:1rem">
+        <textarea class="input" id="hw-ta" placeholder="Twoja odpowiedź..." style="min-height:150px;width:100%;background:var(--surface);color:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:.75rem">${savedHw}</textarea>
+        <div style="margin-top:.75rem"><button class="btn btn-green btn-sm" onclick="saveHomework('${les.id}')">Zapisz odpowiedź</button><span class="notes-saved" id="hw-saved">✓ Zapisano!</span></div>
       </div>`
-  } else {
-    hwa.innerHTML = '<div class="no-pdfs">Brak zadania domowego do tej lekcji.</div>'
-  }
-
-  // Notatki — z cache Firestore
+  } else { hwa.innerHTML = '<div class="no-pdfs">Brak zadania domowego do tej lekcji.</div>' }
+  renderQuiz(les)
+  renderComments(les.id)
   document.getElementById('notes-ta').value = notesCache[les.id] || ''
   document.getElementById('notes-saved').classList.remove('show')
-
-  // Przycisk ukończenia
   const cb = document.getElementById('btn-complete')
-  if (done) {
-    cb.textContent = '✓ Ukończona'
-    cb.className = 'btn btn-sm btn-complete-done'
-  } else {
-    cb.textContent = 'Oznacz jako ukończoną ✓'
-    cb.className = 'btn btn-green btn-sm'
-  }
-
+  if (done) { cb.textContent = '✓ Ukończona'; cb.className = 'btn btn-sm btn-complete-done' }
+  else { cb.textContent = 'Oznacz jako ukończoną ✓'; cb.className = 'btn btn-green btn-sm' }
   document.getElementById('btn-prev').disabled = (mi === 0 && li === 0)
-  const isLast = (mi === kursData.modules.length - 1 && li === mod.lessons.length - 1)
-  document.getElementById('btn-next').disabled = isLast
-
-  // Reset zakładek
-  document.querySelectorAll('.tab-btn').forEach((b, i) => { if (i === 0) b.classList.add('active'); else b.classList.remove('active') })
-  document.querySelectorAll('.tab-pane').forEach((p, i) => { if (i === 0) p.classList.add('active'); else p.classList.remove('active') })
-
+  document.getElementById('btn-next').disabled = (mi === kursData.modules.length - 1 && li === mod.lessons.length - 1)
+  document.querySelectorAll('.tab-btn').forEach((b, i) => { b.classList.toggle('active', i === 0) })
+  document.querySelectorAll('.tab-pane').forEach((p, i) => { p.classList.toggle('active', i === 0) })
   buildSidebar()
   showView('lesson')
-  document.querySelector('.main-content').scrollTop = 0
+  document.getElementById('main-content').scrollTop = 0
 }
 
 function loadVideo(ytId, container) {
   container.innerHTML = `<iframe src="https://www.youtube.com/embed/${ytId}?autoplay=1" allowfullscreen></iframe>`
 }
-
 function switchTab(name, btn) {
   document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'))
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'))
@@ -625,51 +462,115 @@ function switchTab(name, btn) {
   btn.classList.add('active')
 }
 
-// =============================================
-// OZNACZ JAKO UKOŃCZONA — zapis do Firestore
-// =============================================
+// ===== QUIZ =====
+function renderQuiz(les) {
+  const area = document.getElementById('quiz-area')
+  if (!les.quiz || !les.quiz.length) { area.innerHTML = '<div class="no-pdfs">Brak quizu do tej lekcji.</div>'; return }
+  const prev = quizResults[les.id]
+  if (prev) {
+    area.innerHTML = `<div class="quiz-wrap"><div class="quiz-title">❓ Quiz — wynik</div><div class="quiz-result"><div class="quiz-score ${prev.score >= 70 ? 'pass' : 'fail'}">${prev.score}%</div><p style="color:var(--muted);margin-top:.5rem">${prev.score >= 70 ? '✓ Quiz zaliczony!' : 'Spróbuj ponownie.'}</p><button class="btn btn-outline btn-sm" style="margin-top:1rem" onclick="resetQuiz('${les.id}')">Powtórz quiz</button></div></div>`
+    return
+  }
+  let html = '<div class="quiz-wrap"><div class="quiz-title">❓ Quiz — sprawdź wiedzę</div>'
+  les.quiz.forEach((q, qi) => {
+    html += `<div class="quiz-question"><div class="quiz-q-text">${qi + 1}. ${q.question}</div><div class="quiz-options">`
+    q.options.forEach((opt, oi) => {
+      html += `<label class="quiz-option" id="qopt-${qi}-${oi}"><input type="radio" name="q${qi}" value="${oi}" style="flex-shrink:0"> ${opt}</label>`
+    })
+    html += '</div></div>'
+  })
+  html += `<button class="btn btn-green" onclick="submitQuiz('${les.id}')">Sprawdź odpowiedzi →</button></div>`
+  area.innerHTML = html
+}
+
+async function submitQuiz(lesId) {
+  const les = kursData.modules[currentMod].lessons[currentLes]
+  if (!les.quiz) return
+  let correct = 0
+  les.quiz.forEach((q, qi) => {
+    const sel = document.querySelector(`input[name="q${qi}"]:checked`)
+    const opts = document.querySelectorAll(`[id^="qopt-${qi}-"]`)
+    opts.forEach(o => { o.style.pointerEvents = 'none' })
+    if (sel) {
+      const val = parseInt(sel.value)
+      document.getElementById(`qopt-${qi}-${val}`).classList.add(val === q.correct ? 'correct' : 'wrong')
+      if (val === q.correct) { correct++; document.getElementById(`qopt-${qi}-${val}`).classList.add('correct') }
+      else { document.getElementById(`qopt-${qi}-${q.correct}`).classList.add('correct') }
+    } else { document.getElementById(`qopt-${qi}-${q.correct}`).classList.add('correct') }
+  })
+  const score = Math.round(correct / les.quiz.length * 100)
+  quizResults[lesId] = { score, correct, total: les.quiz.length, date: new Date().toISOString() }
+  try { await db.collection('uczniowie').doc(currentUser.uid).collection('quizy').doc(lesId).set(quizResults[lesId]) } catch (e) {}
+  setTimeout(() => {
+    document.getElementById('quiz-area').innerHTML += `<div style="margin-top:1rem;padding:1rem;background:rgba(29,158,117,0.08);border:1px solid rgba(29,158,117,0.2);border-radius:var(--radius);text-align:center"><div style="font-family:Syne,sans-serif;font-weight:800;font-size:2rem;color:${score >= 70 ? 'var(--green)' : 'var(--red)'}">${score}%</div><div style="font-size:.85rem;color:var(--muted);margin-top:.3rem">${correct}/${les.quiz.length} poprawnych · ${score >= 70 ? '✓ Zaliczono!' : 'Spróbuj ponownie'}</div></div>`
+    if (score >= 70) showToast('Quiz zaliczony! ' + score + '%', 'success')
+    else showToast('Quiz niezaliczony. ' + score + '% — próbuj dalej!', 'error')
+  }, 600)
+}
+
+function resetQuiz(lesId) { delete quizResults[lesId]; renderQuiz(kursData.modules[currentMod].lessons[currentLes]) }
+
+// ===== COMMENTS =====
+async function renderComments(lesId) {
+  const area = document.getElementById('comments-area')
+  area.innerHTML = `<div style="margin-bottom:1rem">
+    <textarea class="input" id="new-comment" placeholder="Zadaj pytanie do tej lekcji..." style="min-height:90px;width:100%;background:var(--surface);color:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:.75rem"></textarea>
+    <button class="btn btn-green btn-sm" style="margin-top:.5rem" onclick="addComment('${lesId}')">Wyślij pytanie →</button>
+  </div>
+  <div id="comments-list"><div style="color:var(--muted);font-size:.85rem;padding:1rem 0">Ładowanie pytań...</div></div>`
+  try {
+    const snap = await db.collection('komentarze').doc(lesId).collection('wpisy').orderBy('createdAt', 'desc').limit(20).get()
+    const list = document.getElementById('comments-list')
+    if (snap.empty) { list.innerHTML = '<div style="color:var(--muted);font-size:.84rem;padding:.5rem 0">Brak pytań do tej lekcji. Bądź pierwszy!</div>'; return }
+    list.innerHTML = snap.docs.map(doc => {
+      const d = doc.data()
+      const date = d.createdAt ? new Date(d.createdAt.toDate()).toLocaleDateString('pl-PL') : ''
+      return `<div class="comment-item">
+        <div class="comment-header"><div class="comment-avatar">${(d.authorName || '?')[0].toUpperCase()}</div><span class="comment-author">${d.authorName || 'Uczestnik'}</span><span class="comment-date">${date}</span></div>
+        <div class="comment-text">${d.text}</div>
+        ${d.reply ? `<div class="comment-reply"><div class="comment-header"><div class="comment-avatar" style="background:rgba(226,75,74,0.2);color:var(--red)">N</div><span class="comment-author">Naffy.ai</span></div><div class="comment-text">${d.reply}</div></div>` : ''}
+      </div>`
+    }).join('')
+  } catch (e) { document.getElementById('comments-list').innerHTML = '<div style="color:var(--muted);font-size:.84rem">Nie można załadować pytań.</div>' }
+}
+
+async function addComment(lesId) {
+  const text = document.getElementById('new-comment').value.trim()
+  if (!text) return
+  try {
+    await db.collection('komentarze').doc(lesId).collection('wpisy').add({
+      text, authorName: getUserDisplayName(currentUser), authorId: currentUser.uid,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    })
+    document.getElementById('new-comment').value = ''
+    showToast('Pytanie wysłane!', 'success')
+    renderComments(lesId)
+  } catch (e) { showToast('Błąd wysyłania pytania.', 'error') }
+}
+
+// ===== TOGGLE COMPLETE =====
 async function toggleComplete() {
   const les = kursData.modules[currentMod].lessons[currentLes]
   const btn = document.getElementById('btn-complete')
   btn.disabled = true
-
-  if (completed.has(les.id)) {
-    completed.delete(les.id)
-    showToast('Lekcja oznaczona jako nieukończona', 'info')
-  } else {
-    completed.add(les.id)
-    showToast('Brawo! Lekcja ukończona ✓', 'success')
-  }
-
+  if (completed.has(les.id)) { completed.delete(les.id); showToast('Oznaczono jako nieukończona', 'info') }
+  else { completed.add(les.id); showToast('Brawo! Lekcja ukończona ✓', 'success') }
   try {
-    // Zapis do Firestore
     await db.collection('uczniowie').doc(currentUser.uid).set({
       completed: Array.from(completed),
       lastActivity: firebase.firestore.FieldValue.serverTimestamp(),
-      email: currentUser.email,
-      name: getUserDisplayName(currentUser)
+      email: currentUser.email, name: getUserDisplayName(currentUser)
     }, { merge: true })
-  } catch(e) {
-    // Fallback na localStorage
-    KV.set('completed_' + currentUser.uid, [...completed])
-    console.warn('Firestore niedostępny, zapis lokalny')
-  }
-
+  } catch (e) { KV.set('completed_' + currentUser.uid, [...completed]) }
   btn.disabled = false
-  updateProgress()
-  updateDashboard()
-  openLesson(currentMod, currentLes)
+  updateProgress(); updateDashboard(); checkAchievements(); openLesson(currentMod, currentLes)
 }
 
-// =============================================
-// POPRZEDNIA / NASTĘPNA
-// =============================================
 function goPrev() {
   let mi = currentMod, li = currentLes - 1
   if (li < 0) { mi--; if (mi < 0) return; li = kursData.modules[mi].lessons.length - 1 }
   openLesson(mi, li)
 }
-
 function goNext2() {
   const mod = kursData.modules[currentMod]
   let mi = currentMod, li = currentLes + 1
@@ -678,63 +579,92 @@ function goNext2() {
   openLesson(mi, li)
 }
 
-// =============================================
-// NOTATKI — zapis do Firestore
-// =============================================
+// ===== NOTES =====
 async function saveNotes() {
   const les = kursData.modules[currentMod].lessons[currentLes]
   const text = document.getElementById('notes-ta').value
   notesCache[les.id] = text
-
-  const savedEl = document.getElementById('notes-saved')
-  savedEl.classList.remove('show')
-
   try {
-    await db.collection('uczniowie').doc(currentUser.uid)
-      .collection('notatki').doc(les.id).set({
-        content: text,
-        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-      })
-    savedEl.classList.add('show')
-    setTimeout(() => savedEl.classList.remove('show'), 2500)
-  } catch(e) {
-    KV.set('notes_' + currentUser.uid + '_' + les.id, text)
-    savedEl.textContent = '✓ Zapisano lokalnie'
-    savedEl.classList.add('show')
-    setTimeout(() => { savedEl.classList.remove('show'); savedEl.textContent = '✓ Zapisano!' }, 2500)
-  }
+    await db.collection('uczniowie').doc(currentUser.uid).collection('notatki').doc(les.id).set({ content: text, updatedAt: firebase.firestore.FieldValue.serverTimestamp() })
+    notesCount = Object.keys(notesCache).filter(k => notesCache[k].trim()).length
+    const el = document.getElementById('notes-saved')
+    el.classList.add('show'); setTimeout(() => el.classList.remove('show'), 2500)
+    checkAchievements()
+  } catch (e) { KV.set('notes_' + currentUser.uid + '_' + les.id, text) }
 }
 
-// =============================================
-// ZADANIE DOMOWE — zapis do Firestore
-// =============================================
 async function saveHomework(lesId) {
   const text = document.getElementById('hw-ta').value
   hwCache[lesId] = text
-
   try {
-    await db.collection('uczniowie').doc(currentUser.uid)
-      .collection('zadania').doc(lesId).set({
-        content: text,
-        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-      })
+    await db.collection('uczniowie').doc(currentUser.uid).collection('zadania').doc(lesId).set({ content: text, updatedAt: firebase.firestore.FieldValue.serverTimestamp() })
     const el = document.getElementById('hw-saved')
-    el.classList.add('show')
-    setTimeout(() => el.classList.remove('show'), 2500)
+    el.classList.add('show'); setTimeout(() => el.classList.remove('show'), 2500)
     showToast('Zadanie zapisane!', 'success')
-  } catch(e) {
-    KV.set('hw_' + currentUser.uid + '_' + lesId, text)
-    showToast('Zapisano lokalnie (brak połączenia)', 'info')
-  }
+  } catch (e) { KV.set('hw_' + currentUser.uid + '_' + lesId, text) }
 }
 
-// =============================================
-// CERTYFIKAT
-// =============================================
+// ===== ACHIEVEMENTS =====
+function checkAchievements() {
+  const total = kursData.modules.reduce((a, m) => a + m.lessons.length, 0)
+  const done = completed.size
+  const modsDone = kursData.modules.filter(m => m.lessons.every(l => completed.has(l.id))).length
+  ACHIEVEMENTS.forEach(ach => {
+    if (!unlockedAch.has(ach.id) && ach.condition(done, total, streak, modsDone, notesCount)) {
+      unlockedAch.add(ach.id)
+      saveAchievement(ach.id)
+      showAchievementPopup(ach)
+    }
+  })
+  renderAchievements()
+  const count = unlockedAch.size
+  const badge = document.getElementById('ach-count-badge')
+  badge.textContent = count; badge.style.display = count > 0 ? 'inline' : 'none'
+}
+
+async function saveAchievement(id) {
+  try { await db.collection('uczniowie').doc(currentUser.uid).set({ achievements: Array.from(unlockedAch) }, { merge: true }) } catch (e) {}
+}
+
+function showAchievementPopup(ach) {
+  const popup = document.getElementById('achievement-popup')
+  document.getElementById('ach-popup-icon').textContent = ach.icon
+  document.getElementById('ach-popup-title').textContent = '🏅 ' + ach.title
+  document.getElementById('ach-popup-desc').textContent = ach.desc
+  popup.classList.add('show')
+  setTimeout(() => popup.classList.remove('show'), 4000)
+}
+
+function renderAchievements() {
+  const grid = document.getElementById('achievements-grid')
+  if (!grid) return
+  grid.innerHTML = ACHIEVEMENTS.map(ach => {
+    const unlocked = unlockedAch.has(ach.id)
+    return `<div class="ach-card ${unlocked ? 'unlocked' : 'locked'}">
+      <div class="ach-card-icon">${ach.icon}</div>
+      <div class="ach-card-title">${ach.title}</div>
+      <div class="ach-card-desc">${ach.desc}</div>
+      ${unlocked ? '<div style="margin-top:.5rem"><span class="badge badge-yellow">✓ Odblokowane</span></div>' : ''}
+    </div>`
+  }).join('')
+}
+
+// ===== CERTYFIKAT =====
 function downloadCert() {
   const name = getUserDisplayName(currentUser)
   const date = new Date().toLocaleDateString('pl-PL')
-  alert(`Certyfikat\n\nKursant: ${name}\nKurs: AI które oszczędza Twoje pieniądze\nData ukończenia: ${date}\n\n(Generowanie PDF — wkrótce dostępne)`)
+  alert(`🏆 CERTYFIKAT UKOŃCZENIA\n\nKursant: ${name}\nKurs: AI które oszczędza Twoje pieniądze\nData: ${date}\n\n(Generowanie PDF wkrótce dostępne)`)
+}
+
+// ===== THEME =====
+function toggleTheme() {
+  const isLight = document.body.classList.toggle('light')
+  KV.set('theme', isLight ? 'light' : 'dark')
+  document.getElementById('theme-btn').textContent = isLight ? '☀️' : '🌙'
+}
+function loadTheme() {
+  const t = KV.get('theme')
+  if (t === 'light') { document.body.classList.add('light'); document.getElementById('theme-btn').textContent = '☀️' }
 }
 </script>
 </body>
