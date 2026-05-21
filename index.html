@@ -23,7 +23,7 @@ body::before { content:''; position:fixed; inset:0; background: radial-gradient(
     <h2>Panel platformy kursowej</h2>
   </div>
 
-  <div class="alert alert-error" id="login-error" style="display: none;"></div>
+  <div class="alert alert-error" id="login-error" style="display:none;"></div>
 
   <div class="input-group">
     <label>Adres e-mail</label>
@@ -42,106 +42,82 @@ body::before { content:''; position:fixed; inset:0; background: radial-gradient(
   </div>
 </div>
 
-<!-- ZAMIANA: Biblioteka Supabase zamiast Firebase -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<!-- Firebase (Wersja kompatybilna, idealna pod skrypty) -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 <script src="app.js"></script>
 <script>
-// KONFIGURACJA SUPABASE (Podmień na swoje dane z Project Settings -> API)
-const SUPABASE_URL = "TWÓJ_SUPABASE_URL";
-const SUPABASE_ANON_KEY = "TWÓJ_SUPABASE_ANON_KEY";
+// PAMIĘTAJ: Zmienna FIREBASE_CONFIG musi być zdefiniowana w Twoim pliku app.js
+firebase.initializeApp(FIREBASE_CONFIG)
 
-const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-// Funkcje pomocnicze do alertów (zabezpieczenie, jeśli nie ma ich w app.js)
+// Funkcje pomocnicze do alertów (gdyby nie było ich w app.js)
 function showAlert(id, message, type = 'error') {
   const el = document.getElementById(id);
   el.innerText = message;
   el.style.display = 'block';
-  if(type === 'success') { el.className = 'alert alert-success'; }
-  else if(type === 'info') { el.className = 'alert alert-info'; }
-  else { el.className = 'alert alert-error'; }
+  el.className = `alert alert-${type}`;
 }
 function hideAlert(id) {
-  document.getElementById(id).style.display = 'none';
+  const el = document.getElementById(id);
+  if(el) el.style.display = 'none';
 }
 
-// Automatyczne sprawdzanie sesji przy wejściu na stronę
-async function checkActiveSession() {
-  const { data: { user } } = await supabaseClient.auth.getUser();
-  if (user) {
-    handleRedirection(user.id);
-  }
+// Funkcja sprawdzająca czy zalogowany user to Ty (Admin)
+function isAdmin(user) {
+  // Najprostsza metoda na GitHub Pages: wpisz tu swój e-mail admina
+  const adminEmail = "TWÓJ_EMAIL_ADMINA@gmail.com"; 
+  return user && user.email === adminEmail;
 }
-checkActiveSession();
 
-// Wspólna funkcja sprawdzająca rolę w bazie i przekierowująca
-async function handleRedirection(userId) {
-  const { data: profile, error } = await supabaseClient
-    .from('profiles')
-    .select('role')
-    .eq('id', userId)
-    .single();
-
-  if (!error && profile) {
-    if (profile.role === 'admin') {
-      window.location.href = 'admin.html';
+// Jeśli już zalogowany — przekieruj
+firebase.auth().onAuthStateChanged(user => {
+  if(user){
+    if(isAdmin(user)){
+      window.location.href = 'admin.html'
     } else {
-      window.location.href = 'panel.html'; // Przekierowanie do panelu klienta
+      window.location.href = 'panel.html'
     }
   }
-}
+})
 
 async function doLogin(){
-  const email = document.getElementById('login-email').value.trim();
-  const pass = document.getElementById('login-pass').value;
-  hideAlert('login-error');
+  const email = document.getElementById('login-email').value.trim()
+  const pass = document.getElementById('login-pass').value
+  hideAlert('login-error')
 
-  if(!email || !pass){ showAlert('login-error', 'Wpisz e-mail i hasło.'); return; }
+  if(!email || !pass){ showAlert('login-error', 'Wpisz e-mail i hasło.'); return }
 
-  const btn = document.getElementById('login-btn');
-  btn.disabled = true;
-  btn.innerHTML = '<span class="spinner"></span> Logowanie...';
+  const btn = document.getElementById('login-btn')
+  btn.disabled = true
+  btn.innerHTML = '<span class="spinner"></span> Logowanie...'
 
-  try {
-    // Logowanie w Supabase
-    const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password: pass });
-
-    if (error) throw error;
-
-    // Pobranie roli i przekierowanie
-    await handleRedirection(data.user.id);
-
-  } catch(e) {
-    let msg = 'Błąd logowania. Sprawdź e-mail i hasło.';
-    // Obsługa komunikatów błędów z Supabase
-    if(e.message.includes('Invalid login credentials')) msg = 'Nieprawidłowy e-mail lub hasło.';
-    if(e.message.includes('Email not confirmed')) msg = 'Adres e-mail nie został jeszcze potwierdzony.';
-    
-    showAlert('login-error', msg);
-    btn.disabled = false;
-    btn.innerHTML = 'Zaloguj się →';
+  try{
+    await firebase.auth().signInWithEmailAndPassword(email, pass)
+    // onAuthStateChanged przekieruje automatycznie
+  } catch(e){
+    let msg = 'Błąd logowania. Sprawdź e-mail i hasło.'
+    if(e.code === 'auth/user-not-found' || e.code === 'auth/wrong-password') msg = 'Nieprawidłowy e-mail lub hasło.'
+    if(e.code === 'auth/too-many-requests') msg = 'Za dużo prób. Spróbuj ponownie za chwilę.'
+    showAlert('login-error', msg)
+    btn.disabled = false
+    btn.innerHTML = 'Zaloguj się →'
   }
 }
 
 async function doResetPassword(){
-  const email = document.getElementById('login-email').value.trim();
-  if(!email){ showAlert('login-error', 'Wpisz swój e-mail żeby zresetować hasło.', 'info'); return; }
-  
-  try {
-    const { error } = await supabaseClient.auth.resetPasswordForEmail(email, {
-      redirectTo: window.location.origin + '/reset-password.html', // Strona, gdzie użytkownik poda nowe hasło
-    });
-    
-    if (error) throw error;
-    showAlert('login-error', '✓ Wysłano link do resetu hasła na ' + email, 'success');
-  } catch(e) {
-    showAlert('login-error', 'Nie udało się wysłać linku do resetu. Sprawdź e-mail.');
+  const email = document.getElementById('login-email').value.trim()
+  if(!email){ showAlert('login-error', 'Wpisz swój e-mail żeby zresetować hasło.', 'info'); return }
+  try{
+    await firebase.auth().sendPasswordResetEmail(email)
+    showAlert('login-error', '✓ Wysłano link do resetu hasła na ' + email, 'success')
+  } catch(e){
+    showAlert('login-error', 'Nie znaleziono konta z tym e-mailem.')
   }
 }
 
 document.addEventListener('keydown', e => {
-  if(e.key === 'Enter') doLogin();
-});
+  if(e.key === 'Enter') doLogin()
+})
 </script>
 </body>
 </html>
