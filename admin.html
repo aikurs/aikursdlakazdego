@@ -181,7 +181,7 @@ body { background-color: var(--background); color: var(--text); font-family: 'DM
 
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 <script src="app.js"></script>
 <script>
 firebase.initializeApp(FIREBASE_CONFIG)
@@ -189,7 +189,7 @@ firebase.initializeApp(FIREBASE_CONFIG)
 let currentUser = null
 let kursData = { modules: [] }
 
-// AKTUALIZACJA: Pobieranie struktury bezpośrednio z Realtime Database przy ładowaniu strony
+// AKTUALIZACJA: Bezpieczne pobieranie struktury prosto z Cloud Firestore
 firebase.auth().onAuthStateChanged(async user => {
   if(!user){ window.location.href = 'index.html'; return }
   
@@ -202,19 +202,25 @@ firebase.auth().onAuthStateChanged(async user => {
   } catch(e){}
 
   try {
-    document.getElementById('loading').querySelector('p').textContent = "Pobieranie struktury kursu z Firebase..."
-    const snapshot = await firebase.database().ref('kursStructure').get()
-    if (snapshot.exists()) {
-      kursData = snapshot.val()
+    document.getElementById('loading').querySelector('p').textContent = "Pobieranie struktury kursu z Firestore..."
+    
+    // Pobranie dokumentu 'kurs' z kolekcji 'konfiguracja'
+    const doc = await firebase.firestore().collection('konfiguracja').doc('kurs').get()
+    
+    if (doc.exists) {
+      kursData = doc.data()
       if (!kursData.modules) kursData.modules = []
     } else {
-      kursData = { modules: [] }
+      // Jeśli dokument jeszcze nie istnieje, załaduj lokalny fallback z app.js
+      try { kursData = getKursData() || { modules: [] } } catch(err) { kursData = { modules: [] } }
     }
   } catch(e) {
-    console.error("Błąd pobierania z Firebase, ładuję plik lokalny:", e)
+    console.error("Błąd pobierania z Cloud Firestore:", e)
+    // Awaryjne ładowanie danych lokalnych, by zdjąć overlay ładowania w przypadku braku rekordu
     try { kursData = getKursData() || { modules: [] } } catch(err) { kursData = { modules: [] } }
   }
 
+  // Ukrycie ekranu ładowania
   document.getElementById('loading').style.display = 'none'
   document.getElementById('app').style.display = 'grid'
 
@@ -353,7 +359,7 @@ function deleteModule(index, event) {
   if(confirmDelete) {
     kursData.modules.splice(index, 1)
     
-    // Resetowanie ID modułów po usunięciu, by zachować kolejność 1, 2, 3...
+    // Przywrócenie indeksowania id od 1
     kursData.modules.forEach((m, idx) => {
       m.id = idx + 1
     })
@@ -362,15 +368,16 @@ function deleteModule(index, event) {
   }
 }
 
-/* AKTUALIZACJA: Permanentny zapis struktury w Firebase Realtime Database */
+/* AKTUALIZACJA: Zapis struktury bezpośrednio do Cloud Firestore */
 async function saveKursDataToFirebase() {
   refreshAllUI()
 
   try {
-    await firebase.database().ref('kursStructure').set(kursData)
-    console.log("Struktura zapisana poprawnie w Realtime Database.")
+    await firebase.firestore().collection('konfiguracja').doc('kurs').set(kursData)
+    console.log("Struktura kursu pomyślnie zsynchronizowana z Firestore.");
   } catch(e) {
-    alert("Błąd podczas zapisywania w Firebase: " + e.message)
+    console.error("Błąd zapisu w Cloud Firestore:", e);
+    alert("Błąd podczas zapisywania w bazie Firestore: " + e.message)
   }
 }
 
