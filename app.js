@@ -2,7 +2,7 @@
 const FIREBASE_CONFIG = {
   apiKey: "AIzaSyCDSP_ztZ88ftNZwrG_xA5X-9NWmG-rHGA",
   authDomain: "aikursdlakazdego.firebaseapp.com",
-  projectId: "aikursdlakazdego",
+  projectId: "ai-kurs-w-biznesie",
   storageBucket: "aikursdlakazdego.appspot.com",
   messagingSenderId: "367258079633",
   appId: "1:367258079633:web:651341fc22eefd0b64f9bf"
