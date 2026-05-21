@@ -1,22 +1,22 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
-<meta charset="UTF-8">
-<title>Admin — Naffy.ai</title>
-<link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <title>Admin Panel — Naffy.ai</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <div class="loading-overlay" id="loading">Ładowanie panelu...</div>
 
 <div class="app-layout" id="app" style="display:none">
-  <div class="sidebar">
-      <a href="index.html" class="logo">Naffy<span>.ai</span></a>
-      <button class="btn btn-danger" onclick="doLogout()">Wyloguj się</button>
-  </div>
-  <div class="main-content">
-      <div id="kurs-modules"></div>
-  </div>
+    <div class="sidebar">
+        <h2 class="logo">Naffy<span>.ai</span></h2>
+        <button class="btn btn-danger" onclick="doLogout()">Wyloguj się</button>
+    </div>
+    <div class="main-content">
+        <div id="kurs-modules"></div>
+    </div>
 </div>
 
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
@@ -25,46 +25,61 @@
 <script src="app.js"></script>
 
 <script>
-firebase.initializeApp(FIREBASE_CONFIG);
+    // 1. Inicjalizacja
+    const app = firebase.initializeApp(FIREBASE_CONFIG);
+    const db = firebase.firestore(app); // Teraz db jest poprawną instancją
 
-// UŻYWAMY FUNKCJI POMOCNICZEJ DO BAZY
-const getDb = () => firebase.firestore('(default)');
+    let kursData = { modules: [] };
 
-firebase.auth().onAuthStateChanged(user => {
-  if(!user) { window.location.href = 'index.html'; return; }
-  document.getElementById('loading').style.display = 'none';
-  document.getElementById('app').style.display = 'grid';
-  loadKursData();
-});
+    // 2. Obsługa sesji
+    firebase.auth().onAuthStateChanged(user => {
+        if(!user) {
+            window.location.href = 'index.html';
+            return;
+        }
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('app').style.display = 'grid';
+        loadKursData();
+    });
 
-async function loadKursData() {
-  try {
-    // Używamy getDb() zamiast bezpośrednio firebase.firestore()
-    const doc = await getDb().collection('konfiguracja').doc('kurs').get();
-    if (doc.exists) {
-      kursData = doc.data();
-    } else {
-      kursData = { modules: [] };
-      await getDb().collection('konfiguracja').doc('kurs').set(kursData);
+    // 3. Pobieranie danych
+    async function loadKursData() {
+        try {
+            // Używamy zdefiniowanego wyżej 'db'
+            const doc = await db.collection('konfiguracja').doc('kurs').get();
+            if (doc.exists) {
+                kursData = doc.data();
+            } else {
+                kursData = { modules: [] };
+                await db.collection('konfiguracja').doc('kurs').set(kursData);
+            }
+            renderKursEditor();
+        } catch(e) {
+            console.error("Błąd ładowania:", e);
+            alert("Błąd bazy: " + e.message);
+        }
     }
-    renderKursEditor();
-  } catch(e) {
-    console.error("Błąd ładowania:", e);
-  }
-}
 
-async function saveKursDataToFirebase(showAlert = false) {
-  try {
-    await getDb().collection('konfiguracja').doc('kurs').set(kursData);
-    if(showAlert) alert("Zapisano!");
-  } catch(e) {
-    alert("Błąd zapisu: " + e.message);
-  }
-}
+    // 4. Zapis danych
+    async function saveKursDataToFirebase(showAlert = false) {
+        try {
+            await db.collection('konfiguracja').doc('kurs').set(kursData);
+            if(showAlert) alert("Zapisano!");
+        } catch(e) {
+            alert("Błąd zapisu: " + e.message);
+        }
+    }
 
-function doLogout(){ firebase.auth().signOut().then(()=>{ window.location.href = 'index.html' }); }
+    function doLogout() {
+        firebase.auth().signOut().then(() => { window.location.href = 'index.html'; });
+    }
 
-// [Wklej tutaj resztę swoich funkcji renderujących: renderKursEditor, addNewLesson, itp.]
+    function renderKursEditor() {
+        const wrap = document.getElementById('kurs-modules');
+        if(!wrap) return;
+        wrap.innerHTML = '<h2>Edytor Kursu</h2><p>Działa!</p>'; 
+        // Tutaj wstawiasz swoją resztę logiki renderowania, którą miałeś wcześniej
+    }
 </script>
 </body>
 </html>
