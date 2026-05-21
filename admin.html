@@ -80,7 +80,7 @@ body { background-color: var(--background); color: var(--text); font-family: 'DM
 
 <div class="loading-overlay" id="loading">
   <div style="font-size: 2rem; margin-bottom: 1rem; color: var(--red)">⏳</div>
-  <p>Ładowanie panelu admina...</p>
+  <p id="loading-text">Ładowanie panelu admina...</p>
 </div>
 
 <div class="app-layout" id="app" style="display:none">
@@ -191,11 +191,14 @@ firebase.initializeApp(FIREBASE_CONFIG)
 
 let currentUser = null
 let kursData = { modules: [] }
-let openModulesState = {} // Zapamiętuje, które moduły były rozwinięte
+let openModulesState = {}
 
-// POBIERANIE STRUKTURY Z FIRESTORE
-firebase.auth().onAuthStateChanged(async user => {
-  if(!user){ window.location.href = 'index.html'; return }
+// 1. MONITOROWANIE STANU ZALOGOWANIA
+firebase.auth().onAuthStateChanged(user => {
+  if(!user){ 
+    window.location.href = 'index.html'
+    return 
+  }
   currentUser = user
 
   try {
@@ -204,26 +207,32 @@ firebase.auth().onAuthStateChanged(async user => {
     document.getElementById('admin-name').textContent = name
   } catch(e){}
 
+  // Ukrywamy loader i pokazujemy app bez czekania, baza doładuje się w tle lub wypluje błąd bezpiecznie
+  document.getElementById('loading').style.display = 'none'
+  document.getElementById('app').style.display = 'grid'
+
+  loadKursData()
+})
+
+// 2. BEZPIECZNE POBIERANIE DANYCH Z FIRESTORE
+async function loadKursData() {
   try {
-    document.getElementById('loading').querySelector('p').textContent = "Pobieranie struktury kursu z Firestore..."
     const doc = await firebase.firestore().collection('konfiguracja').doc('kurs').get()
-    
     if (doc.exists) {
       kursData = doc.data()
       if (!kursData.modules) kursData.modules = []
     } else {
+      // Jeśli dokumentu nie ma, ustawiamy pustą strukturę i od razu ją tworzymy w Firestore
       kursData = { modules: [] }
+      await firebase.firestore().collection('konfiguracja').doc('kurs').set(kursData)
     }
   } catch(e) {
-    console.error("Błąd pobierania:", e)
+    console.error("Błąd krytyczny Firestore:", e)
+    // Awaryjna pusta struktura, aby interfejs się nie wywalił
     kursData = { modules: [] }
   }
-
-  document.getElementById('loading').style.display = 'none'
-  document.getElementById('app').style.display = 'grid'
-
   refreshAllUI()
-})
+}
 
 function doLogout(){
   firebase.auth().signOut().then(()=>{ window.location.href = 'index.html' })
@@ -272,7 +281,7 @@ function renderOverview(){
         <span style="font-size:.75rem;color:var(--muted);width:40px;flex-shrink:0">${mod.id}.${li+1}</span>
         <span style="flex:1;font-size:.85rem">${les.title || 'Lekcja bez tytułu'}</span>
         <span class="indicator" style="width:8px; height:8px; border-radius:50%; background:${hasVideo?'var(--green)':'rgba(255,255,255,0.15)'}"></span>
-        <button class="btn btn-outline btn-sm" onclick="showSection('kurs'); openModulesState[${mi}]=true; renderKursEditor();"></button>
+        <button class="btn btn-outline btn-sm" onclick="showSection('kurs'); openModulesState[${mi}]=true; renderKursEditor();">Edytuj</button>
       </div>`
     })
   })
@@ -363,7 +372,6 @@ function createNewModule() {
   const nextId = kursData.modules.length > 0 ? Math.max(...kursData.modules.map(m => m.id)) + 1 : 1
   kursData.modules.push({ id: nextId, title: title.trim(), lessons: [] })
   
-  // Automatycznie rozwiń nowy moduł
   openModulesState[kursData.modules.length - 1] = true
   saveKursDataToFirebase(false) 
 }
@@ -390,8 +398,6 @@ function deleteModule(index, event) {
 /* ZARZĄDZANIE LEKCJAMI */
 function addNewLesson(mi, event) {
   event.stopPropagation()
-  
-  // Zanim dodamy nową lekcję, musimy pobrać z UI to, co użytkownik zdążył wpisać w obecne lekcje!
   scrapeCurrentModuleInputs(mi)
 
   if(!kursData.modules[mi].lessons) kursData.modules[mi].lessons = []
@@ -414,7 +420,6 @@ function deleteLesson(mi, li) {
   }
 }
 
-// Funkcja zbierająca dane tekstowe bezpośrednio z formularzy przed zapisem lub dodaniem lekcji
 function scrapeCurrentModuleInputs(mi) {
   const container = document.getElementById(`lessons-container-${mi}`)
   if(!container) return
@@ -438,7 +443,6 @@ function scrapeCurrentModuleInputs(mi) {
   })
 }
 
-// Wywoływana po kliknięciu dużego przycisku dyskietki
 function saveModuleChanges(mi) {
   scrapeCurrentModuleInputs(mi)
   saveKursDataToFirebase(true)
@@ -448,7 +452,6 @@ function saveModuleChanges(mi) {
 async function saveKursDataToFirebase(showAlertMessage = false) {
   try {
     await firebase.firestore().collection('konfiguracja').doc('kurs').set(kursData)
-    console.log("Dane zapisane pomyślnie w Cloud Firestore.")
     refreshAllUI()
     if(showAlertMessage) {
       alert("✓ Zmiany zostały bezpowrotnie zapisane w bazie Firestore!")
