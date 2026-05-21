@@ -40,6 +40,10 @@ body::before { content:''; position:fixed; inset:0; background: radial-gradient(
   <div style="text-align:center;margin-top:1.25rem">
     <a href="#" onclick="doResetPassword()" style="font-size:.82rem;color:var(--muted);text-decoration:none">Zapomniałem hasła</a>
   </div>
+  <div style="text-align: center; margin-top: 1rem; font-size: .85rem;">
+  <span style="color: rgba(255,255,255,0.4)">Nie masz konta?</span> 
+  <a href="rejestracja.html" style="color: var(--green); text-decoration: none; font-weight: 500; margin-left: .3rem;">Zarejestruj się</a>
+</div>
 </div>
 
 <!-- Firebase (Wersja kompatybilna, idealna pod skrypty) -->
@@ -65,7 +69,7 @@ function hideAlert(id) {
 // Funkcja sprawdzająca czy zalogowany user to Ty (Admin)
 function isAdmin(user) {
   // Najprostsza metoda na GitHub Pages: wpisz tu swój e-mail admina
-  const adminEmail = "TWÓJ_EMAIL_ADMINA@gmail.com"; 
+  const adminEmail = "psp45rostyslav@gmail.com"; 
   return user && user.email === adminEmail;
 }
 
