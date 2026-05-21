@@ -6,7 +6,7 @@
 <title>Admin — Naffy.ai</title>
 <link rel="stylesheet" href="style.css">
 <style>
-/* Reset i style bazowe wbudowane na wypadek problemów ze style.css */
+/* Reset i style bazowe */
 :root {
   --background: #0b0f19;
   --surface: #131a2c;
@@ -27,7 +27,7 @@ body { background-color: var(--background); color: var(--text); font-family: 'DM
 .main-content { padding: 2rem; background: var(--background); }
 .main-inner { max-width: 1100px; margin: 0 auto; }
 .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.5rem; margin-bottom: 1.5rem; }
-.btn { border: none; padding: 0.6rem 1.2rem; border-radius: var(--radius); cursor: pointer; font-weight: 600; font-family: inherit; display: inline-flex; align-items: center; justify-content: center; transition: all 0.2s; gap: 0.5rem; }
+.btn { border: none; padding: 0.6rem 1.2rem; border-radius: var(--radius); cursor: pointer; font-weight: 600; font-family: inherit; display: inline-flex; align-items: center; justify-content: center; transition: all 0.2s; gap: 0.5rem; font-size: 0.9rem; }
 .btn-green { background: var(--green); color: #fff; }
 .btn-green:hover { background: #167a5a; }
 .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text); }
@@ -54,14 +54,17 @@ body { background-color: var(--background); color: var(--text); font-family: 'DM
 .section-card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
 .section-card-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1rem; }
 
-/* Style zarządzania modułami */
-.mod-admin { border: 1px solid var(--border); border-radius: var(--radius-lg); margin-bottom: .75rem; overflow: hidden; background: var(--surface); }
-.mod-admin-header { display: flex; align-items: center; justify-content: space-between; padding: 1rem 1.25rem; cursor: pointer; transition: background .15s; }
+/* Style edytora modułów i lekcji */
+.mod-admin { border: 1px solid var(--border); border-radius: var(--radius-lg); margin-bottom: 1.25rem; overflow: hidden; background: var(--surface); }
+.mod-admin-header { display: flex; align-items: center; justify-content: space-between; padding: 1.25rem; cursor: pointer; transition: background .15s; background: rgba(255,255,255,0.01); }
 .mod-admin-header:hover { background: var(--surface2); }
 .mod-admin-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: .95rem; display: flex; align-items: center; gap: .75rem; }
 .mod-admin-actions { display: flex; gap: 0.5rem; align-items: center; }
-.mod-admin-body { display: none; padding: 1rem; border-top: 1px solid var(--border); background: rgba(0,0,0,0.1); }
+.mod-admin-body { display: none; padding: 1.25rem; border-top: 1px solid var(--border); background: rgba(0,0,0,0.15); }
 .mod-admin.open .mod-admin-body { display: block; }
+
+.lesson-editor-item { background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem; margin-bottom: 1rem; }
+.lesson-editor-row { display: grid; grid-template-columns: 2fr 1.5fr 1.5fr auto; gap: 0.75rem; align-items: end; }
 
 .nav-section { display: flex; flex-direction: column; gap: 0.25rem; }
 .nav-label { font-size: 0.75rem; text-transform: uppercase; color: var(--muted); letter-spacing: 0.05em; margin-bottom: 0.5rem; margin-top: 1rem; }
@@ -70,7 +73,7 @@ body { background-color: var(--background); color: var(--text); font-family: 'DM
 .divider { border: 0; border-top: 1px solid var(--border); margin: 1rem 0; }
 .logo { font-size: 1.25rem; font-weight: 800; color: #fff; text-decoration: none; }
 .logo span { color: var(--red); }
-@media(max-width:900px){ .admin-stats{grid-template-columns:repeat(2,1fr)} .app-layout { grid-template-columns: 1fr; } .sidebar { display: none; } }
+@media(max-width:900px){ .admin-stats{grid-template-columns:repeat(2,1fr)} .app-layout { grid-template-columns: 1fr; } .sidebar { display: none; } .lesson-editor-row { grid-template-columns: 1fr; gap: 0.5rem; } }
 </style>
 </head>
 <body>
@@ -143,7 +146,7 @@ body { background-color: var(--background); color: var(--text); font-family: 'DM
         <div class="page-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">
           <div>
             <h1>Zarządzaj kursem</h1>
-            <p style="color:var(--muted)">Twórz, edytuj i usuwaj moduły oraz lekcje.</p>
+            <p style="color:var(--muted)">Twórz moduły, dodawaj lekcje i zapisuj je bezpośrednio w chmurze.</p>
           </div>
           <button class="btn btn-green" onclick="createNewModule()">➕ Nowy moduł</button>
         </div>
@@ -189,10 +192,9 @@ firebase.initializeApp(FIREBASE_CONFIG)
 let currentUser = null
 let kursData = { modules: [] }
 
-// POBIERANIE STRUKTURY Z CLOUD FIRESTORE (BEZ WYMUSZANIA MODUŁÓW STARTOWYCH)
+// POBIERANIE STRUKTURY Z FIRESTORE
 firebase.auth().onAuthStateChanged(async user => {
   if(!user){ window.location.href = 'index.html'; return }
-  
   currentUser = user
 
   try {
@@ -203,18 +205,16 @@ firebase.auth().onAuthStateChanged(async user => {
 
   try {
     document.getElementById('loading').querySelector('p').textContent = "Pobieranie struktury kursu z Firestore..."
-    
     const doc = await firebase.firestore().collection('konfiguracja').doc('kurs').get()
     
     if (doc.exists) {
       kursData = doc.data()
       if (!kursData.modules) kursData.modules = []
     } else {
-      // Jeśli dokumentu nie ma, ustawiamy czystą bazę zamiast ładować dane z pliku lokalnego
       kursData = { modules: [] }
     }
   } catch(e) {
-    console.error("Błąd pobierania z Cloud Firestore:", e)
+    console.error("Błąd pobierania:", e)
     kursData = { modules: [] }
   }
 
@@ -228,7 +228,6 @@ function doLogout(){
   firebase.auth().signOut().then(()=>{ window.location.href = 'index.html' })
 }
 
-// Zmiana podstron panelu
 function showSection(name){
   ['overview','kurs','invite'].forEach(s=>{
     const el = document.getElementById('section-'+s)
@@ -260,9 +259,9 @@ function renderOverview(){
     return
   }
 
-  kursData.modules.forEach(mod=>{
+  kursData.modules.forEach((mod, mi)=>{
     if(!mod.lessons) mod.lessons = []
-    mod.lessons.forEach((les,li)=>{
+    mod.lessons.forEach((les, li)=>{
       total++
       if(les.ytId) totalVideos++
       if(les.pdfs) totalPdfs += les.pdfs.length
@@ -270,51 +269,81 @@ function renderOverview(){
       if(hasVideo) ready++
       html += `<div style="display:flex;align-items:center;gap:.75rem;padding:.6rem .75rem;border-radius:8px;margin-bottom:2px;background:var(--surface)">
         <span style="font-size:.75rem;color:var(--muted);width:40px;flex-shrink:0">${mod.id}.${li+1}</span>
-        <span style="flex:1;font-size:.85rem">${les.title}</span>
+        <span style="flex:1;font-size:.85rem">${les.title || 'Lekcja bez tytułu'}</span>
         <span class="indicator" style="width:8px; height:8px; border-radius:50%; background:${hasVideo?'var(--green)':'rgba(255,255,255,0.15)'}"></span>
-        <button class="btn btn-outline btn-sm" onclick="showSection('kurs'); toggleModAdmin(${kursData.modules.indexOf(mod)})">Edytuj</button>
+        <button class="btn btn-outline btn-sm" onclick="showSection('kurs'); toggleModAdmin(${mi})">Edytuj</button>
       </div>`
     })
   })
+  
   document.getElementById('ov-modules').textContent = kursData.modules.length
   document.getElementById('ov-lessons').textContent = total
   document.getElementById('ov-videos').textContent = totalVideos
   document.getElementById('ov-pdfs').textContent = totalPdfs
   document.getElementById('ov-ready-badge').textContent = ready + ' / ' + total + ' gotowych'
-  list.innerHTML = html
+  list.innerHTML = html || '<p style="color:var(--muted); text-align:center; padding:1rem;">Brak lekcji w modułach.</p>'
 }
 
+// NOWOŚĆ: PEŁNE RENDEROWANIE MODUŁÓW I FORMULARZY LEKCJI
 function renderKursEditor(){
   const wrap = document.getElementById('kurs-modules')
   if(!wrap) return
   wrap.innerHTML = ''
   
   if(!kursData.modules || kursData.modules.length === 0) {
-    wrap.innerHTML = '<p style="color:var(--muted); text-align:center; padding:2rem;">Baza kursu jest pusta. Kliknij przycisk powyżej, aby dodać pierwszy moduł.</p>'
+    wrap.innerHTML = '<p style="color:var(--muted); text-align:center; padding:2rem;">Baza kursu jest pusta. Utwórz swój pierwszy moduł przyciskiem powyżej.</p>'
     return
   }
 
   kursData.modules.forEach((mod, mi)=>{
     if(!mod.lessons) mod.lessons = []
-    const videosInMod = mod.lessons.filter(l=>l.ytId).length
     const div = document.createElement('div')
     div.className = 'mod-admin'
     div.id = 'mod-admin-'+mi
+    
+    // Generowanie HTML dla listy lekcji wewnątrz modułu
+    let lessonsHTML = ''
+    if(mod.lessons.length === 0) {
+      lessonsHTML = '<p style="color:var(--muted); font-size:0.85rem; padding:0.5rem 0;">Brak lekcji w tym module. Dodaj pierwszą!</p>'
+    } else {
+      mod.lessons.forEach((les, li)=>{
+        lessonsHTML += `
+          <div class="lesson-editor-item">
+            <div class="lesson-editor-row">
+              <div class="input-group" style="margin:0">
+                <label>Tytuł lekcji</label>
+                <input type="text" class="input" value="${les.title || ''}" onchange="updateLessonField(${mi}, ${li}, 'title', this.value)" placeholder="np. Wprowadzenie do AI">
+              </div>
+              <div class="input-group" style="margin:0">
+                <label>YouTube Video ID</label>
+                <input type="text" class="input" value="${les.ytId || ''}" onchange="updateLessonField(${mi}, ${li}, 'ytId', this.value)" placeholder="np. dQw4w9WgXcQ">
+              </div>
+              <div class="input-group" style="margin:0">
+                <label>Plik PDF (Link opcjonalny)</label>
+                <input type="text" class="input" value="${les.pdfs && les.pdfs[0] ? les.pdfs[0].url : ''}" onchange="updateLessonPdf(${mi}, ${li}, this.value)" placeholder="https://link-do-pliku.pdf">
+              </div>
+              <button class="btn btn-danger btn-sm" onclick="deleteLesson(${mi}, ${li})" style="margin-bottom: 2px;">🗑️</button>
+            </div>
+          </div>`
+      })
+    }
+
     div.innerHTML = `
       <div class="mod-admin-header">
         <div class="mod-admin-title" onclick="toggleModAdmin(${mi})">
-          <span>Moduł ${mod.id}: <strong>${mod.title}</strong></span>
-          <span class="badge badge-gray">${videosInMod}/${mod.lessons.length} wideo</span>
+          <span>📁 Moduł ${mod.id}: <strong>${mod.title}</strong></span>
+          <span class="badge badge-gray">${mod.lessons.length} lekcji</span>
         </div>
         <div class="mod-admin-actions">
-          <button class="btn btn-outline btn-sm" onclick="editModuleTitle(${mi}, event)">✏️ Zmień nazwę</button>
-          <button class="btn btn-danger btn-sm" onclick="deleteModule(${mi}, event)">🗑️ Usuń</button>
+          <button class="btn btn-green btn-sm" onclick="addNewLesson(${mi}, event)">➕ Dodaj lekcję</button>
+          <button class="btn btn-outline btn-sm" onclick="editModuleTitle(${mi}, event)">✏️ Nazwa</button>
+          <button class="btn btn-danger btn-sm" onclick="deleteModule(${mi}, event)">🗑️ Usuń moduł</button>
         </div>
       </div>
       <div class="mod-admin-body">
-        <p style="color:var(--muted); font-size:0.85rem; margin:0 0 1rem 0;">Zawartość lekcji dla tego modułu:</p>
-        <div id="lessons-container-${mi}">
-           <p style="font-size:0.85rem; color:var(--muted)">Zarządzanie lekcjami w tym module...</p>
+        <div id="lessons-container-${mi}">${lessonsHTML}</div>
+        <div style="margin-top: 1.25rem; text-align: right;">
+          <button class="btn btn-green" onclick="saveKursDataToFirebase()">💾 Zapisz zmiany modułu w bazie</button>
         </div>
       </div>`
     wrap.appendChild(div)
@@ -326,20 +355,13 @@ function toggleModAdmin(mi){
   if(el) el.classList.toggle('open') 
 }
 
-/* Operacje na modułach */
+/* ZARZĄDZANIE MODUŁAMI */
 function createNewModule() {
   const title = prompt("Wpisz tytuł nowego modułu:")
   if(!title || title.trim() === "") return
 
   const nextId = kursData.modules.length > 0 ? Math.max(...kursData.modules.map(m => m.id)) + 1 : 1
-
-  const newModule = {
-    id: nextId,
-    title: title.trim(),
-    lessons: []
-  }
-
-  kursData.modules.push(newModule)
+  kursData.modules.push({ id: nextId, title: title.trim(), lessons: [] })
   saveKursDataToFirebase()
 }
 
@@ -347,7 +369,6 @@ function editModuleTitle(index, event) {
   event.stopPropagation()
   const oldTitle = kursData.modules[index].title
   const newTitle = prompt("Edytuj tytuł modułu:", oldTitle)
-  
   if(newTitle && newTitle.trim() !== "" && newTitle !== oldTitle) {
     kursData.modules[index].title = newTitle.trim()
     saveKursDataToFirebase()
@@ -356,30 +377,62 @@ function editModuleTitle(index, event) {
 
 function deleteModule(index, event) {
   event.stopPropagation()
-  const mod = kursData.modules[index]
-  const confirmDelete = confirm(`Czy na pewno chcesz usunąć Moduł ${mod.id}: "${mod.title}" wraz z lekcjami?`)
-  
-  if(confirmDelete) {
+  if(confirm(`Czy na pewno chcesz usunąć cały Moduł ${kursData.modules[index].id} wraz z lekcjami?`)) {
     kursData.modules.splice(index, 1)
-    
-    kursData.modules.forEach((m, idx) => {
-      m.id = idx + 1
-    })
-
+    kursData.modules.forEach((m, idx) => m.id = idx + 1)
     saveKursDataToFirebase()
   }
 }
 
-/* Zapis bezpośrednio do Cloud Firestore */
-async function saveKursDataToFirebase() {
-  refreshAllUI()
+/* ZARZĄDZANIE LEKCJAMI W MODUŁACH */
+function addNewLesson(mi, event) {
+  event.stopPropagation()
+  if(!kursData.modules[mi].lessons) kursData.modules[mi].lessons = []
+  
+  kursData.modules[mi].lessons.push({
+    title: "Nowa lekcja",
+    ytId: "",
+    pdfs: []
+  })
+  
+  // Rerender i otwarcie modułu, żeby od razu widzieć formularz nowej lekcji
+  renderKursEditor()
+  const el = document.getElementById('mod-admin-'+mi)
+  if(el) el.classList.add('open')
+}
 
+function updateLessonField(mi, li, field, value) {
+  kursData.modules[mi].lessons[li][field] = value.trim()
+}
+
+function updateLessonPdf(mi, li, value) {
+  const url = value.trim()
+  if(url === "") {
+    kursData.modules[mi].lessons[li].pdfs = []
+  } else {
+    kursData.modules[mi].lessons[li].pdfs = [{ name: "Materiały dodatkowe (PDF)", url: url }]
+  }
+}
+
+function deleteLesson(mi, li) {
+  if(confirm("Czy chcesz usunąć tę lekcję?")) {
+    kursData.modules[mi].lessons.splice(li, 1)
+    renderKursEditor()
+    const el = document.getElementById('mod-admin-'+mi)
+    if(el) el.classList.add('open')
+  }
+}
+
+/* SYNCHRONIZACJA Z CLOUD FIRESTORE */
+async function saveKursDataToFirebase() {
   try {
     await firebase.firestore().collection('konfiguracja').doc('kurs').set(kursData)
-    console.log("Synchronizacja z Firestore zakończona sukcesem.");
+    console.log("Dane zapisane pomyślnie w Cloud Firestore.")
+    refreshAllUI()
+    alert("✓ Zmiany zostały zapisane w bazie Firestore!")
   } catch(e) {
-    console.error("Błąd zapisu w Cloud Firestore:", e);
-    alert("Błąd podczas zapisywania zmian w bazie: " + e.message)
+    console.error("Błąd zapisu:", e)
+    alert("Błąd podczas zapisywania zmian: " + e.message)
   }
 }
 
