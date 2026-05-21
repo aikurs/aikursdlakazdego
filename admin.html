@@ -27,12 +27,14 @@ body { background-color: var(--background); color: var(--text); font-family: 'DM
 .main-content { padding: 2rem; background: var(--background); }
 .main-inner { max-width: 1100px; margin: 0 auto; }
 .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.5rem; margin-bottom: 1.5rem; }
-.btn { border: none; padding: 0.6rem 1.2rem; border-radius: var(--radius); cursor: pointer; font-weight: 600; font-family: inherit; display: inline-flex; align-items: center; justify-content: center; transition: all 0.2s; }
+.btn { border: none; padding: 0.6rem 1.2rem; border-radius: var(--radius); cursor: pointer; font-weight: 600; font-family: inherit; display: inline-flex; align-items: center; justify-content: center; transition: all 0.2s; gap: 0.5rem; }
 .btn-green { background: var(--green); color: #fff; }
 .btn-green:hover { background: #167a5a; }
 .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text); }
 .btn-outline:hover { background: var(--surface2); }
 .btn-danger { background: var(--red); color: #fff; }
+.btn-danger:hover { background: #b93c3b; }
+.btn-sm { padding: 0.4rem 0.8rem; font-size: 0.82rem; }
 .input { width: 100%; background: var(--surface2); border: 1px solid var(--border); padding: 0.75rem; border-radius: var(--radius); color: #fff; box-sizing: border-box; font-family: inherit; }
 .input:focus { border-color: var(--green); outline: none; }
 .input-group { margin-bottom: 1.25rem; }
@@ -40,13 +42,10 @@ body { background-color: var(--background); color: var(--text); font-family: 'DM
 .badge { display: inline-block; padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.75rem; font-weight: 600; }
 .badge-gray { background: var(--surface2); color: var(--muted); }
 .badge-green { background: rgba(29,158,117,0.15); color: var(--green); }
-.badge-blue { background: rgba(59,130,246,0.15); color: var(--blue); }
-.badge-red { background: rgba(226,75,74,0.15); color: var(--red); }
 .alert { padding: 1rem; border-radius: var(--radius); margin-bottom: 1rem; display: none; font-size: 0.9rem; }
 .alert-error { background: rgba(226,75,74,0.1); border: 1px solid rgba(226,75,74,0.2); color: #ff8b8b; }
 .alert-success { background: rgba(29,158,117,0.1); border: 1px solid rgba(29,158,117,0.2); color: #6ee7b7; }
 
-/* Oryginalne style specyficzne dla admina */
 .admin-badge { background: rgba(226,75,74,0.12); border: 1px solid rgba(226,75,74,0.25); color: var(--red); font-size: .7rem; padding: .2rem .6rem; border-radius: 50px; font-weight: 600; letter-spacing: .05em; }
 .admin-stats { display: grid; grid-template-columns: repeat(4,1fr); gap: 1rem; margin-bottom: 2rem; }
 .admin-stat { text-align: center; padding: 1.25rem 1rem; }
@@ -54,33 +53,19 @@ body { background-color: var(--background); color: var(--text); font-family: 'DM
 .admin-stat .l { font-size: .75rem; color: var(--muted); margin-top: .3rem; }
 .section-card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
 .section-card-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1rem; }
-.mod-admin { border: 1px solid var(--border); border-radius: var(--radius-lg); margin-bottom: .75rem; overflow: hidden; }
-.mod-admin-header { display: flex; align-items: center; justify-content: space-between; padding: 1rem 1.25rem; background: var(--surface); cursor: pointer; transition: background .15s; }
+
+/* Style zarządzania modułami */
+.mod-admin { border: 1px solid var(--border); border-radius: var(--radius-lg); margin-bottom: .75rem; overflow: hidden; background: var(--surface); }
+.mod-admin-header { display: flex; align-items: center; justify-content: space-between; padding: 1rem 1.25rem; cursor: pointer; transition: background .15s; }
 .mod-admin-header:hover { background: var(--surface2); }
 .mod-admin-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: .95rem; display: flex; align-items: center; gap: .75rem; }
-.mod-admin-body { display: none; padding: 1rem; border-top: 1px solid var(--border); }
+.mod-admin-actions { display: flex; gap: 0.5rem; align-items: center; }
+.mod-admin-body { display: none; padding: 1rem; border-top: 1px solid var(--border); background: rgba(0,0,0,0.1); }
 .mod-admin.open .mod-admin-body { display: block; }
-.mod-admin-chevron { color: var(--muted); transition: transform .2s; }
-.mod-admin.open .mod-admin-chevron { transform: rotate(90deg); }
-.lesson-admin-row { display: flex; align-items: center; gap: .75rem; padding: .75rem; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: .5rem; transition: border-color .2s; }
-.lesson-admin-row:hover { border-color: rgba(255,255,255,0.15); }
-.lesson-admin-num { font-size: .75rem; color: var(--muted); width: 28px; flex-shrink: 0; font-weight: 600; }
-.lesson-admin-title { flex: 1; font-size: .88rem; font-weight: 500; }
-.lesson-admin-meta { display: flex; gap: .5rem; }
-.indicator { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
-.indicator.on { background: var(--green); }
-.indicator.off { background: rgba(255,255,255,0.15); }
-.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-.form-section { margin-bottom: 1.25rem; padding-bottom: 1.25rem; border-bottom: 1px solid var(--border); }
-.form-section:last-child { border-bottom: none; margin-bottom: 0; }
-.form-section-title { font-size: .78rem; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin-bottom: .75rem; }
-.pdf-row { display: flex; align-items: center; gap: .6rem; margin-bottom: .5rem; }
-.pdf-row input { flex: 1; }
-.add-pdf-btn { font-size: .82rem; color: var(--green); background: transparent; border: 1px dashed rgba(29,158,117,0.3); border-radius: var(--radius); padding: .5rem 1rem; cursor: pointer; width: 100%; text-align: center; transition: all .2s; margin-top: .3rem; font-family: 'DM Sans', sans-serif; }
-.add-pdf-btn:hover { background: rgba(29,158,117,0.06); border-color: rgba(29,158,117,0.5); }
+
 .nav-section { display: flex; flex-direction: column; gap: 0.25rem; }
 .nav-label { font-size: 0.75rem; text-transform: uppercase; color: var(--muted); letter-spacing: 0.05em; margin-bottom: 0.5rem; margin-top: 1rem; }
-.nav-item { background: transparent; border: none; color: var(--muted); padding: 0.6rem 0.75rem; border-radius: var(--radius); text-align: left; font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; text-decoration: none; }
+.nav-item { background: transparent; border: none; color: var(--muted); padding: 0.6rem 0.75rem; border-radius: var(--radius); text-align: left; font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; text-decoration: none; width: 100%; box-sizing: border-box; }
 .nav-item:hover, .nav-item.active { background: var(--surface2); color: #fff; }
 .divider { border: 0; border-top: 1px solid var(--border); margin: 1rem 0; }
 .logo { font-size: 1.25rem; font-weight: 800; color: #fff; text-decoration: none; }
@@ -89,8 +74,6 @@ body { background-color: var(--background); color: var(--text); font-family: 'DM
 </style>
 </head>
 <body>
-
-<div id="toast"></div>
 
 <div class="loading-overlay" id="loading">
   <div style="font-size: 2rem; margin-bottom: 1rem; color: var(--red)">⏳</div>
@@ -142,8 +125,8 @@ body { background-color: var(--background); color: var(--text); font-family: 'DM
           <p style="color:var(--muted)">Statystyki i szybki podgląd stanu kursu.</p>
         </div>
         <div class="admin-stats">
-          <div class="card admin-stat"><div class="n" id="ov-modules">6</div><div class="l">Modułów</div></div>
-          <div class="card admin-stat"><div class="n" id="ov-lessons">22</div><div class="l">Lekcji total</div></div>
+          <div class="card admin-stat"><div class="n" id="ov-modules">0</div><div class="l">Modułów</div></div>
+          <div class="card admin-stat"><div class="n" id="ov-lessons">0</div><div class="l">Lekcji total</div></div>
           <div class="card admin-stat"><div class="n" id="ov-videos">0</div><div class="l">Wideo dodanych</div></div>
           <div class="card admin-stat"><div class="n" id="ov-pdfs">0</div><div class="l">Plików PDF</div></div>
         </div>
@@ -157,10 +140,14 @@ body { background-color: var(--background); color: var(--text); font-family: 'DM
       </div>
 
       <div id="section-kurs" style="display:none">
-        <div class="page-header">
-          <h1>Zarządzaj kursem</h1>
-          <p style="color:var(--muted)">Edytuj lekcje — dodawaj wideo YouTube, pliki PDF i zadania domowe.</p>
+        <div class="page-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">
+          <div>
+            <h1>Zarządzaj kursem</h1>
+            <p style="color:var(--muted)">Twórz, edytuj i usuwaj moduły oraz lekcje.</p>
+          </div>
+          <button class="btn btn-green" onclick="createNewModule()">➕ Nowy moduł</button>
         </div>
+        
         <div id="kurs-modules"></div>
       </div>
 
@@ -186,17 +173,6 @@ body { background-color: var(--background); color: var(--text); font-family: 'DM
           </div>
           <button class="btn btn-green" onclick="sendInvite()">Wyślij zaproszenie →</button>
         </div>
-
-        <div class="card">
-          <div class="section-card-title" style="margin-bottom:1rem">⚙️ Jak pozbyć się błędu auth/operation-not-allowed?</div>
-          <div style="font-size:.88rem;color:var(--muted);line-height:1.8">
-            <p style="color:#ff8b8b; font-weight:bold;">Widzisz błąd auth/operation-not-allowed? Wykonaj te kroki:</p>
-            <p>1. Zaloguj się do swojego <strong>Firebase Console</strong>.</p>
-            <p>2. Wejdź w zakładkę <strong>Authentication</strong> -> <strong>Sign-in method</strong>.</p>
-            <p>3. Kliknij dostawcę <strong>Email/Password</strong> (E-mail/hasło).</p>
-            <p>4. Włącz opcję <strong>"Email link (passwordless sign-in)"</strong> (Logowanie za pomocą linku e-mail) i zapisz zmiany.</p>
-          </div>
-        </div>
       </div>
 
     </div>
@@ -210,17 +186,23 @@ body { background-color: var(--background); color: var(--text); font-family: 'DM
 firebase.initializeApp(FIREBASE_CONFIG)
 
 let currentUser = null
-let kursData = null
+let kursData = { modules: [] }
 
 firebase.auth().onAuthStateChanged(user => {
   if(!user){ window.location.href = 'index.html'; return }
   
   currentUser = user
-  // Zabezpieczenie na wypadek braku funkcji getKursData w app.js podczas testów
   try {
-    kursData = getKursData()
+    // Pobranie danych z app.js (jeśli funkcja istnieje)
+    kursData = getKursData() || { modules: [] }
   } catch(e) {
-    kursData = { modules: [] }
+    // Dane testowe, jeśli app.js jeszcze ich nie eksportuje globalnie
+    kursData = {
+      modules: [
+        { id: 1, title: "Wstęp do sztucznej inteligencji", lessons: [{ title: "Czym jest AI?", ytId: "123" }] },
+        { id: 2, title: "Podstawy Prompt Engineeringu", lessons: [{ title: "Pisanie pierwszych promptów", ytId: "" }] }
+      ]
+    }
   }
 
   try {
@@ -232,8 +214,7 @@ firebase.auth().onAuthStateChanged(user => {
   document.getElementById('loading').style.display = 'none'
   document.getElementById('app').style.display = 'grid'
 
-  renderOverview()
-  renderKursEditor()
+  refreshAllUI()
 })
 
 function doLogout(){
@@ -250,25 +231,35 @@ function showSection(name){
   if(el) el.classList.add('active')
 }
 
+function refreshAllUI() {
+  renderOverview()
+  renderKursEditor()
+}
+
 function renderOverview(){
   let totalVideos = 0, totalPdfs = 0, ready = 0, total = 0
   const list = document.getElementById('ov-lesson-list')
-  if(!list || !kursData || !kursData.modules) return
+  if(!list) return
   let html = ''
+  
+  if(!kursData.modules || kursData.modules.length === 0) {
+    list.innerHTML = '<p style="color:var(--muted); text-align:center; padding:1rem;">Brak modułów w kursie.</p>'
+    return
+  }
+
   kursData.modules.forEach(mod=>{
+    if(!mod.lessons) mod.lessons = []
     mod.lessons.forEach((les,li)=>{
       total++
       if(les.ytId) totalVideos++
       if(les.pdfs) totalPdfs += les.pdfs.length
       const hasVideo = !!les.ytId
-      const hasPdfs = les.pdfs && les.pdfs.length > 0
-      const hasHw = !!les.homework
       if(hasVideo) ready++
       html += `<div style="display:flex;align-items:center;gap:.75rem;padding:.6rem .75rem;border-radius:8px;margin-bottom:2px;background:var(--surface)">
         <span style="font-size:.75rem;color:var(--muted);width:40px;flex-shrink:0">${mod.id}.${li+1}</span>
         <span style="flex:1;font-size:.85rem">${les.title}</span>
-        <span class="indicator ${hasVideo?'on':'off'}" title="${hasVideo?'Wideo dodane':'Brak wideo'}"></span>
-        <button class="btn btn-outline" style="font-size:.72rem;padding:.3rem .7rem" onclick="showSection('kurs')">Edytuj</button>
+        <span class="indicator ${hasVideo?'on':'off'}" style="width:8px; height:8px; border-radius:50%; background:${hasVideo?'var(--green)':'rgba(255,255,255,0.15)'}"></span>
+        <button class="btn btn-outline btn-sm" onclick="showSection('kurs'); toggleModAdmin(${kursData.modules.indexOf(mod)})">Edytuj</button>
       </div>`
     })
   })
@@ -277,23 +268,40 @@ function renderOverview(){
   document.getElementById('ov-videos').textContent = totalVideos
   document.getElementById('ov-pdfs').textContent = totalPdfs
   document.getElementById('ov-ready-badge').textContent = ready + ' / ' + total + ' gotowych'
-  list.innerHTML = html
+  list.innerHTML = html || '<p style="color:var(--muted); text-align:center; padding:1rem;">Brak lekcji w modułach.</p>'
 }
 
 function renderKursEditor(){
   const wrap = document.getElementById('kurs-modules')
-  if(!wrap || !kursData || !kursData.modules) return
+  if(!wrap) return
   wrap.innerHTML = ''
+  
+  if(!kursData.modules || kursData.modules.length === 0) {
+    wrap.innerHTML = '<p style="color:var(--muted); text-align:center; padding:2rem;">Kliknij przycisk powyżej, aby utworzyć swój pierwszy moduł!</p>'
+    return
+  }
+
   kursData.modules.forEach((mod, mi)=>{
+    if(!mod.lessons) mod.lessons = []
     const videosInMod = mod.lessons.filter(l=>l.ytId).length
     const div = document.createElement('div')
     div.className = 'mod-admin'
     div.id = 'mod-admin-'+mi
     div.innerHTML = `
-      <div class="mod-admin-header" onclick="toggleModAdmin(${mi})">
-        <div class="mod-admin-title">
-          <span>Moduł ${mod.id}: ${mod.title}</span>
+      <div class="mod-admin-header">
+        <div class="mod-admin-title" onclick="toggleModAdmin(${mi})">
+          <span>Moduł ${mod.id}: <strong>${mod.title}</strong></span>
           <span class="badge badge-gray">${videosInMod}/${mod.lessons.length} wideo</span>
+        </div>
+        <div class="mod-admin-actions">
+          <button class="btn btn-outline btn-sm" onclick="editModuleTitle(${mi}, event)">✏️ Zmień nazwę</button>
+          <button class="btn btn-danger btn-sm" onclick="deleteModule(${mi}, event)">🗑️ Usuń</button>
+        </div>
+      </div>
+      <div class="mod-admin-body">
+        <p style="color:var(--muted); font-size:0.85rem; margin:0 0 1rem 0;">Zawartość lekcji dla tego modułu:</p>
+        <div id="lessons-container-${mi}">
+           <p style="font-size:0.85rem; color:var(--muted)">Zarządzanie lekcjami w tym module...</p>
         </div>
       </div>`
     wrap.appendChild(div)
@@ -303,6 +311,72 @@ function renderKursEditor(){
 function toggleModAdmin(mi){ 
   const el = document.getElementById('mod-admin-'+mi)
   if(el) el.classList.toggle('open') 
+}
+
+/* Funkcje zarządzania modułami */
+
+function createNewModule() {
+  const title = prompt("Wpisz tytuł nowego modułu:")
+  if(!title || title.trim() === "") return
+
+  // Wyznaczenie kolejnego ID modułu
+  const nextId = kursData.modules.length > 0 ? Math.max(...kursData.modules.map(m => m.id)) + 1 : 1
+
+  const newModule = {
+    id: nextId,
+    title: title.trim(),
+    lessons: []
+  }
+
+  kursData.modules.push(newModule)
+  saveKursDataToFirebase()
+}
+
+function editModuleTitle(index, event) {
+  event.stopPropagation() // Blokuje otwieranie/zamykanie zakładki modułu przy kliknięciu w button
+  const oldTitle = kursData.modules[index].title
+  const newTitle = prompt("Edytuj tytuł modułu:", oldTitle)
+  
+  if(newTitle && newTitle.trim() !== "" && newTitle !== oldTitle) {
+    kursData.modules[index].title = newTitle.trim()
+    saveKursDataToFirebase()
+  }
+}
+
+function deleteModule(index, event) {
+  event.stopPropagation()
+  const mod = kursData.modules[index]
+  const confirmDelete = confirm(`Czy na pewno chcesz usunąć Moduł ${mod.id}: "${mod.title}" wraz ze wszystkimi lekcjami? Tej operacji nie da się cofnąć!`)
+  
+  if(confirmDelete) {
+    kursData.modules.splice(index, 1)
+    
+    // Opcjonalnie: Naprawiamy numerację ID, żeby szły po kolei (np. 1, 2, 3...)
+    kursData.modules.forEach((m, idx) => {
+      m.id = idx + 1
+    })
+
+    saveKursDataToFirebase()
+  }
+}
+
+/* Zapis do Firebase */
+async function saveKursDataToFirebase() {
+  refreshAllUI() // Natychmiast odświeża widok w panelu admina
+
+  try {
+    // Jeżeli w app.js masz funkcję zapisu struktury (np. firebase.database().ref('kurs').set(kursData))
+    if(typeof updateKursInFirebase === "function") {
+       await updateKursInFirebase(kursData)
+    } else {
+       // Przykładowy uniwersalny zapis pod klucz 'kursStructure' w Realtime Database:
+       // await firebase.database().ref('kursStructure').set(kursData)
+       console.log("Zapisano lokalnie nową strukturę:", kursData)
+    }
+    alert("✓ Zmiany w modułach zostały zapisane pomyślnie!")
+  } catch(e) {
+    alert("Błąd podczas zapisywania struktury w Firebase: " + e.message)
+  }
 }
 
 function showAlert(id, text) {
