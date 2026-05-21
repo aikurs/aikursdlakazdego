@@ -54,7 +54,6 @@
 
 <div class="app-layout" id="app" style="display:none">
 
-  <!-- SIDEBAR -->
   <div class="sidebar">
     <div class="sidebar-header">
       <a href="index.html" class="logo">Naffy<span>.ai</span></a>
@@ -85,11 +84,9 @@
     </div>
   </div>
 
-  <!-- MAIN -->
   <div class="main-content">
     <div class="main-inner">
 
-      <!-- OVERVIEW -->
       <div id="section-overview">
         <div class="page-header">
           <h1>Przegląd kursu</h1>
@@ -110,7 +107,6 @@
         </div>
       </div>
 
-      <!-- KURS EDITOR -->
       <div id="section-kurs" style="display:none">
         <div class="page-header">
           <h1>Zarządzaj kursem</h1>
@@ -119,7 +115,6 @@
         <div id="kurs-modules"></div>
       </div>
 
-      <!-- INVITE -->
       <div id="section-invite" style="display:none">
         <div class="page-header">
           <h1>Zaproszenia</h1>
@@ -161,7 +156,6 @@
   </div>
 </div>
 
-<!-- MODAL: EDYCJA LEKCJI -->
 <div class="modal-overlay" id="modal-lesson">
   <div class="modal" style="max-width:600px">
     <div class="modal-header">
@@ -225,7 +219,6 @@
   </div>
 </div>
 
-<!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 <script src="app.js"></script>
@@ -425,9 +418,9 @@ async function sendInvite(){
   btn.innerHTML = '<span class="spinner"></span> Wysyłam...'
 
   try{
-    // Wysyłamy link do rejestracji przez Firebase Email Link
+    // Sztywny URL zapobiegający błędom 404 na strukturze podfolderów GitHub Pages
     const actionCodeSettings = {
-      url: window.location.origin + '/rejestracja.html?email=' + encodeURIComponent(email),
+      url: 'https://mozzart-games.github.io/aikursdlakazdego/rejestracja.html?email=' + encodeURIComponent(email),
       handleCodeInApp: true
     }
 
@@ -450,3 +443,6 @@ async function sendInvite(){
 </script>
 </body>
 </html>
+
+
+
