@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rejestracja — Naffy.ai</title>
+<link rel="stylesheet" href="style.css">
+<style>
+body { display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 1.5rem; }
+body::before { content:''; position:fixed; inset:0; background: radial-gradient(ellipse at 70% 20%, rgba(29,158,117,0.06) 0%, transparent 60%); pointer-events:none; }
+.reg-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 2.5rem; max-width: 440px; width: 100%; position: relative; overflow: hidden; }
+.reg-card::before { content:''; position:absolute; top:0; left:0; right:0; height:2px; background:linear-gradient(90deg, var(--green), var(--blue)); }
+.reg-logo { margin-bottom: 2rem; text-align: center; }
+.state { display: none; text-align: center; }
+.state.active { display: block; }
+.state-icon { font-size: 3rem; margin-bottom: 1rem; }
+.state h2 { font-size: 1.5rem; margin-bottom: .5rem; }
+.state p { font-size: .88rem; color: var(--muted); line-height: 1.6; margin-bottom: 1.5rem; }
+.form-state { text-align: left; }
+.form-state h2 { text-align: center; }
+.form-state p { text-align: center; }
+.back-link { display: block; text-align: center; margin-top: 1.5rem; font-size: .82rem; color: var(--muted); text-decoration: none; transition: color .2s; }
+.back-link:hover { color: var(--white); }
+</style>
+</head>
+<body>
+<div id="toast"></div>
+
+<div class="reg-card">
+  <div class="reg-logo"><a href="index.html" class="logo">Naffy<span>.ai</span></a></div>
+
+  <!-- Ładowanie -->
+  <div class="state active" id="state-loading">
+    <div class="state-icon">⏳</div>
+    <h2>Sprawdzam zaproszenie...</h2>
+    <p>Chwileczkę, weryfikuję Twój link.</p>
+    <div class="spinner spinner-lg" style="color:var(--green)"></div>
+  </div>
+
+  <!-- Formularz -->
+  <div class="state form-state" id="state-form">
+    <div class="state-icon">🎉</div>
+    <h2>Witaj w kursie!</h2>
+    <p>Ustaw hasło do swojego konta i zacznij naukę.</p>
+    <div class="alert alert-error" id="reg-error"></div>
+    <div class="input-group">
+      <label>Adres e-mail</label>
+      <input class="input" type="email" id="reg-email" readonly>
+    </div>
+    <div class="input-group">
+      <label>Imię i nazwisko</label>
+      <input class="input" type="text" id="reg-name" placeholder="np. Jan Kowalski">
+    </div>
+    <div class="input-group">
+      <label>Hasło (min. 8 znaków)</label>
+      <input class="input" type="password" id="reg-pass" placeholder="••••••••" minlength="8">
+    </div>
+    <div class="input-group">
+      <label>Powtórz hasło</label>
+      <input class="input" type="password" id="reg-pass2" placeholder="••••••••">
+    </div>
+    <button class="btn btn-green btn-block btn-lg" id="reg-btn" onclick="doRegister()">
+      Utwórz konto i zacznij kurs →
+    </button>
+  </div>
+
+  <!-- Błąd tokenu -->
+  <div class="state" id="state-error">
+    <div class="state-icon">❌</div>
+    <h2>Link wygasł lub jest nieprawidłowy</h2>
+    <p>Ten link zaproszenia mógł wygasnąć lub już został użyty. Napisz do nas żeby otrzymać nowe zaproszenie.</p>
+    <a href="index.html" class="btn btn-outline btn-block">Wróć do logowania</a>
+  </div>
+
+  <!-- Sukces -->
+  <div class="state" id="state-success">
+    <div class="state-icon">✅</div>
+    <h2>Konto gotowe!</h2>
+    <p>Twoje konto zostało utworzone. Za chwilę zostaniesz przekierowany do panelu ucznia.</p>
+    <div class="spinner spinner-lg" style="color:var(--green);margin:1rem auto;display:block"></div>
+  </div>
+
+  <a href="index.html" class="back-link">← Wróć do logowania</a>
+</div>
+
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="app.js"></script>
+<script>
+firebase.initializeApp(FIREBASE_CONFIG)
+
+function setState(name){
+  document.querySelectorAll('.state').forEach(s=>s.classList.remove('active'))
+  document.getElementById('state-'+name).classList.add('active')
+}
+
+// Pobierz parametry z URL (link zaproszenia z Firebase)
+function getUrlParams(){
+  const params = new URLSearchParams(window.location.search)
+  return {
+    mode: params.get('mode'),       // 'signIn' lub 'resetPassword'
+    oobCode: params.get('oobCode'), // token
+    email: params.get('email')      // email (opcjonalny)
+  }
+}
+
+// INIT
+window.addEventListener('load', async ()=>{
+  // Jeśli już zalogowany — przekieruj
+  firebase.auth().onAuthStateChanged(user => {
+    if(user) { window.location.href = 'panel.html'; return }
+  })
+
+  const p = getUrlParams()
+
+  // Tryb: link zaproszenia (email link sign-in)
+  if(firebase.auth().isSignInWithEmailLink(window.location.href)){
+    let email = p.email || localStorage.getItem('naffy_invite_email') || ''
+    if(!email){
+      email = window.prompt('Podaj swój adres e-mail (ten na który dostałeś zaproszenie):')
+    }
+    if(!email){ setState('error'); return }
+    document.getElementById('reg-email').value = email
+    setState('form')
+    return
+  }
+
+  // Tryb: standardowe zaproszenie (email + hasło)
+  if(p.email){
+    document.getElementById('reg-email').value = decodeURIComponent(p.email)
+    setState('form')
+    return
+  }
+
+  // Brak parametrów
+  setState('error')
+})
+
+async function doRegister(){
+  const email = document.getElementById('reg-email').value.trim()
+  const name = document.getElementById('reg-name').value.trim()
+  const pass = document.getElementById('reg-pass').value
+  const pass2 = document.getElementById('reg-pass2').value
+
+  hideAlert('reg-error')
+
+  if(!name){ showAlert('reg-error','Wpisz swoje imię i nazwisko.'); return }
+  if(pass.length < 8){ showAlert('reg-error','Hasło musi mieć co najmniej 8 znaków.'); return }
+  if(pass !== pass2){ showAlert('reg-error','Hasła się nie zgadzają. Spróbuj ponownie.'); return }
+
+  const btn = document.getElementById('reg-btn')
+  btn.disabled = true
+  btn.innerHTML = '<span class="spinner"></span> Tworzę konto...'
+
+  try{
+    let userCredential
+
+    // Email link sign-in
+    if(firebase.auth().isSignInWithEmailLink(window.location.href)){
+      userCredential = await firebase.auth().signInWithEmailLink(email, window.location.href)
+      await userCredential.user.updatePassword(pass)
+    } else {
+      // Standardowa rejestracja
+      userCredential = await firebase.auth().createUserWithEmailAndPassword(email, pass)
+    }
+
+    // Ustaw wyświetlane imię
+    await userCredential.user.updateProfile({ displayName: name })
+
+    localStorage.removeItem('naffy_invite_email')
+    setState('success')
+    setTimeout(()=>{ window.location.href = 'panel.html' }, 2500)
+
+  } catch(e){
+    let msg = 'Coś poszło nie tak. Spróbuj ponownie.'
+    if(e.code === 'auth/email-already-in-use') msg = 'Konto z tym e-mailem już istnieje. Zaloguj się zamiast rejestrować.'
+    if(e.code === 'auth/invalid-action-code') msg = 'Link wygasł lub był już użyty. Poproś o nowe zaproszenie.'
+    if(e.code === 'auth/weak-password') msg = 'Hasło jest za słabe. Użyj min. 8 znaków.'
+    showAlert('reg-error', msg)
+    btn.disabled = false
+    btn.innerHTML = 'Utwórz konto i zacznij kurs →'
+  }
+}
+</script>
+</body>
+</html>

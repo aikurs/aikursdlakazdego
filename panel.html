@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Panel ucznia — Naffy.ai</title>
+<link rel="stylesheet" href="style.css">
+<style>
+/* LESSON SIDEBAR */
+.mod-group { margin-bottom: .5rem; }
+.mod-toggle { display: flex; align-items: center; justify-content: space-between; padding: .5rem .75rem; cursor: pointer; border-radius: 8px; transition: background .15s; }
+.mod-toggle:hover { background: var(--surface2); }
+.mod-toggle-left { display: flex; align-items: center; gap: .6rem; }
+.mod-toggle-icon { font-size: .75rem; color: var(--muted); transition: transform .2s; }
+.mod-group.open .mod-toggle-icon { transform: rotate(90deg); }
+.mod-title-text { font-size: .82rem; font-weight: 600; color: rgba(255,255,255,0.8); }
+.mod-prog-text { font-size: .68rem; color: var(--green); }
+.mod-lessons { display: none; padding-left: .5rem; }
+.mod-group.open .mod-lessons { display: block; }
+.lesson-btn { display: flex; align-items: center; gap: .6rem; padding: .5rem .75rem; border-radius: 7px; cursor: pointer; transition: background .15s; border: none; background: transparent; width: 100%; text-align: left; font-family: 'DM Sans', sans-serif; font-size: .82rem; color: rgba(255,255,255,0.65); margin-bottom: 1px; }
+.lesson-btn:hover { background: var(--surface2); color: var(--white); }
+.lesson-btn.active { background: rgba(29,158,117,0.12); color: var(--green); }
+.lesson-btn.done .lesson-check { color: var(--green); }
+.lesson-btn .lesson-check { margin-left: auto; font-size: .75rem; color: rgba(255,255,255,0.15); flex-shrink: 0; }
+.lesson-btn .lesson-num { font-size: .68rem; color: rgba(255,255,255,0.25); flex-shrink: 0; width: 22px; }
+
+/* DASHBOARD */
+.dash-stats { display: grid; grid-template-columns: repeat(3,1fr); gap: 1rem; margin-bottom: 1.5rem; }
+.stat-card { text-align: center; padding: 1.25rem; }
+.stat-num { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 2rem; color: var(--green); }
+.stat-label { font-size: .75rem; color: var(--muted); margin-top: .3rem; }
+.next-card { background: rgba(29,158,117,0.05); border: 1px solid rgba(29,158,117,0.2); border-radius: var(--radius-lg); padding: 1.25rem 1.5rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 1.5rem; cursor: pointer; transition: border-color .2s; }
+.next-card:hover { border-color: rgba(29,158,117,0.45); }
+.next-tag { font-size: .7rem; color: var(--green); text-transform: uppercase; letter-spacing: .1em; margin-bottom: .3rem; }
+.next-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: .95rem; }
+.next-meta { font-size: .78rem; color: var(--muted); margin-top: .25rem; }
+.activity-list { display: grid; gap: .6rem; }
+.activity-item { display: flex; align-items: center; gap: .8rem; padding: .75rem 1rem; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); font-size: .85rem; }
+.activity-check { color: var(--green); flex-shrink: 0; }
+.activity-info { flex: 1; }
+.activity-title { font-weight: 500; }
+.activity-mod { font-size: .75rem; color: var(--muted); margin-top: .15rem; }
+
+/* LEKCJA */
+.lesson-header { margin-bottom: 1.5rem; }
+.lesson-breadcrumb { font-size: .75rem; color: var(--muted); margin-bottom: .5rem; display: flex; align-items: center; gap: .4rem; }
+.lesson-title-h { font-size: 1.5rem; margin-bottom: .4rem; }
+.lesson-meta-row { display: flex; align-items: center; gap: 1rem; }
+.video-container { background: #000; border-radius: var(--radius-lg); overflow: hidden; position: relative; padding-top: 56.25%; margin-bottom: 1.5rem; }
+.video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
+.video-placeholder { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1rem; background: rgba(255,255,255,0.02); cursor: pointer; border: 1px solid var(--border); border-radius: var(--radius-lg); }
+.play-circle { width: 72px; height: 72px; border-radius: 50%; background: var(--red); display: flex; align-items: center; justify-content: center; font-size: 2rem; transition: transform .2s, opacity .2s; }
+.video-placeholder:hover .play-circle { transform: scale(1.08); }
+.video-placeholder p { font-size: .85rem; color: var(--muted); }
+.no-video { background: rgba(255,255,255,0.02); border: 1px dashed var(--border); border-radius: var(--radius-lg); padding: 3rem; text-align: center; margin-bottom: 1.5rem; }
+.no-video p { color: var(--muted); font-size: .88rem; margin-top: .5rem; }
+
+/* TABS */
+.tabs-bar { display: flex; gap: .3rem; border-bottom: 1px solid var(--border); margin-bottom: 1.5rem; }
+.tab-btn { background: transparent; border: none; color: var(--muted); font-family: 'DM Sans', sans-serif; font-size: .88rem; padding: .6rem 1.1rem; cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; transition: all .2s; }
+.tab-btn:hover { color: var(--white); }
+.tab-btn.active { color: var(--green); border-bottom-color: var(--green); }
+.tab-pane { display: none; }
+.tab-pane.active { display: block; }
+
+/* PDF LIST */
+.pdf-list { display: grid; gap: .75rem; }
+.pdf-item { display: flex; align-items: center; gap: 1rem; padding: .9rem 1.1rem; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); text-decoration: none; color: var(--white); transition: border-color .2s; }
+.pdf-item:hover { border-color: rgba(29,158,117,0.35); }
+.pdf-icon { font-size: 1.4rem; flex-shrink: 0; }
+.pdf-name { font-size: .9rem; font-weight: 500; }
+.pdf-meta { font-size: .75rem; color: var(--muted); margin-top: .15rem; }
+.pdf-dl { margin-left: auto; color: var(--green); font-size: .8rem; flex-shrink: 0; }
+.no-pdfs { color: var(--muted); font-size: .88rem; text-align: center; padding: 2rem; }
+
+/* HOMEWORK */
+.homework-box { background: rgba(55,138,221,0.05); border: 1px solid rgba(55,138,221,0.2); border-radius: var(--radius); padding: 1.25rem; margin-bottom: 1rem; }
+.homework-label { font-size: .72rem; color: var(--blue); text-transform: uppercase; letter-spacing: .1em; margin-bottom: .5rem; }
+.homework-text { font-size: .9rem; line-height: 1.6; color: rgba(255,255,255,0.8); }
+.hw-answer { margin-top: 1rem; }
+
+/* NAV BOTTOM */
+.lesson-nav { display: flex; justify-content: space-between; align-items: center; margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--border); gap: 1rem; }
+.btn-complete-done { background: rgba(29,158,117,0.12); color: var(--green); border: 1px solid rgba(29,158,117,0.25); }
+.btn-complete-done:hover { background: rgba(29,158,117,0.2); }
+
+/* CERT */
+.cert-center { max-width: 540px; margin: 0 auto; text-align: center; }
+.cert-icon-big { font-size: 5rem; margin-bottom: 1.5rem; }
+
+/* NOTES SAVED */
+.notes-saved { font-size: .78rem; color: var(--green); margin-left: .8rem; opacity: 0; transition: opacity .3s; }
+.notes-saved.show { opacity: 1; }
+
+@media(max-width:768px){ .dash-stats{grid-template-columns:repeat(2,1fr)} .next-card{flex-direction:column;align-items:flex-start} }
+</style>
+</head>
+<body>
+
+<div id="toast"></div>
+
+<div class="loading-overlay" id="loading">
+  <div class="spinner spinner-lg" style="color:var(--green)"></div>
+  <p>Ładowanie panelu...</p>
+</div>
+
+<div class="app-layout" id="app" style="display:none">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="sidebar-header">
+      <a href="index.html" class="logo">Naffy<span>.ai</span></a>
+    </div>
+
+    <div class="sidebar-body">
+      <div class="card" style="margin-bottom:1rem;padding:1rem">
+        <div class="progress-wrap">
+          <div class="progress-meta">
+            <span>Twój postęp</span>
+            <span id="sb-pct" style="color:var(--green);font-weight:600">0%</span>
+          </div>
+          <div class="progress-track"><div class="progress-fill" id="sb-bar" style="width:0%"></div></div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-top:.75rem;text-align:center">
+          <div><div style="font-family:Syne,sans-serif;font-weight:800;font-size:1.2rem;color:var(--green)" id="sb-done">0</div><div style="font-size:.68rem;color:var(--muted)">ukończonych</div></div>
+          <div><div style="font-family:Syne,sans-serif;font-weight:800;font-size:1.2rem;color:var(--white)" id="sb-total">22</div><div style="font-size:.68rem;color:var(--muted)">lekcji total</div></div>
+        </div>
+      </div>
+
+      <div class="nav-section">
+        <div class="nav-label">Menu</div>
+        <button class="nav-item active" id="nav-dash" onclick="showView('dashboard')">
+          <span class="nav-icon">🏠</span> Dashboard
+        </button>
+        <button class="nav-item" id="nav-cert" onclick="showView('cert')">
+          <span class="nav-icon">🏆</span> Certyfikat
+        </button>
+      </div>
+
+      <hr class="divider">
+
+      <div class="nav-section">
+        <div class="nav-label">Program kursu</div>
+        <div id="sb-modules"></div>
+      </div>
+    </div>
+
+    <div class="sidebar-footer">
+      <div class="user-box" style="margin-bottom:.75rem">
+        <div class="avatar" id="sb-avatar">?</div>
+        <div>
+          <div class="user-name" id="sb-name">Ładowanie...</div>
+          <div class="user-role" id="sb-email"></div>
+        </div>
+      </div>
+      <button class="btn btn-danger btn-sm btn-block" onclick="doLogout()">Wyloguj się</button>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main-content">
+    <div class="main-inner">
+
+      <!-- DASHBOARD VIEW -->
+      <div id="view-dashboard">
+        <div class="page-header">
+          <h1 id="dash-greeting">Cześć!</h1>
+          <p>Kontynuuj naukę od miejsca w którym skończyłeś.</p>
+        </div>
+
+        <div class="dash-stats">
+          <div class="card stat-card">
+            <div class="stat-num" id="ds-done">0</div>
+            <div class="stat-label">Ukończonych lekcji</div>
+          </div>
+          <div class="card stat-card">
+            <div class="stat-num" id="ds-pct">0%</div>
+            <div class="stat-label">Postęp kursu</div>
+          </div>
+          <div class="card stat-card">
+            <div class="stat-num" id="ds-mod">0/6</div>
+            <div class="stat-label">Modułów</div>
+          </div>
+        </div>
+
+        <div class="next-card" onclick="goNext()">
+          <div>
+            <div class="next-tag"><span class="pulse-dot" style="margin-right:.4rem"></span>Następna lekcja</div>
+            <div class="next-title" id="next-title">Załaduj...</div>
+            <div class="next-meta" id="next-meta"></div>
+          </div>
+          <button class="btn btn-green" style="flex-shrink:0">Zacznij →</button>
+        </div>
+
+        <h3 style="font-size:.9rem;color:var(--muted);margin-bottom:.75rem;font-weight:500">Ostatnie aktywności</h3>
+        <div class="activity-list" id="activity-list">
+          <p style="color:var(--muted);font-size:.85rem">Jeszcze nie ukończyłeś żadnej lekcji. Zacznij teraz!</p>
+        </div>
+      </div>
+
+      <!-- LESSON VIEW -->
+      <div id="view-lesson" style="display:none">
+        <div class="lesson-header">
+          <div class="lesson-breadcrumb"><span id="l-breadcrumb"></span></div>
+          <h1 class="lesson-title-h" id="l-title"></h1>
+          <div class="lesson-meta-row">
+            <span class="badge badge-gray" id="l-time"></span>
+            <span class="badge badge-green" id="l-status"></span>
+          </div>
+        </div>
+
+        <div id="video-area"></div>
+
+        <div class="tabs-bar">
+          <button class="tab-btn active" onclick="switchTab('opis',this)">📋 Opis</button>
+          <button class="tab-btn" onclick="switchTab('pdf',this)">📄 Materiały</button>
+          <button class="tab-btn" onclick="switchTab('homework',this)">📝 Zadanie</button>
+          <button class="tab-btn" onclick="switchTab('notatki',this)">✏️ Notatki</button>
+        </div>
+
+        <div class="tab-pane active" id="tab-opis">
+          <div id="l-desc" style="font-size:.9rem;color:rgba(255,255,255,0.7);line-height:1.8"></div>
+        </div>
+        <div class="tab-pane" id="tab-pdf">
+          <div class="pdf-list" id="l-pdfs"></div>
+        </div>
+        <div class="tab-pane" id="tab-homework">
+          <div id="hw-area"></div>
+        </div>
+        <div class="tab-pane" id="tab-notatki">
+          <textarea class="input" id="notes-ta" placeholder="Twoje notatki do tej lekcji..." style="min-height:220px"></textarea>
+          <div style="display:flex;align-items:center;margin-top:.75rem">
+            <button class="btn btn-green btn-sm" onclick="saveNotes()">Zapisz notatki</button>
+            <span class="notes-saved" id="notes-saved">✓ Zapisano!</span>
+          </div>
+        </div>
+
+        <div class="lesson-nav">
+          <button class="btn btn-outline btn-sm" onclick="goPrev()" id="btn-prev">← Poprzednia</button>
+          <button class="btn btn-sm" id="btn-complete" onclick="toggleComplete()">Oznacz jako ukończoną ✓</button>
+          <button class="btn btn-outline btn-sm" onclick="goNext2()" id="btn-next">Następna →</button>
+        </div>
+      </div>
+
+      <!-- CERT VIEW -->
+      <div id="view-cert" style="display:none">
+        <div class="cert-center">
+          <div class="page-header" style="text-align:center">
+            <h1>Certyfikat ukończenia</h1>
+            <p>Ukończ wszystkie lekcje żeby odblokować certyfikat.</p>
+          </div>
+          <div class="card" style="text-align:center;padding:3rem" id="cert-card">
+            <div class="cert-icon-big" id="cert-icon">🔒</div>
+            <h2 id="cert-title" style="margin-bottom:.5rem">Kurs w trakcie</h2>
+            <p id="cert-sub" style="color:var(--muted);margin-bottom:2rem;font-size:.9rem"></p>
+            <div class="progress-wrap" style="max-width:300px;margin:0 auto 1.5rem">
+              <div class="progress-meta"><span id="cert-done-text">0 / 22</span><span id="cert-pct-text">0%</span></div>
+              <div class="progress-track"><div class="progress-fill" id="cert-bar" style="width:0%"></div></div>
+            </div>
+            <button class="btn btn-green btn-lg" id="cert-btn" disabled onclick="downloadCert()">
+              🏆 Pobierz certyfikat PDF
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="app.js"></script>
+<script>
+firebase.initializeApp(FIREBASE_CONFIG)
+
+let currentUser = null
+let kursData = null
+let completed = new Set()
+let currentMod = 0
+let currentLes = 0
+let nextMod = 0
+let nextLes = 0
+const TOTAL_LESSONS = 22
+
+firebase.auth().onAuthStateChanged(user => {
+  if(!user){ window.location.href = 'index.html'; return }
+  currentUser = user
+  kursData = getKursData()
+  loadCompleted()
+  initUI()
+  document.getElementById('loading').style.display = 'none'
+  document.getElementById('app').style.display = 'grid'
+})
+
+function doLogout(){
+  firebase.auth().signOut().then(()=>{ window.location.href = 'index.html' })
+}
+
+function loadCompleted(){
+  const saved = KV.get('completed_'+currentUser.uid)
+  completed = new Set(saved || [])
+}
+
+function saveCompleted(){
+  KV.set('completed_'+currentUser.uid, [...completed])
+}
+
+function initUI(){
+  const name = getUserDisplayName(currentUser)
+  const initial = name[0].toUpperCase()
+  document.getElementById('sb-avatar').textContent = initial
+  document.getElementById('sb-name').textContent = name
+  document.getElementById('sb-email').textContent = currentUser.email
+  document.getElementById('dash-greeting').textContent = 'Cześć, ' + name.split(' ')[0] + '! 👋'
+  buildSidebar()
+  updateProgress()
+  updateDashboard()
+}
+
+function buildSidebar(){
+  const wrap = document.getElementById('sb-modules')
+  wrap.innerHTML = ''
+  kursData.modules.forEach((mod, mi)=>{
+    const done = mod.lessons.filter(l=>completed.has(l.id)).length
+    const isOpen = mi === currentMod
+    const group = document.createElement('div')
+    group.className = 'mod-group' + (isOpen ? ' open' : '')
+    group.id = 'mod-group-'+mi
+    group.innerHTML = `
+      <div class="mod-toggle" onclick="toggleMod(${mi})">
+        <div class="mod-toggle-left">
+          <span class="mod-toggle-icon">▶</span>
+          <span class="mod-title-text">M${mod.id}: ${mod.title}</span>
+        </div>
+        <span class="mod-prog-text">${done}/${mod.lessons.length}</span>
+      </div>
+      <div class="mod-lessons" id="mod-lessons-${mi}">
+        ${mod.lessons.map((les,li)=>`
+          <button class="lesson-btn ${completed.has(les.id)?'done':''} ${(mi===currentMod&&li===currentLes&&document.getElementById('view-lesson').style.display!=='none')?'active':''}"
+            id="les-btn-${mi}-${li}" onclick="openLesson(${mi},${li})">
+            <span class="lesson-num">${mod.id}.${li+1}</span>
+            <span style="flex:1;line-height:1.3">${les.title}</span>
+            <span class="lesson-check">${completed.has(les.id)?'✓':''}</span>
+          </button>
+        `).join('')}
+      </div>`
+    wrap.appendChild(group)
+  })
+}
+
+function toggleMod(mi){ document.getElementById('mod-group-'+mi).classList.toggle('open') }
+
+function updateProgress(){
+  const done = completed.size
+  const total = TOTAL_LESSONS
+  const pct = Math.round(done/total*100)
+  document.getElementById('sb-pct').textContent = pct+'%'
+  document.getElementById('sb-bar').style.width = pct+'%'
+  document.getElementById('sb-done').textContent = done
+  document.getElementById('sb-total').textContent = total
+  document.getElementById('cert-bar').style.width = pct+'%'
+  document.getElementById('cert-done-text').textContent = done+' / '+total
+  document.getElementById('cert-pct-text').textContent = pct+'%'
+  document.getElementById('cert-sub').textContent = pct < 100
+    ? `Ukończ jeszcze ${total-done} lekcji żeby odblokować certyfikat.`
+    : 'Gratulacje! Ukończyłeś cały kurs. Certyfikat jest gotowy!'
+  if(done === total){
+    document.getElementById('cert-icon').textContent = '🏆'
+    document.getElementById('cert-title').textContent = 'Kurs ukończony!'
+    document.getElementById('cert-btn').disabled = false
+  }
+}
+
+function updateDashboard(){
+  const done = completed.size
+  const pct = Math.round(done/TOTAL_LESSONS*100)
+  const modsDone = kursData.modules.filter(m=>m.lessons.every(l=>completed.has(l.id))).length
+  document.getElementById('ds-done').textContent = done
+  document.getElementById('ds-pct').textContent = pct+'%'
+  document.getElementById('ds-mod').textContent = modsDone+'/'+kursData.modules.length
+
+  let foundNext = false
+  kursData.modules.forEach((mod,mi)=>{
+    mod.lessons.forEach((les,li)=>{
+      if(!foundNext && !completed.has(les.id)){
+        foundNext = true
+        nextMod = mi; nextLes = li
+        document.getElementById('next-title').textContent = les.title
+        document.getElementById('next-meta').textContent = `Moduł ${mod.id}: ${mod.title} · ${les.time}`
+      }
+    })
+  })
+  if(!foundNext){
+    document.getElementById('next-title').textContent = 'Ukończyłeś cały kurs! 🎉'
+    document.getElementById('next-meta').textContent = 'Czas odebrać certyfikat'
+  }
+
+  const al = document.getElementById('activity-list')
+  const recent = [...completed].slice(-4).reverse()
+  if(!recent.length){ al.innerHTML = '<p style="color:var(--muted);font-size:.85rem">Jeszcze nie ukończyłeś żadnej lekcji. Zacznij teraz!</p>'; return }
+  al.innerHTML = recent.map(id=>{
+    let found = null
+    kursData.modules.forEach(m=>m.lessons.forEach((l)=>{ if(l.id===id) found={l,m} }))
+    if(!found) return ''
+    return `<div class="activity-item">
+      <span class="activity-check">✓</span>
+      <div class="activity-info">
+        <div class="activity-title">${found.l.title}</div>
+        <div class="activity-mod">Moduł ${found.m.id}: ${found.m.title}</div>
+      </div>
+    </div>`
+  }).join('')
+}
+
+function showView(name){
+  ['dashboard','lesson','cert'].forEach(v=>{
+    document.getElementById('view-'+v).style.display = v===name ? 'block' : 'none'
+  })
+  document.querySelectorAll('[id^="nav-"]').forEach(b=>b.classList.remove('active'))
+  const navEl = document.getElementById('nav-'+name)
+  if(navEl) navEl.classList.add('active')
+}
+
+function goNext(){
+  if(document.getElementById('next-title').textContent.includes('Ukończyłeś')){ showView('cert'); return }
+  openLesson(nextMod, nextLes)
+}
+
+function openLesson(mi, li){
+  currentMod = mi; currentLes = li
+  const mod = kursData.modules[mi]
+  const les = mod.lessons[li]
+
+  document.getElementById('l-breadcrumb').textContent = `Moduł ${mod.id}: ${mod.title} › Lekcja ${mod.id}.${li+1}`
+  document.getElementById('l-title').textContent = les.title
+  document.getElementById('l-time').textContent = '⏱ ' + les.time
+  document.getElementById('l-desc').textContent = les.desc || ''
+
+  const done = completed.has(les.id)
+  const statusEl = document.getElementById('l-status')
+  statusEl.textContent = done ? '✓ Ukończona' : 'W toku'
+  statusEl.className = done ? 'badge badge-green' : 'badge badge-gray'
+
+  const va = document.getElementById('video-area')
+  if(les.ytId){
+    va.innerHTML = `<div class="video-container">
+      <div class="video-placeholder" onclick="loadVideo('${les.ytId}',this.parentElement)">
+        <div class="play-circle">▶</div>
+        <p>${les.title}</p>
+      </div>
+    </div>`
+  } else {
+    va.innerHTML = `<div class="no-video"><div style="font-size:2rem">🎬</div><p>Wideo będzie dostępne wkrótce.</p></div>`
+  }
+
+  const pdfsEl = document.getElementById('l-pdfs')
+  if(les.pdfs && les.pdfs.length){
+    pdfsEl.innerHTML = les.pdfs.map(p=>`
+      <a href="${p.url}" class="pdf-item" target="_blank">
+        <span class="pdf-icon">📄</span>
+        <div><div class="pdf-name">${p.name}</div><div class="pdf-meta">${p.size||''}</div></div>
+        <span class="pdf-dl">↓ Pobierz</span>
+      </a>`).join('')
+  } else {
+    pdfsEl.innerHTML = '<div class="no-pdfs">Brak materiałów PDF do tej lekcji.</div>'
+  }
+
+  const hwa = document.getElementById('hw-area')
+  if(les.homework){
+    const savedHw = KV.get('hw_'+currentUser.uid+'_'+les.id) || ''
+    hwa.innerHTML = `
+      <div class="homework-box">
+        <div class="homework-label">📋 Zadanie domowe</div>
+        <div class="homework-text">${les.homework}</div>
+      </div>
+      <div class="hw-answer">
+        <div class="input-group">
+          <label>Twoja odpowiedź / notatki do zadania</label>
+          <textarea class="input" id="hw-ta" placeholder="Wpisz swoje odpowiedzi..." style="min-height:160px">${savedHw}</textarea>
+        </div>
+        <button class="btn btn-green btn-sm" onclick="saveHomework('${les.id}')">Zapisz odpowiedź</button>
+        <span class="notes-saved" id="hw-saved">✓ Zapisano!</span>
+      </div>`
+  } else {
+    hwa.innerHTML = '<div class="no-pdfs">Brak zadania domowego do tej lekcji.</div>'
+  }
+
+  document.getElementById('notes-ta').value = KV.get('notes_'+currentUser.uid+'_'+les.id) || ''
+  document.getElementById('notes-saved').classList.remove('show')
+
+  const cb = document.getElementById('btn-complete')
+  if(done){ cb.textContent = '✓ Ukończona'; cb.className = 'btn btn-sm btn-complete-done' }
+  else { cb.textContent = 'Oznacz jako ukończoną ✓'; cb.className = 'btn btn-green btn-sm' }
+
+  document.getElementById('btn-prev').disabled = (mi===0 && li===0)
+  const isLast = (mi===kursData.modules.length-1 && li===mod.lessons.length-1)
+  document.getElementById('btn-next').disabled = isLast
+
+  document.querySelectorAll('.tab-btn').forEach((b,i)=>{ if(i===0) b.classList.add('active'); else b.classList.remove('active') })
+  document.querySelectorAll('.tab-pane').forEach((p,i)=>{ if(i===0) p.classList.add('active'); else p.classList.remove('active') })
+
+  buildSidebar()
+  showView('lesson')
+  document.querySelector('.main-content').scrollTop = 0
+}
+
+function loadVideo(ytId, container){
+  container.innerHTML = `<iframe src="https://www.youtube.com/embed/${ytId}?autoplay=1" allowfullscreen></iframe>`
+}
+
+function switchTab(name, btn){
+  document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'))
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'))
+  document.getElementById('tab-'+name).classList.add('active')
+  btn.classList.add('active')
+}
+
+function toggleComplete(){
+  const les = kursData.modules[currentMod].lessons[currentLes]
+  if(completed.has(les.id)){ completed.delete(les.id); showToast('Lekcja oznaczona jako nieukończona', 'info') }
+  else { completed.add(les.id); showToast('Brawo! Lekcja ukończona ✓', 'success') }
+  saveCompleted(); updateProgress(); updateDashboard(); openLesson(currentMod, currentLes)
+}
+
+function goPrev(){
+  let mi = currentMod, li = currentLes - 1
+  if(li < 0){ mi--; if(mi < 0) return; li = kursData.modules[mi].lessons.length - 1 }
+  openLesson(mi, li)
+}
+
+function goNext2(){
+  const mod = kursData.modules[currentMod]
+  let mi = currentMod, li = currentLes + 1
+  if(li >= mod.lessons.length){ mi++; li = 0 }
+  if(mi >= kursData.modules.length) return
+  openLesson(mi, li)
+}
+
+function saveNotes(){
+  const les = kursData.modules[currentMod].lessons[currentLes]
+  KV.set('notes_'+currentUser.uid+'_'+les.id, document.getElementById('notes-ta').value)
+  const el = document.getElementById('notes-saved')
+  el.classList.add('show')
+  setTimeout(()=>el.classList.remove('show'), 2500)
+}
+
+function saveHomework(lesId){
+  KV.set('hw_'+currentUser.uid+'_'+lesId, document.getElementById('hw-ta').value)
+  const el = document.getElementById('hw-saved')
+  el.classList.add('show')
+  setTimeout(()=>el.classList.remove('show'), 2500)
+  showToast('Zadanie zapisane!', 'success')
+}
+
+function downloadCert(){
+  const name = getUserDisplayName(currentUser)
+  alert('Certyfikat dla: '+name+'\nKurs: AI które oszczędza Twoje pieniądze\nData ukończenia: '+new Date().toLocaleDateString('pl-PL'))
+}
+</script>
+</body>
+</html>

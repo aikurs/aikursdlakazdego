@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Naffy.ai — Logowanie</title>
+<link rel="stylesheet" href="style.css">
+<style>
+body { display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 1.5rem; }
+body::before { content:''; position:fixed; inset:0; background: radial-gradient(ellipse at 70% 20%, rgba(29,158,117,0.06) 0%, transparent 60%); pointer-events:none; }
+.login-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 2.5rem; max-width: 420px; width: 100%; position: relative; overflow: hidden; }
+.login-card::before { content:''; position:absolute; top:0; left:0; right:0; height:2px; background:linear-gradient(90deg, var(--green), var(--blue)); }
+.login-logo { margin-bottom: 2rem; text-align: center; }
+.login-logo h2 { font-size: .88rem; color: var(--muted); margin-top: .4rem; font-weight: 400; }
+</style>
+</head>
+<body>
+<div id="toast"></div>
+
+<div class="login-card">
+  <div class="login-logo">
+    <div class="logo">Naffy<span>.ai</span></div>
+    <h2>Panel platformy kursowej</h2>
+  </div>
+
+  <div class="alert alert-error" id="login-error"></div>
+
+  <div class="input-group">
+    <label>Adres e-mail</label>
+    <input class="input" type="email" id="login-email" placeholder="twoj@email.com">
+  </div>
+  <div class="input-group">
+    <label>Hasło</label>
+    <input class="input" type="password" id="login-pass" placeholder="••••••••">
+  </div>
+  <button class="btn btn-green btn-block btn-lg" id="login-btn" onclick="doLogin()">
+    Zaloguj się →
+  </button>
+
+  <div style="text-align:center;margin-top:1.25rem">
+    <a href="#" onclick="doResetPassword()" style="font-size:.82rem;color:var(--muted);text-decoration:none">Zapomniałem hasła</a>
+  </div>
+</div>
+
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="app.js"></script>
+<script>
+firebase.initializeApp(FIREBASE_CONFIG)
+
+// Jeśli już zalogowany — przekieruj
+firebase.auth().onAuthStateChanged(user => {
+  if(user){
+    if(isAdmin(user)){
+      window.location.href = 'admin.html'
+    } else {
+      window.location.href = 'panel.html'
+    }
+  }
+})
+
+async function doLogin(){
+  const email = document.getElementById('login-email').value.trim()
+  const pass = document.getElementById('login-pass').value
+  hideAlert('login-error')
+
+  if(!email || !pass){ showAlert('login-error', 'Wpisz e-mail i hasło.'); return }
+
+  const btn = document.getElementById('login-btn')
+  btn.disabled = true
+  btn.innerHTML = '<span class="spinner"></span> Logowanie...'
+
+  try{
+    await firebase.auth().signInWithEmailAndPassword(email, pass)
+    // onAuthStateChanged przekieruje automatycznie
+  } catch(e){
+    let msg = 'Błąd logowania. Sprawdź e-mail i hasło.'
+    if(e.code === 'auth/user-not-found') msg = 'Nie znaleziono konta z tym adresem e-mail.'
+    if(e.code === 'auth/wrong-password') msg = 'Nieprawidłowe hasło.'
+    if(e.code === 'auth/too-many-requests') msg = 'Za dużo prób. Spróbuj ponownie za chwilę.'
+    showAlert('login-error', msg)
+    btn.disabled = false
+    btn.innerHTML = 'Zaloguj się →'
+  }
+}
+
+async function doResetPassword(){
+  const email = document.getElementById('login-email').value.trim()
+  if(!email){ showAlert('login-error', 'Wpisz swój e-mail żeby zresetować hasło.', 'info'); return }
+  try{
+    await firebase.auth().sendPasswordResetEmail(email)
+    showAlert('login-error', '✓ Wysłano link do resetu hasła na ' + email, 'success')
+  } catch(e){
+    showAlert('login-error', 'Nie znaleziono konta z tym e-mailem.')
+  }
+}
+
+document.addEventListener('keydown', e => {
+  if(e.key === 'Enter') doLogin()
+})
+</script>
+</body>
+</html>
