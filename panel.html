@@ -228,7 +228,7 @@
           <div id="hw-area"></div>
         </div>
         <div class="tab-pane" id="tab-notatki">
-          <textarea class="input" id="notes-ta" placeholder="Twoje notatki do tej lekcji..." style="min-height:220px"></textarea>
+          <textarea class="input" id="notes-ta" placeholder="Twoje notatki do tej lekcji..." style="min-height:220px; width: 100%; box-sizing: border-box; background: var(--surface); color: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: .75rem"></textarea>
           <div style="display:flex;align-items:center;margin-top:.75rem">
             <button class="btn btn-green btn-sm" onclick="saveNotes()">Zapisz notatki</button>
             <span class="notes-saved" id="notes-saved">✓ Zapisano!</span>
@@ -363,9 +363,11 @@ function updateProgress(){
   document.getElementById('cert-bar').style.width = pct+'%'
   document.getElementById('cert-done-text').textContent = done+' / '+total
   document.getElementById('cert-pct-text').textContent = pct+'%'
+  
   document.getElementById('cert-sub').textContent = pct < 100
     ? `Ukończ jeszcze ${total-done} lekcji żeby odblokować certyfikat.`
     : 'Gratulacje! Ukończyłeś cały kurs. Certyfikat jest gotowy!'
+    
   if(done === total){
     document.getElementById('cert-icon').textContent = '🏆'
     document.getElementById('cert-title').textContent = 'Kurs ukończony!'
@@ -436,7 +438,9 @@ function openLesson(mi, li){
   document.getElementById('l-breadcrumb').textContent = `Moduł ${mod.id}: ${mod.title} › Lekcja ${mod.id}.${li+1}`
   document.getElementById('l-title').textContent = les.title
   document.getElementById('l-time').textContent = '⏱ ' + les.time
-  document.getElementById('l-desc').textContent = les.desc || ''
+  
+  // Zmiana na innerHTML pozwala na formatowanie tekstu lekcji
+  document.getElementById('l-desc').innerHTML = les.desc || ''
 
   const done = completed.has(les.id)
   const statusEl = document.getElementById('l-status')
@@ -447,7 +451,7 @@ function openLesson(mi, li){
   if(les.ytId){
     va.innerHTML = `<div class="video-container">
       <div class="video-placeholder" onclick="loadVideo('${les.ytId}',this.parentElement)">
-        <div class="play-circle">▶</div>
+        <div class="play-circle" style="color: #fff">▶</div>
         <p>${les.title}</p>
       </div>
     </div>`
@@ -478,10 +482,12 @@ function openLesson(mi, li){
       <div class="hw-answer">
         <div class="input-group">
           <label>Twoja odpowiedź / notatki do zadania</label>
-          <textarea class="input" id="hw-ta" placeholder="Wpisz swoje odpowiedzi..." style="min-height:160px">${savedHw}</textarea>
+          <textarea class="input" id="hw-ta" placeholder="Wpisz swoje odpowiedzi..." style="min-height:160px; width: 100%; box-sizing: border-box; background: var(--surface); color: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: .75rem; margin-top: .5rem">${savedHw}</textarea>
         </div>
-        <button class="btn btn-green btn-sm" onclick="saveHomework('${les.id}')">Zapisz odpowiedź</button>
-        <span class="notes-saved" id="hw-saved">✓ Zapisano!</span>
+        <div style="margin-top: .75rem">
+          <button class="btn btn-green btn-sm" onclick="saveHomework('${les.id}')">Zapisz odpowiedź</button>
+          <span class="notes-saved" id="hw-saved">✓ Zapisano!</span>
+        </div>
       </div>`
   } else {
     hwa.innerHTML = '<div class="no-pdfs">Brak zadania domowego do tej lekcji.</div>'
@@ -519,8 +525,13 @@ function switchTab(name, btn){
 
 function toggleComplete(){
   const les = kursData.modules[currentMod].lessons[currentLes]
-  if(completed.has(les.id)){ completed.delete(les.id); showToast('Lekcja oznaczona jako nieukończona', 'info') }
-  else { completed.add(les.id); showToast('Brawo! Lekcja ukończona ✓', 'success') }
+  if(completed.has(les.id)){ 
+    completed.delete(les.id); 
+    showToast('Lekcja oznaczona jako nieukończona', 'info') 
+  } else { 
+    completed.add(les.id); 
+    showToast('Brawo! Lekcja ukończona ✓', 'success') 
+  }
   saveCompleted(); updateProgress(); updateDashboard(); openLesson(currentMod, currentLes)
 }
 
