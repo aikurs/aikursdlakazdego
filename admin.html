@@ -181,6 +181,7 @@ body { background-color: var(--background); color: var(--text); font-family: 'DM
 
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 <script src="app.js"></script>
 <script>
 firebase.initializeApp(FIREBASE_CONFIG)
@@ -188,28 +189,31 @@ firebase.initializeApp(FIREBASE_CONFIG)
 let currentUser = null
 let kursData = { modules: [] }
 
-firebase.auth().onAuthStateChanged(user => {
+// AKTUALIZACJA: Pobieranie struktury bezpośrednio z Realtime Database przy ładowaniu strony
+firebase.auth().onAuthStateChanged(async user => {
   if(!user){ window.location.href = 'index.html'; return }
   
   currentUser = user
-  try {
-    // Pobranie danych z app.js (jeśli funkcja istnieje)
-    kursData = getKursData() || { modules: [] }
-  } catch(e) {
-    // Dane testowe, jeśli app.js jeszcze ich nie eksportuje globalnie
-    kursData = {
-      modules: [
-        { id: 1, title: "Wstęp do sztucznej inteligencji", lessons: [{ title: "Czym jest AI?", ytId: "123" }] },
-        { id: 2, title: "Podstawy Prompt Engineeringu", lessons: [{ title: "Pisanie pierwszych promptów", ytId: "" }] }
-      ]
-    }
-  }
 
   try {
     const name = user.displayName || user.email || "Admin"
     document.getElementById('admin-avatar').textContent = name[0].toUpperCase()
     document.getElementById('admin-name').textContent = name
   } catch(e){}
+
+  try {
+    document.getElementById('loading').querySelector('p').textContent = "Pobieranie struktury kursu z Firebase..."
+    const snapshot = await firebase.database().ref('kursStructure').get()
+    if (snapshot.exists()) {
+      kursData = snapshot.val()
+      if (!kursData.modules) kursData.modules = []
+    } else {
+      kursData = { modules: [] }
+    }
+  } catch(e) {
+    console.error("Błąd pobierania z Firebase, ładuję plik lokalny:", e)
+    try { kursData = getKursData() || { modules: [] } } catch(err) { kursData = { modules: [] } }
+  }
 
   document.getElementById('loading').style.display = 'none'
   document.getElementById('app').style.display = 'grid'
@@ -258,7 +262,7 @@ function renderOverview(){
       html += `<div style="display:flex;align-items:center;gap:.75rem;padding:.6rem .75rem;border-radius:8px;margin-bottom:2px;background:var(--surface)">
         <span style="font-size:.75rem;color:var(--muted);width:40px;flex-shrink:0">${mod.id}.${li+1}</span>
         <span style="flex:1;font-size:.85rem">${les.title}</span>
-        <span class="indicator ${hasVideo?'on':'off'}" style="width:8px; height:8px; border-radius:50%; background:${hasVideo?'var(--green)':'rgba(255,255,255,0.15)'}"></span>
+        <span class="indicator" style="width:8px; height:8px; border-radius:50%; background:${hasVideo?'var(--green)':'rgba(255,255,255,0.15)'}"></span>
         <button class="btn btn-outline btn-sm" onclick="showSection('kurs'); toggleModAdmin(${kursData.modules.indexOf(mod)})">Edytuj</button>
       </div>`
     })
@@ -314,12 +318,10 @@ function toggleModAdmin(mi){
 }
 
 /* Funkcje zarządzania modułami */
-
 function createNewModule() {
   const title = prompt("Wpisz tytuł nowego modułu:")
   if(!title || title.trim() === "") return
 
-  // Wyznaczenie kolejnego ID modułu
   const nextId = kursData.modules.length > 0 ? Math.max(...kursData.modules.map(m => m.id)) + 1 : 1
 
   const newModule = {
@@ -333,7 +335,7 @@ function createNewModule() {
 }
 
 function editModuleTitle(index, event) {
-  event.stopPropagation() // Blokuje otwieranie/zamykanie zakładki modułu przy kliknięciu w button
+  event.stopPropagation()
   const oldTitle = kursData.modules[index].title
   const newTitle = prompt("Edytuj tytuł modułu:", oldTitle)
   
@@ -351,7 +353,7 @@ function deleteModule(index, event) {
   if(confirmDelete) {
     kursData.modules.splice(index, 1)
     
-    // Opcjonalnie: Naprawiamy numerację ID, żeby szły po kolei (np. 1, 2, 3...)
+    // Resetowanie ID modułów po usunięciu, by zachować kolejność 1, 2, 3...
     kursData.modules.forEach((m, idx) => {
       m.id = idx + 1
     })
@@ -360,22 +362,15 @@ function deleteModule(index, event) {
   }
 }
 
-/* Zapis do Firebase */
+/* AKTUALIZACJA: Permanentny zapis struktury w Firebase Realtime Database */
 async function saveKursDataToFirebase() {
-  refreshAllUI() // Natychmiast odświeża widok w panelu admina
+  refreshAllUI()
 
   try {
-    // Jeżeli w app.js masz funkcję zapisu struktury (np. firebase.database().ref('kurs').set(kursData))
-    if(typeof updateKursInFirebase === "function") {
-       await updateKursInFirebase(kursData)
-    } else {
-       // Przykładowy uniwersalny zapis pod klucz 'kursStructure' w Realtime Database:
-       // await firebase.database().ref('kursStructure').set(kursData)
-       console.log("Zapisano lokalnie nową strukturę:", kursData)
-    }
-    alert("✓ Zmiany w modułach zostały zapisane pomyślnie!")
+    await firebase.database().ref('kursStructure').set(kursData)
+    console.log("Struktura zapisana poprawnie w Realtime Database.")
   } catch(e) {
-    alert("Błąd podczas zapisywania struktury w Firebase: " + e.message)
+    alert("Błąd podczas zapisywania w Firebase: " + e.message)
   }
 }
 
