@@ -29,7 +29,6 @@ body::before { content:''; position:fixed; inset:0; background: radial-gradient(
 <div class="reg-card">
   <div class="reg-logo"><a href="index.html" class="logo">Naffy<span>.ai</span></a></div>
 
-  <!-- Ładowanie -->
   <div class="state active" id="state-loading">
     <div class="state-icon">⏳</div>
     <h2>Sprawdzam zaproszenie...</h2>
@@ -37,7 +36,6 @@ body::before { content:''; position:fixed; inset:0; background: radial-gradient(
     <div class="spinner spinner-lg" style="color:var(--green)"></div>
   </div>
 
-  <!-- Formularz -->
   <div class="state form-state" id="state-form">
     <div class="state-icon">🎉</div>
     <h2>Witaj w kursie!</h2>
@@ -45,7 +43,7 @@ body::before { content:''; position:fixed; inset:0; background: radial-gradient(
     <div class="alert alert-error" id="reg-error"></div>
     <div class="input-group">
       <label>Adres e-mail</label>
-      <input class="input" type="email" id="reg-email" readonly>
+      <input class="input" type="email" id="reg-email" placeholder="np. twoj-email@gmail.com">
     </div>
     <div class="input-group">
       <label>Imię i nazwisko</label>
@@ -64,7 +62,6 @@ body::before { content:''; position:fixed; inset:0; background: radial-gradient(
     </button>
   </div>
 
-  <!-- Błąd tokenu -->
   <div class="state" id="state-error">
     <div class="state-icon">❌</div>
     <h2>Link wygasł lub jest nieprawidłowy</h2>
@@ -72,7 +69,6 @@ body::before { content:''; position:fixed; inset:0; background: radial-gradient(
     <a href="index.html" class="btn btn-outline btn-block">Wróć do logowania</a>
   </div>
 
-  <!-- Sukces -->
   <div class="state" id="state-success">
     <div class="state-icon">✅</div>
     <h2>Konto gotowe!</h2>
@@ -83,7 +79,6 @@ body::before { content:''; position:fixed; inset:0; background: radial-gradient(
   <a href="index.html" class="back-link">← Wróć do logowania</a>
 </div>
 
-<!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 <script src="app.js"></script>
@@ -95,19 +90,17 @@ function setState(name){
   document.getElementById('state-'+name).classList.add('active')
 }
 
-// Pobierz parametry z URL (link zaproszenia z Firebase)
 function getUrlParams(){
   const params = new URLSearchParams(window.location.search)
   return {
-    mode: params.get('mode'),       // 'signIn' lub 'resetPassword'
-    oobCode: params.get('oobCode'), // token
-    email: params.get('email')      // email (opcjonalny)
+    mode: params.get('mode'),
+    oobCode: params.get('oobCode'),
+    email: params.get('email')
   }
 }
 
 // INIT
 window.addEventListener('load', async ()=>{
-  // Jeśli już zalogowany — przekieruj
   firebase.auth().onAuthStateChanged(user => {
     if(user) { window.location.href = 'panel.html'; return }
   })
@@ -121,20 +114,26 @@ window.addEventListener('load', async ()=>{
       email = window.prompt('Podaj swój adres e-mail (ten na który dostałeś zaproszenie):')
     }
     if(!email){ setState('error'); return }
-    document.getElementById('reg-email').value = email
+    const emailInput = document.getElementById('reg-email')
+    emailInput.value = email
+    emailInput.readOnly = true
     setState('form')
     return
   }
 
-  // Tryb: standardowe zaproszenie (email + hasło)
+  // Tryb: standardowe zaproszenie z parametru URL
   if(p.email){
-    document.getElementById('reg-email').value = decodeURIComponent(p.email)
+    const emailInput = document.getElementById('reg-email')
+    emailInput.value = decodeURIComponent(p.email)
+    emailInput.readOnly = true
     setState('form')
     return
   }
 
-  // Brak parametrów
-  setState('error')
+  // Obejście dla admina / brak parametrów: pozwól wpisać e-mail ręcznie
+  const emailInput = document.getElementById('reg-email')
+  emailInput.readOnly = false
+  setState('form')
 })
 
 async function doRegister(){
@@ -145,6 +144,7 @@ async function doRegister(){
 
   hideAlert('reg-error')
 
+  if(!email){ showAlert('reg-error','Wpisz swój adres e-mail.'); return }
   if(!name){ showAlert('reg-error','Wpisz swoje imię i nazwisko.'); return }
   if(pass.length < 8){ showAlert('reg-error','Hasło musi mieć co najmniej 8 znaków.'); return }
   if(pass !== pass2){ showAlert('reg-error','Hasła się nie zgadzają. Spróbuj ponownie.'); return }
@@ -156,16 +156,13 @@ async function doRegister(){
   try{
     let userCredential
 
-    // Email link sign-in
     if(firebase.auth().isSignInWithEmailLink(window.location.href)){
       userCredential = await firebase.auth().signInWithEmailLink(email, window.location.href)
       await userCredential.user.updatePassword(pass)
     } else {
-      // Standardowa rejestracja
       userCredential = await firebase.auth().createUserWithEmailAndPassword(email, pass)
     }
 
-    // Ustaw wyświetlane imię
     await userCredential.user.updateProfile({ displayName: name })
 
     localStorage.removeItem('naffy_invite_email')
