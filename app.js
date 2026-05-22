@@ -3,7 +3,6 @@
 // Firebase config + utilities + kurs data
 // ============================================
 
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const FIREBASE_CONFIG = {
   apiKey: "AIzaSyCDSP_ztZ88ftNZwrG_xA5X-9NWmG-rHGA",
   authDomain: "ai-kurs-w-biznesie.firebaseapp.com",
@@ -12,7 +11,7 @@ const FIREBASE_CONFIG = {
   messagingSenderId: "978692477925",
   appId: "1:978692477925:web:264bdd5a60d12e1415d50c",
   measurementId: "G-PKT77Y8SMD"
-};
+}
 
 // ---- TOAST ----
 function showToast(msg, type = 'success') {
