@@ -39,7 +39,6 @@
 </div>
 
 <div class="app-layout" id="app" style="display:none">
-  <!-- SIDEBAR -->
   <div class="sidebar" id="sidebar">
     <div class="sidebar-header">
       <a href="admin.html" class="logo">Naffy<span>.admin</span></a>
@@ -59,11 +58,9 @@
     </div>
   </div>
 
-  <!-- MAIN CONTENT -->
   <div class="main-content" id="main-content">
     <div class="main-inner">
 
-      <!-- VIEW: DASHBOARD -->
       <div id="view-dashboard">
         <div class="page-header">
           <h1>Statystyki systemu</h1>
@@ -76,7 +73,6 @@
         </div>
       </div>
 
-      <!-- VIEW: COURSE EDITOR -->
       <div id="view-course" style="display:none">
         <div class="page-header">
           <h1>Struktura i zawartość kursu</h1>
@@ -84,7 +80,6 @@
         </div>
         
         <div class="admin-grid">
-          <!-- Drzewo modułów i lekcji -->
           <div>
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem">
               <h3 style="font-size:0.9rem; font-weight:600">Struktura kursu</h3>
@@ -93,7 +88,6 @@
             <div id="course-tree-container"></div>
           </div>
 
-          <!-- Formularz edycyjny zawartości -->
           <div>
             <div class="card" id="editor-card" style="display:none; position:sticky; top:1rem">
               <h3 id="editor-title" style="margin-bottom:1.5rem; font-size:1.1rem">Wybierz element</h3>
@@ -118,7 +112,6 @@
         </div>
       </div>
 
-      <!-- VIEW: STUDENTS LIST -->
       <div id="view-students" style="display:none">
         <div class="page-header">
           <h1>Zarządzanie Uczniami</h1>
@@ -159,7 +152,7 @@ const db = firebase.firestore(fbApp)
 let kursData = { modules: [] }
 let globalStudents = []
 
-// Autoryzacja sesji oraz weryfikacja Twojego adresu e-mail admina
+// Autoryzacja sesji oraz weryfikacja adresu e-mail admina
 firebase.auth().onAuthStateChanged(async user => {
   if (!user) { 
     window.location.href = 'index.html'; 
@@ -179,7 +172,8 @@ firebase.auth().onAuthStateChanged(async user => {
     if (kursDoc.exists) {
       kursData = kursDoc.data()
     } else {
-      kursData = { modules: [] }
+      // Jeśli chmura Firestore jest jeszcze pusta, pobierz domyślne moduły z app.js
+      kursData = getKursData()
     }
     
     const studentsSnap = await db.collection('uczniowie').get()
@@ -503,6 +497,7 @@ function showToast(msg, isErr = false) {
   setTimeout(() => t.classList.remove('show'), 3000)
 }
 
+// ===== SYSTEM MOTYWÓW =====
 function loadTheme() {
   const th = localStorage.getItem('theme') || 'dark'
   document.documentElement.setAttribute('data-theme', th)
