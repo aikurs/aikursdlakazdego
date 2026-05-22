@@ -3,15 +3,15 @@
 // Firebase config + utilities + kurs data
 // ============================================
 
-// 🔥 WKLEJ TUTAJ SWOJĄ KONFIGURACJĘ FIREBASE
+// CONFIGURATION
 const FIREBASE_CONFIG = {
-  apiKey: "WKLEJ_API_KEY",
-  authDomain: "WKLEJ_AUTH_DOMAIN",
-  projectId: "WKLEJ_PROJECT_ID",
-  storageBucket: "WKLEJ_STORAGE_BUCKET",
-  messagingSenderId: "WKLEJ_SENDER_ID",
-  appId: "WKLEJ_APP_ID"
-}
+  apiKey: "AIzaSyCDSP_ztZ88ftNZwrG_xA5X-9NWmG-rHGA",
+  authDomain: "aikursdlakazdego.firebaseapp.com",
+  projectId: "ai-kurs-w-biznesie",
+  storageBucket: "aikursdlakazdego.appspot.com",
+  messagingSenderId: "367258079633",
+  appId: "1:367258079633:web:651341fc22eefd0b64f9bf"
+};
 
 // ---- TOAST ----
 function showToast(msg, type = 'success') {
