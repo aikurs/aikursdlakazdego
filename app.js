@@ -3,14 +3,15 @@
 // Firebase config + utilities + kurs data
 // ============================================
 
-// CONFIGURATION
-const FIREBASE_CONFIG = {
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
   apiKey: "AIzaSyCDSP_ztZ88ftNZwrG_xA5X-9NWmG-rHGA",
-  authDomain: "aikursdlakazdego.firebaseapp.com",
+  authDomain: "ai-kurs-w-biznesie.firebaseapp.com",
   projectId: "ai-kurs-w-biznesie",
-  storageBucket: "aikursdlakazdego.appspot.com",
-  messagingSenderId: "367258079633",
-  appId: "1:367258079633:web:651341fc22eefd0b64f9bf"
+  storageBucket: "ai-kurs-w-biznesie.firebasestorage.app",
+  messagingSenderId: "978692477925",
+  appId: "1:978692477925:web:264bdd5a60d12e1415d50c",
+  measurementId: "G-PKT77Y8SMD"
 };
 
 // ---- TOAST ----
