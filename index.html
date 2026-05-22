@@ -3,125 +3,80 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Naffy.ai — Logowanie</title>
+<title>Logowanie — Naffy.ai</title>
 <link rel="stylesheet" href="style.css">
 <style>
-body { display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 1.5rem; }
-body::before { content:''; position:fixed; inset:0; background: radial-gradient(ellipse at 70% 20%, rgba(29,158,117,0.06) 0%, transparent 60%); pointer-events:none; }
-.login-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 2.5rem; max-width: 420px; width: 100%; position: relative; overflow: hidden; }
-.login-card::before { content:''; position:absolute; top:0; left:0; right:0; height:2px; background:linear-gradient(90deg, var(--green), var(--blue)); }
-.login-logo { margin-bottom: 2rem; text-align: center; }
-.login-logo h2 { font-size: .88rem; color: var(--muted); margin-top: .4rem; font-weight: 400; }
+body{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:1.5rem}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at 70% 20%,rgba(29,158,117,0.07) 0%,transparent 60%);pointer-events:none}
+.login-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:2.5rem;max-width:420px;width:100%;position:relative;overflow:hidden}
+.login-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--green),var(--blue))}
+.login-logo{text-align:center;margin-bottom:2rem}
+.tabs-login{display:flex;gap:.3rem;border-bottom:1px solid var(--border);margin-bottom:1.5rem}
+.tab-login{background:transparent;border:none;color:var(--muted);font-family:'DM Sans',sans-serif;font-size:.9rem;padding:.55rem 1rem;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .2s}
+.tab-login.active{color:var(--green);border-bottom-color:var(--green)}
+.login-form{display:none}.login-form.active{display:block}
 </style>
 </head>
 <body>
 <div id="toast"></div>
-
 <div class="login-card">
-  <div class="login-logo">
-    <div class="logo">Naffy<span>.ai</span></div>
-    <h2>Panel platformy kursowej</h2>
+  <div class="login-logo"><a href="#" class="logo" style="font-size:1.4rem">Naffy<span>.ai</span></a><p style="font-size:.84rem;color:var(--muted);margin-top:.4rem">Platforma kursu AI</p></div>
+  <div class="tabs-login">
+    <button class="tab-login active" onclick="switchLoginTab('login',this)">Zaloguj się</button>
+    <button class="tab-login" onclick="switchLoginTab('reset',this)">Reset hasła</button>
   </div>
-
-  <div class="alert alert-error" id="login-error" style="display:none;"></div>
-
-  <div class="input-group">
-    <label>Adres e-mail</label>
-    <input class="input" type="email" id="login-email" placeholder="twoj@email.com">
+  <div class="login-form active" id="form-login">
+    <div id="login-alert"></div>
+    <div class="input-group"><label>E-mail</label><input class="input" type="email" id="login-email" placeholder="twoj@email.com"></div>
+    <div class="input-group"><label>Hasło</label><input class="input" type="password" id="login-pass" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()"></div>
+    <button class="btn btn-green btn-block btn-lg" id="login-btn" onclick="doLogin()">Zaloguj się →</button>
   </div>
-  <div class="input-group">
-    <label>Hasło</label>
-    <input class="input" type="password" id="login-pass" placeholder="••••••••">
+  <div class="login-form" id="form-reset">
+    <div id="reset-alert"></div>
+    <p style="font-size:.87rem;color:var(--muted);margin-bottom:1rem">Wpisz swój e-mail a wyślemy Ci link do resetowania hasła.</p>
+    <div class="input-group"><label>E-mail</label><input class="input" type="email" id="reset-email" placeholder="twoj@email.com"></div>
+    <button class="btn btn-outline btn-block" onclick="doReset()">Wyślij link resetujący</button>
   </div>
-  <button class="btn btn-green btn-block btn-lg" id="login-btn" onclick="doLogin()">
-    Zaloguj się →
-  </button>
-
-  <div style="text-align:center;margin-top:1.25rem">
-    <a href="#" onclick="doResetPassword()" style="font-size:.82rem;color:var(--muted);text-decoration:none">Zapomniałem hasła</a>
-  </div>
-  <div style="text-align: center; margin-top: 1rem; font-size: .85rem;">
-  <span style="color: rgba(255,255,255,0.4)">Nie masz konta?</span> 
-  <a href="rejestracja.html" style="color: var(--green); text-decoration: none; font-weight: 500; margin-left: .3rem;">Zarejestruj się</a>
 </div>
-</div>
-
-<!-- Firebase (Wersja kompatybilna, idealna pod skrypty) -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 <script src="app.js"></script>
 <script>
-// PAMIĘTAJ: Zmienna FIREBASE_CONFIG musi być zdefiniowana w Twoim pliku app.js
 firebase.initializeApp(FIREBASE_CONFIG)
-
-// Funkcje pomocnicze do alertów (gdyby nie było ich w app.js)
-function showAlert(id, message, type = 'error') {
-  const el = document.getElementById(id);
-  el.innerText = message;
-  el.style.display = 'block';
-  el.className = `alert alert-${type}`;
+firebase.auth().onAuthStateChanged(user => { if (user) window.location.href = 'panel.html' })
+function switchLoginTab(name, btn) {
+  document.querySelectorAll('.tab-login').forEach(b => b.classList.remove('active'))
+  document.querySelectorAll('.login-form').forEach(f => f.classList.remove('active'))
+  btn.classList.add('active')
+  document.getElementById('form-' + name).classList.add('active')
 }
-function hideAlert(id) {
-  const el = document.getElementById(id);
-  if(el) el.style.display = 'none';
-}
-
-// Funkcja sprawdzająca czy zalogowany user to Ty (Admin)
-function isAdmin(user) {
-  // Najprostsza metoda na GitHub Pages: wpisz tu swój e-mail admina
-  const adminEmail = "psp45rostyslav@gmail.com"; 
-  return user && user.email === adminEmail;
-}
-
-// Jeśli już zalogowany — przekieruj
-firebase.auth().onAuthStateChanged(user => {
-  if(user){
-    if(isAdmin(user)){
-      window.location.href = 'admin.html'
-    } else {
-      window.location.href = 'panel.html'
-    }
-  }
-})
-
-async function doLogin(){
+async function doLogin() {
   const email = document.getElementById('login-email').value.trim()
   const pass = document.getElementById('login-pass').value
-  hideAlert('login-error')
-
-  if(!email || !pass){ showAlert('login-error', 'Wpisz e-mail i hasło.'); return }
-
+  const alertEl = document.getElementById('login-alert')
+  alertEl.innerHTML = ''
+  if (!email || !pass) { alertEl.innerHTML = '<div style="color:var(--red);font-size:.84rem;margin-bottom:.75rem">Wypełnij wszystkie pola.</div>'; return }
   const btn = document.getElementById('login-btn')
-  btn.disabled = true
-  btn.innerHTML = '<span class="spinner"></span> Logowanie...'
-
-  try{
+  btn.disabled = true; btn.innerHTML = '<span class="spinner"></span> Logowanie...'
+  try {
     await firebase.auth().signInWithEmailAndPassword(email, pass)
-    // onAuthStateChanged przekieruje automatycznie
-  } catch(e){
-    let msg = 'Błąd logowania. Sprawdź e-mail i hasło.'
-    if(e.code === 'auth/user-not-found' || e.code === 'auth/wrong-password') msg = 'Nieprawidłowy e-mail lub hasło.'
-    if(e.code === 'auth/too-many-requests') msg = 'Za dużo prób. Spróbuj ponownie za chwilę.'
-    showAlert('login-error', msg)
-    btn.disabled = false
-    btn.innerHTML = 'Zaloguj się →'
+  } catch (e) {
+    const msg = e.code === 'auth/wrong-password' || e.code === 'auth/user-not-found' ? 'Nieprawidłowy e-mail lub hasło.' : e.code === 'auth/too-many-requests' ? 'Zbyt wiele prób. Spróbuj za chwilę.' : e.message
+    alertEl.innerHTML = `<div style="color:var(--red);font-size:.84rem;margin-bottom:.75rem">${msg}</div>`
+    btn.disabled = false; btn.innerHTML = 'Zaloguj się →'
   }
 }
-
-async function doResetPassword(){
-  const email = document.getElementById('login-email').value.trim()
-  if(!email){ showAlert('login-error', 'Wpisz swój e-mail żeby zresetować hasło.', 'info'); return }
-  try{
+async function doReset() {
+  const email = document.getElementById('reset-email').value.trim()
+  const alertEl = document.getElementById('reset-alert')
+  if (!email) { alertEl.innerHTML = '<div style="color:var(--red);font-size:.84rem;margin-bottom:.75rem">Wpisz e-mail.</div>'; return }
+  try {
     await firebase.auth().sendPasswordResetEmail(email)
-    showAlert('login-error', '✓ Wysłano link do resetu hasła na ' + email, 'success')
-  } catch(e){
-    showAlert('login-error', 'Nie znaleziono konta z tym e-mailem.')
+    alertEl.innerHTML = '<div style="color:var(--green);font-size:.84rem;margin-bottom:.75rem">✓ Link wysłany! Sprawdź skrzynkę.</div>'
+  } catch (e) {
+    alertEl.innerHTML = `<div style="color:var(--red);font-size:.84rem;margin-bottom:.75rem">${e.message}</div>`
   }
 }
-
-document.addEventListener('keydown', e => {
-  if(e.key === 'Enter') doLogin()
-})
 </script>
 </body>
 </html>
