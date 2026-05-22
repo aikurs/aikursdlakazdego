@@ -90,6 +90,7 @@
           <div class="user-role" id="sb-email" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis"></div>
         </div>
       </div>
+      <a href="admin.html" id="admin-link" class="btn btn-sm btn-block" style="display:none;margin-bottom:.5rem;background:rgba(226,75,74,0.12);border:1px solid rgba(226,75,74,0.25);color:var(--red);text-decoration:none;text-align:center">🛡️ Panel Admina</a>
       <button class="btn btn-danger btn-sm btn-block" onclick="doLogout()">Wyloguj się</button>
     </div>
   </div>
@@ -186,8 +187,9 @@
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 <script src="app.js"></script>
 <script>
-const fbApp = firebase.initializeApp(FIREBASE_CONFIG)
-const db = firebase.firestore(fbApp)
+if (!firebase.apps.length) firebase.initializeApp(FIREBASE_CONFIG)
+const db = firebase.firestore()
+const ADMIN_EMAIL = 'psp45rostyslav@gmail.com'
 
 let currentUser = null
 let kursData = { modules: [] }
@@ -262,6 +264,9 @@ function initUI() {
   document.getElementById('sb-avatar').textContent = name[0].toUpperCase()
   document.getElementById('sb-name').textContent = name
   document.getElementById('sb-email').textContent = currentUser.email
+  if (currentUser.email === ADMIN_EMAIL) {
+    document.getElementById('admin-link').style.display = 'block'
+  }
   document.getElementById('dash-greeting').textContent = 'Cześć, ' + name.split(' ')[0] + '! 👋'
   document.getElementById('streak-num').textContent = streak
   calcTimeLeft()
