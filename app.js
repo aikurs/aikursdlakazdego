@@ -3,15 +3,17 @@
 // Firebase config + utilities + kurs data
 // ============================================
 
+<script>
 const FIREBASE_CONFIG = {
   apiKey: "AIzaSyCDSP_ztZ88ftNZwrG_xA5X-9NWmG-rHGA",
   authDomain: "ai-kurs-w-biznesie.firebaseapp.com",
   projectId: "ai-kurs-w-biznesie",
   storageBucket: "ai-kurs-w-biznesie.firebasestorage.app",
   messagingSenderId: "978692477925",
-  appId: "1:978692477925:web:264bdd5a60d12e1415d50c",
-  measurementId: "G-PKT77Y8SMD"
+  appId: "1:978692477925:web:264bdd5a60d12e1415d50c"
 }
+</script>
+<script src="app.js"></script>
 
 // ---- TOAST ----
 function showToast(msg, type = 'success') {
