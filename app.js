@@ -4,7 +4,7 @@
 // ============================================
 
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
+const FIREBASE_CONFIG = {
   apiKey: "AIzaSyCDSP_ztZ88ftNZwrG_xA5X-9NWmG-rHGA",
   authDomain: "ai-kurs-w-biznesie.firebaseapp.com",
   projectId: "ai-kurs-w-biznesie",
