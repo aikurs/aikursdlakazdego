@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Panel ucznia — AI Kurs dla każdego</title>
 <style>
-/* ===== RESET & BASE ===== */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
   --green:#1d9e75;--red:#e24b4a;--blue:#378add;--yellow:#f5c842;
@@ -13,10 +12,8 @@
   --border:rgba(255,255,255,0.07);--white:#fff;--muted:rgba(255,255,255,0.38);
   --radius:10px;--radius-lg:16px;
 }
-body{background:var(--bg);color:var(--white);font-family:'DM Sans',system-ui,sans-serif;min-height:100vh}
 @import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;600&display=swap');
-
-/* ===== LAYOUT ===== */
+body{background:var(--bg);color:var(--white);font-family:'DM Sans',system-ui,sans-serif;min-height:100vh}
 .app-layout{display:grid;grid-template-columns:280px 1fr;min-height:100vh}
 .sidebar{background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow-y:auto}
 .sidebar-header{display:flex;align-items:center;justify-content:space-between;padding:1.25rem 1rem;border-bottom:1px solid var(--border)}
@@ -26,12 +23,11 @@ body{background:var(--bg);color:var(--white);font-family:'DM Sans',system-ui,san
 .sidebar-footer{padding:.75rem 1rem;border-top:1px solid var(--border)}
 .main-content{overflow-y:auto;height:100vh}
 .main-inner{max-width:820px;margin:0 auto;padding:2rem 1.5rem}
-
-/* ===== COMPONENTS ===== */
 .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.25rem}
 .btn{display:inline-flex;align-items:center;gap:.5rem;padding:.6rem 1.2rem;border-radius:8px;border:1px solid var(--border);background:var(--surface2);color:var(--white);font-family:'DM Sans',sans-serif;font-size:.86rem;font-weight:500;cursor:pointer;transition:all .18s;text-decoration:none}
 .btn:hover{border-color:rgba(255,255,255,0.18)}
-.btn-green{background:var(--green);border-color:var(--green);color:#fff}.btn-green:hover{background:#17866200;border-color:var(--green);color:var(--green)}
+.btn-green{background:var(--green);border-color:var(--green);color:#fff}
+.btn-green:hover{background:transparent;border-color:var(--green);color:var(--green)}
 .btn-danger{background:rgba(226,75,74,0.12);border-color:rgba(226,75,74,0.25);color:var(--red)}
 .btn-outline{background:transparent;border-color:var(--border)}
 .btn-sm{padding:.4rem .85rem;font-size:.8rem}
@@ -41,7 +37,7 @@ body{background:var(--bg);color:var(--white);font-family:'DM Sans',system-ui,san
 .badge-gray{background:rgba(255,255,255,0.06);color:var(--muted)}
 .badge-green{background:rgba(29,158,117,0.15);color:var(--green)}
 .badge-yellow{background:rgba(245,200,66,0.15);color:var(--yellow)}
-.input{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);padding:.65rem .9rem;color:var(--white);font-family:'DM Sans',sans-serif;font-size:.88rem;outline:none;transition:border .18s}
+.input{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);padding:.65rem .9rem;color:var(--white);font-family:'DM Sans',sans-serif;font-size:.88rem;outline:none;transition:border .18s;resize:vertical}
 .input:focus{border-color:var(--green)}
 .progress-track{background:rgba(255,255,255,0.07);border-radius:50px;height:6px;overflow:hidden}
 .progress-fill{background:var(--green);height:100%;border-radius:50px;transition:width .5s}
@@ -54,11 +50,11 @@ body{background:var(--bg);color:var(--white);font-family:'DM Sans',system-ui,san
 .spinner-lg{width:40px;height:40px;border-width:3px}
 @keyframes spin{to{transform:rotate(360deg)}}
 .loading-overlay{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1rem;background:var(--bg);z-index:1000}
-.toast{position:fixed;bottom:1.5rem;right:1.5rem;padding:.75rem 1.2rem;border-radius:10px;font-size:.86rem;font-weight:500;z-index:2000;animation:slideUp .25s ease;pointer-events:none}
+.toast{position:fixed;bottom:1.5rem;right:1.5rem;padding:.75rem 1.2rem;border-radius:10px;font-size:.86rem;font-weight:500;z-index:2000;opacity:0;pointer-events:none;transition:opacity .25s;display:flex;align-items:center;gap:.5rem}
+.toast.show{opacity:1}
 .toast-success{background:#0f3d2c;border:1px solid var(--green);color:var(--green)}
 .toast-error{background:#3d0f0f;border:1px solid var(--red);color:var(--red)}
 .toast-info{background:var(--surface2);border:1px solid var(--border);color:var(--white)}
-@keyframes slideUp{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
 .pulse-dot{display:inline-block;width:7px;height:7px;background:var(--green);border-radius:50%;animation:pulse 1.5s infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
 .notes-saved{font-size:.78rem;color:var(--green);margin-left:.75rem;opacity:0;transition:opacity .3s}
@@ -97,10 +93,7 @@ body{background:var(--bg);color:var(--white);font-family:'DM Sans',system-ui,san
 .search-result-item:hover{background:var(--surface)}
 .search-result-mod{font-size:.7rem;color:var(--muted);margin-top:.15rem}
 .theme-toggle{background:transparent;border:1px solid var(--border);border-radius:8px;padding:.35rem .6rem;cursor:pointer;font-size:.9rem;transition:border-color .2s}
-.theme-toggle:hover{border-color:rgba(255,255,255,0.25)}
 body.light{--bg:#f3f4f6;--surface:#fff;--surface2:#f9fafb;--border:rgba(0,0,0,0.09);--white:#111;--muted:rgba(0,0,0,0.45)}
-
-/* ===== SIDEBAR MODULES ===== */
 .mod-group{margin-bottom:.4rem}
 .mod-toggle{display:flex;align-items:center;justify-content:space-between;padding:.48rem .75rem;cursor:pointer;border-radius:8px;transition:background .15s}
 .mod-toggle:hover{background:var(--surface2)}
@@ -117,8 +110,6 @@ body.light{--bg:#f3f4f6;--surface:#fff;--surface2:#f9fafb;--border:rgba(0,0,0,0.
 .lesson-btn.done .lesson-check{color:var(--green)}
 .lesson-btn .lesson-check{margin-left:auto;font-size:.72rem;color:rgba(255,255,255,0.12);flex-shrink:0}
 .lesson-btn .lesson-num{font-size:.66rem;color:rgba(255,255,255,0.22);flex-shrink:0;width:22px}
-
-/* ===== DASHBOARD ===== */
 .dash-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:1.5rem}
 .stat-card{text-align:center;padding:1.2rem}
 .stat-num{font-family:'Syne',sans-serif;font-weight:800;font-size:1.9rem;color:var(--green)}
@@ -134,8 +125,6 @@ body.light{--bg:#f3f4f6;--surface:#fff;--surface2:#f9fafb;--border:rgba(0,0,0,0.
 .activity-info{flex:1}
 .activity-title{font-weight:500}
 .activity-mod{font-size:.73rem;color:var(--muted);margin-top:.12rem}
-
-/* ===== LESSON ===== */
 .lesson-breadcrumb{font-size:.73rem;color:var(--muted);margin-bottom:.5rem}
 .lesson-title-h{font-size:1.45rem;margin-bottom:.4rem}
 .lesson-meta-row{display:flex;align-items:center;gap:.8rem;flex-wrap:wrap}
@@ -166,7 +155,7 @@ body.light{--bg:#f3f4f6;--surface:#fff;--surface2:#f9fafb;--border:rgba(0,0,0,0.
 .lesson-nav{display:flex;justify-content:space-between;align-items:center;margin-top:2rem;padding-top:1.5rem;border-top:1px solid var(--border);gap:1rem}
 .btn-complete-done{background:rgba(29,158,117,0.12)!important;color:var(--green)!important;border:1px solid rgba(29,158,117,0.25)!important}
 .quiz-wrap{display:grid;gap:1rem}
-.quiz-title{font-weight:600;font-size:.95rem;color:var(--white)}
+.quiz-title{font-weight:600;font-size:.95rem}
 .quiz-question{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1rem}
 .quiz-q-text{font-size:.88rem;margin-bottom:.75rem;line-height:1.5}
 .quiz-options{display:grid;gap:.45rem}
@@ -184,8 +173,6 @@ body.light{--bg:#f3f4f6;--surface:#fff;--surface2:#f9fafb;--border:rgba(0,0,0,0.
 .comment-date{font-size:.72rem;color:var(--muted);margin-left:auto}
 .comment-text{font-size:.85rem;line-height:1.6;color:rgba(255,255,255,0.75)}
 .comment-reply{margin-top:.75rem;padding-top:.75rem;border-top:1px solid var(--border)}
-
-/* ===== CERTYFIKAT ===== */
 .cert-center{max-width:680px;margin:0 auto;text-align:center}
 .cert-preview{position:relative;border-radius:20px;padding:3px;background:linear-gradient(135deg,#1d9e75 0%,#0f6e56 25%,#c9a84c 50%,#1d9e75 75%,#0f6e56 100%);margin:1.5rem 0;box-shadow:0 0 60px rgba(29,158,117,0.18)}
 .cert-inner{background:linear-gradient(160deg,#07111f 0%,#0b1a2e 40%,#071620 100%);border-radius:18px;padding:3rem 2.8rem 2.6rem;position:relative;overflow:hidden}
@@ -197,12 +184,12 @@ body.light{--bg:#f3f4f6;--surface:#fff;--surface2:#f9fafb;--border:rgba(0,0,0,0.
 .cert-corner.br{bottom:18px;right:18px;border-bottom:2px solid #c9a84c;border-right:2px solid #c9a84c;border-radius:0 0 4px 0}
 .cert-brand{display:flex;align-items:center;justify-content:center;gap:.6rem;margin-bottom:1.6rem}
 .cert-brand-icon{width:38px;height:38px;background:linear-gradient(135deg,#1d9e75,#0f6e56);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.2rem}
-.cert-brand-name{font-family:'Syne',sans-serif;font-size:1.15rem;font-weight:800;color:#fff;letter-spacing:-.01em}
+.cert-brand-name{font-family:'Syne',sans-serif;font-size:1.15rem;font-weight:800;color:#fff}
 .cert-brand-name span{color:rgba(255,255,255,0.35)}
 .cert-ornament{display:flex;align-items:center;gap:.8rem;margin-bottom:1.4rem}
 .cert-ornament-line{flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(201,168,76,0.4),transparent)}
 .cert-ornament-diamond{width:6px;height:6px;background:#c9a84c;transform:rotate(45deg);opacity:.7}
-.cert-intro{font-size:.8rem;color:rgba(255,255,255,0.4);margin-bottom:.6rem;letter-spacing:.02em}
+.cert-intro{font-size:.8rem;color:rgba(255,255,255,0.4);margin-bottom:.6rem}
 .cert-recipient{font-family:'Syne',sans-serif;font-size:2.1rem;font-weight:800;color:#fff;line-height:1.15;margin-bottom:1.2rem;text-shadow:0 0 30px rgba(29,158,117,0.3)}
 .cert-course-wrap{background:rgba(29,158,117,0.08);border:1px solid rgba(29,158,117,0.2);border-radius:12px;padding:.9rem 1.4rem;display:inline-block;margin-bottom:1.4rem}
 .cert-course-label{font-size:.67rem;text-transform:uppercase;letter-spacing:.14em;color:rgba(255,255,255,0.35);margin-bottom:.3rem}
@@ -212,83 +199,58 @@ body.light{--bg:#f3f4f6;--surface:#fff;--surface2:#f9fafb;--border:rgba(0,0,0,0.
 .cert-meta-num{font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;color:#1d9e75}
 .cert-meta-label{font-size:.63rem;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:.1em;margin-top:.15rem}
 .cert-seal{width:68px;height:68px;border-radius:50%;border:2px solid rgba(201,168,76,0.5);display:flex;align-items:center;justify-content:center;font-size:2rem;margin:0 auto 1rem;background:rgba(201,168,76,0.06)}
-.cert-date-text{font-size:.75rem;color:rgba(255,255,255,0.3);letter-spacing:.05em}
+.cert-date-text{font-size:.75rem;color:rgba(255,255,255,0.3)}
 .cert-sig-row{display:flex;justify-content:space-between;align-items:flex-end;margin-top:1.8rem;padding-top:1.2rem;border-top:1px solid rgba(255,255,255,0.07)}
 .cert-sig{text-align:center}
 .cert-sig-line{width:100px;height:1px;background:rgba(255,255,255,0.2);margin:0 auto .4rem}
-.cert-sig-name{font-size:.7rem;color:rgba(255,255,255,0.3);letter-spacing:.05em}
-.cert-id-text{font-size:.6rem;color:rgba(255,255,255,0.15);margin-top:.6rem;letter-spacing:.04em}
+.cert-sig-name{font-size:.7rem;color:rgba(255,255,255,0.3)}
+.cert-id-text{font-size:.6rem;color:rgba(255,255,255,0.15);margin-top:.6rem}
 .cert-progress-card{background:rgba(29,158,117,0.05);border:1px solid rgba(29,158,117,0.15);border-radius:16px;padding:1.5rem;margin-bottom:1rem}
-
-@media(max-width:900px){
-  .app-layout{grid-template-columns:1fr}
-  .sidebar{position:static;height:auto}
-  .main-content{height:auto}
-  .dash-stats{grid-template-columns:repeat(2,1fr)}
-  .cert-meta-row{gap:1.2rem}
-  .cert-recipient{font-size:1.5rem}
-  .cert-sig-row{flex-direction:column;gap:1rem;align-items:center}
-}
+@media(max-width:900px){.app-layout{grid-template-columns:1fr}.sidebar{position:static;height:auto}.main-content{height:auto}.dash-stats{grid-template-columns:repeat(2,1fr)}.cert-meta-row{gap:1.2rem}.cert-recipient{font-size:1.5rem}.cert-sig-row{flex-direction:column;gap:1rem;align-items:center}}
 </style>
 </head>
 <body>
-<div id="toast"></div>
+<div id="toast" class="toast"></div>
 <div id="achievement-popup" class="achievement-popup">
   <div class="ach-icon" id="ach-popup-icon">🏆</div>
-  <div>
-    <div class="ach-title" id="ach-popup-title"></div>
-    <div class="ach-desc" id="ach-popup-desc"></div>
-  </div>
+  <div><div class="ach-title" id="ach-popup-title"></div><div class="ach-desc" id="ach-popup-desc"></div></div>
 </div>
-
 <div class="loading-overlay" id="loading">
   <div class="spinner spinner-lg" style="color:var(--green)"></div>
   <p>Ładowanie panelu...</p>
 </div>
-
 <div class="app-layout" id="app" style="display:none">
-  <div class="sidebar" id="sidebar">
+  <div class="sidebar">
     <div class="sidebar-header">
       <a href="index.html" class="logo">AI Kurs<span> dla każdego</span></a>
       <button class="theme-toggle" onclick="toggleTheme()" id="theme-btn">🌙</button>
     </div>
     <div class="sidebar-body">
-      <div class="streak-box" id="streak-box">
-        <div class="streak-icon">🔥</div>
-        <div>
-          <div class="streak-num" id="streak-num">0</div>
-          <div class="streak-label">dni z rzędu</div>
-        </div>
+      <div class="streak-box">
+        <div>🔥</div>
+        <div><div class="streak-num" id="streak-num">0</div><div class="streak-label">dni z rzędu</div></div>
         <div style="margin-left:auto;text-align:right">
           <div style="font-size:.7rem;color:var(--muted)">Szacowany czas</div>
-          <div style="font-size:.8rem;color:var(--white);font-weight:500" id="time-left">— min</div>
+          <div style="font-size:.8rem;font-weight:500" id="time-left">— min</div>
         </div>
       </div>
-
       <div class="card" style="margin-bottom:1rem;padding:1rem">
-        <div class="progress-meta">
-          <span>Twój postęp</span>
-          <span id="sb-pct" style="color:var(--green);font-weight:600">0%</span>
-        </div>
+        <div class="progress-meta"><span>Twój postęp</span><span id="sb-pct" style="color:var(--green);font-weight:600">0%</span></div>
         <div class="progress-track"><div class="progress-fill" id="sb-bar" style="width:0%"></div></div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-top:.75rem;text-align:center">
           <div><div style="font-family:Syne,sans-serif;font-weight:800;font-size:1.2rem;color:var(--green)" id="sb-done">0</div><div style="font-size:.67rem;color:var(--muted)">ukończonych</div></div>
-          <div><div style="font-family:Syne,sans-serif;font-weight:800;font-size:1.2rem;color:var(--white)" id="sb-total">0</div><div style="font-size:.67rem;color:var(--muted)">lekcji total</div></div>
+          <div><div style="font-family:Syne,sans-serif;font-weight:800;font-size:1.2rem" id="sb-total">0</div><div style="font-size:.67rem;color:var(--muted)">lekcji total</div></div>
         </div>
       </div>
-
       <div class="search-wrap">
         <span class="search-icon">🔍</span>
         <input class="search-input" type="text" id="search-input" placeholder="Szukaj lekcji..." oninput="doSearch(this.value)">
         <div class="search-results" id="search-results"></div>
       </div>
-
       <div class="nav-section">
         <div class="nav-label">Menu</div>
         <button class="nav-item active" id="nav-dashboard" onclick="showView('dashboard')"><span class="nav-icon">🏠</span>Dashboard</button>
-        <button class="nav-item" id="nav-achievements" onclick="showView('achievements')"><span class="nav-icon">🏅</span>Osiągnięcia
-          <span id="ach-count-badge" style="margin-left:auto;background:var(--yellow);color:#000;font-size:.65rem;padding:.1rem .45rem;border-radius:50px;font-weight:700;display:none">0</span>
-        </button>
+        <button class="nav-item" id="nav-achievements" onclick="showView('achievements')"><span class="nav-icon">🏅</span>Osiągnięcia<span id="ach-count-badge" style="margin-left:auto;background:var(--yellow);color:#000;font-size:.65rem;padding:.1rem .45rem;border-radius:50px;font-weight:700;display:none">0</span></button>
         <button class="nav-item" id="nav-cert" onclick="showView('cert')"><span class="nav-icon">🏆</span>Certyfikat</button>
       </div>
       <hr class="divider">
@@ -309,16 +271,11 @@ body.light{--bg:#f3f4f6;--surface:#fff;--surface2:#f9fafb;--border:rgba(0,0,0,0.
       <button class="btn btn-danger btn-sm btn-block" onclick="doLogout()">Wyloguj się</button>
     </div>
   </div>
-
   <div class="main-content" id="main-content">
     <div class="main-inner">
-
       <!-- DASHBOARD -->
       <div id="view-dashboard">
-        <div class="page-header">
-          <h1 id="dash-greeting">Cześć!</h1>
-          <p>Kontynuuj naukę od miejsca w którym skończyłeś.</p>
-        </div>
+        <div class="page-header"><h1 id="dash-greeting">Cześć!</h1><p>Kontynuuj naukę od miejsca w którym skończyłeś.</p></div>
         <div class="dash-stats">
           <div class="card stat-card"><div class="stat-num" id="ds-done">0</div><div class="stat-label">Ukończonych lekcji</div></div>
           <div class="card stat-card"><div class="stat-num" id="ds-pct">0%</div><div class="stat-label">Postęp kursu</div></div>
@@ -335,7 +292,6 @@ body.light{--bg:#f3f4f6;--surface:#fff;--surface2:#f9fafb;--border:rgba(0,0,0,0.
         <h3 style="font-size:.88rem;color:var(--muted);margin-bottom:.75rem;font-weight:500">Ostatnie aktywności</h3>
         <div class="activity-list" id="activity-list"><p style="color:var(--muted);font-size:.84rem">Jeszcze nie ukończyłeś żadnej lekcji. Zacznij teraz!</p></div>
       </div>
-
       <!-- LEKCJA -->
       <div id="view-lesson" style="display:none">
         <div class="lesson-breadcrumb"><span id="l-breadcrumb"></span></div>
@@ -359,7 +315,7 @@ body.light{--bg:#f3f4f6;--surface:#fff;--surface2:#f9fafb;--border:rgba(0,0,0,0.
         <div class="tab-pane" id="tab-quiz"><div id="quiz-area"></div></div>
         <div class="tab-pane" id="tab-komentarze"><div id="comments-area"></div></div>
         <div class="tab-pane" id="tab-notatki">
-          <textarea class="input" id="notes-ta" placeholder="Twoje notatki do tej lekcji..." style="min-height:220px;resize:vertical"></textarea>
+          <textarea class="input" id="notes-ta" placeholder="Twoje notatki do tej lekcji..." style="min-height:220px"></textarea>
           <div style="display:flex;align-items:center;margin-top:.75rem">
             <button class="btn btn-green btn-sm" onclick="saveNotes()">Zapisz notatki</button>
             <span class="notes-saved" id="notes-saved">✓ Zapisano!</span>
@@ -371,13 +327,11 @@ body.light{--bg:#f3f4f6;--surface:#fff;--surface2:#f9fafb;--border:rgba(0,0,0,0.
           <button class="btn btn-outline btn-sm" onclick="goNext2()" id="btn-next">Następna →</button>
         </div>
       </div>
-
       <!-- OSIĄGNIĘCIA -->
       <div id="view-achievements" style="display:none">
         <div class="page-header"><h1>Osiągnięcia 🏅</h1><p>Odblokowuj odznaki ucząc się regularnie.</p></div>
         <div class="achievements-grid" id="achievements-grid"></div>
       </div>
-
       <!-- CERTYFIKAT -->
       <div id="view-cert" style="display:none">
         <div class="cert-center">
@@ -385,23 +339,18 @@ body.light{--bg:#f3f4f6;--surface:#fff;--surface2:#f9fafb;--border:rgba(0,0,0,0.
             <h1>Certyfikat ukończenia 🏆</h1>
             <p id="cert-header-sub">Ukończ wszystkie lekcje żeby odblokować certyfikat.</p>
           </div>
-
           <div class="cert-preview">
             <div class="cert-inner">
-              <div class="cert-corner tl"></div>
-              <div class="cert-corner tr"></div>
-              <div class="cert-corner bl"></div>
-              <div class="cert-corner br"></div>
+              <div class="cert-corner tl"></div><div class="cert-corner tr"></div>
+              <div class="cert-corner bl"></div><div class="cert-corner br"></div>
               <div class="cert-brand">
                 <div class="cert-brand-icon">🎓</div>
                 <div class="cert-brand-name">AI Kurs<span> dla każdego</span></div>
               </div>
               <div class="cert-ornament">
-                <div class="cert-ornament-line"></div>
-                <div class="cert-ornament-diamond"></div>
+                <div class="cert-ornament-line"></div><div class="cert-ornament-diamond"></div>
                 <div style="font-size:.58rem;text-transform:uppercase;letter-spacing:.22em;color:rgba(201,168,76,0.6);white-space:nowrap;font-weight:600">Certyfikat ukończenia</div>
-                <div class="cert-ornament-diamond"></div>
-                <div class="cert-ornament-line"></div>
+                <div class="cert-ornament-diamond"></div><div class="cert-ornament-line"></div>
               </div>
               <div class="cert-intro">Niniejszym zaświadcza się, że</div>
               <div class="cert-recipient" id="cert-name-preview">—</div>
@@ -411,40 +360,22 @@ body.light{--bg:#f3f4f6;--surface:#fff;--surface2:#f9fafb;--border:rgba(0,0,0,0.
                 <div class="cert-course-name">AI które oszczędza Twoje pieniądze</div>
               </div>
               <div class="cert-meta-row">
-                <div class="cert-meta-item">
-                  <div class="cert-meta-num" id="cert-meta-lessons">—</div>
-                  <div class="cert-meta-label">Lekcji</div>
-                </div>
-                <div class="cert-meta-item">
-                  <div class="cert-meta-num" id="cert-meta-modules">—</div>
-                  <div class="cert-meta-label">Modułów</div>
-                </div>
-                <div class="cert-meta-item">
-                  <div class="cert-meta-num">100%</div>
-                  <div class="cert-meta-label">Ukończono</div>
-                </div>
+                <div class="cert-meta-item"><div class="cert-meta-num" id="cert-meta-lessons">—</div><div class="cert-meta-label">Lekcji</div></div>
+                <div class="cert-meta-item"><div class="cert-meta-num" id="cert-meta-modules">—</div><div class="cert-meta-label">Modułów</div></div>
+                <div class="cert-meta-item"><div class="cert-meta-num">100%</div><div class="cert-meta-label">Ukończono</div></div>
               </div>
               <div class="cert-ornament" style="margin-bottom:1rem">
-                <div class="cert-ornament-line"></div>
-                <div class="cert-ornament-diamond"></div>
-                <div class="cert-ornament-line"></div>
+                <div class="cert-ornament-line"></div><div class="cert-ornament-diamond"></div><div class="cert-ornament-line"></div>
               </div>
               <div class="cert-seal">🏆</div>
               <div class="cert-date-text" id="cert-date-preview">—</div>
               <div class="cert-sig-row">
-                <div class="cert-sig">
-                  <div class="cert-sig-line"></div>
-                  <div class="cert-sig-name">AI Kurs dla każdego</div>
-                </div>
-                <div class="cert-sig">
-                  <div class="cert-sig-line"></div>
-                  <div class="cert-sig-name" id="cert-sig-student">Kursant</div>
-                </div>
+                <div class="cert-sig"><div class="cert-sig-line"></div><div class="cert-sig-name">AI Kurs dla każdego</div></div>
+                <div class="cert-sig"><div class="cert-sig-line"></div><div class="cert-sig-name" id="cert-sig-student">Kursant</div></div>
               </div>
               <div class="cert-id-text" id="cert-id-preview"></div>
             </div>
           </div>
-
           <div class="cert-progress-card">
             <div class="progress-meta" style="margin-bottom:.5rem">
               <span id="cert-done-text">0 / 0 lekcji</span>
@@ -453,65 +384,54 @@ body.light{--bg:#f3f4f6;--surface:#fff;--surface2:#f9fafb;--border:rgba(0,0,0,0.
             <div class="progress-track"><div class="progress-fill" id="cert-bar" style="width:0%"></div></div>
             <p id="cert-sub" style="color:var(--muted);font-size:.84rem;margin-top:.75rem;text-align:center"></p>
           </div>
-
           <button class="btn btn-green btn-lg" id="cert-btn" disabled onclick="downloadCert()" style="width:100%;font-size:1rem;padding:1rem">
             🏆 Pobierz certyfikat PDF
           </button>
           <p style="font-size:.73rem;color:var(--muted);margin-top:.75rem">Certyfikat zostanie wygenerowany jako plik PDF gotowy do druku i udostępnienia.</p>
         </div>
       </div>
-
     </div>
   </div>
 </div>
 
-<!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-<!-- jsPDF -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<!-- app.js (Twój plik z konfiguracją, ACHIEVEMENTS, KV, getKursData, getUserDisplayName, showToast) -->
 <script src="app.js"></script>
-
 <script>
-// ─────────────────────────────────────────────
-//  FALLBACKI — zabezpieczenie gdy app.js nie dostarczy zmiennych
-// ─────────────────────────────────────────────
-if (typeof ACHIEVEMENTS === 'undefined') window.ACHIEVEMENTS = []
-if (typeof KV === 'undefined') window.KV = {
-  get: function(k){ try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : null } catch(e){ return null } },
-  set: function(k,v){ try { localStorage.setItem(k, JSON.stringify(v)) } catch(e){} }
-}
-if (typeof getUserDisplayName === 'undefined') window.getUserDisplayName = function(u){
-  if (!u) return 'Kursant'
-  return u.displayName || (u.email ? u.email.split('@')[0] : 'Kursant')
-}
-if (typeof getKursData === 'undefined') window.getKursData = function(){ return { modules: [] } }
-if (typeof showToast === 'undefined') window.showToast = function(msg, type){
-  const t = document.createElement('div')
-  t.className = 'toast toast-' + (type || 'info')
-  t.textContent = msg
-  t.style.cssText = 'position:fixed;bottom:1.5rem;right:1.5rem;padding:.75rem 1.2rem;border-radius:10px;font-size:.86rem;font-weight:500;z-index:2000;background:#0d1d30;border:1px solid rgba(255,255,255,0.15);color:#fff'
-  if (type === 'success') { t.style.background = '#0f3d2c'; t.style.borderColor = '#1d9e75'; t.style.color = '#1d9e75' }
-  if (type === 'error') { t.style.background = '#3d0f0f'; t.style.borderColor = '#e24b4a'; t.style.color = '#e24b4a' }
-  document.body.appendChild(t)
-  setTimeout(() => t.remove(), 3500)
+// ================================================================
+//  PANEL.JS — logika panelu ucznia
+//  Wszystkie wywołania zewnętrznych zmiennych są zabezpieczone
+// ================================================================
+
+// --- Bezpieczne pobieranie tablic modułów ---
+function safeModules() {
+  try {
+    if (kursData && Array.isArray(kursData.modules) && kursData.modules.length > 0) {
+      return kursData.modules
+    }
+  } catch(e) {}
+  return []
 }
 
-// ─────────────────────────────────────────────
-//  INICJALIZACJA
-// ─────────────────────────────────────────────
+// --- Bezpieczne pobieranie lekcji modułu ---
+function safeLessons(mod) {
+  if (!mod) return []
+  if (Array.isArray(mod.lessons)) return mod.lessons
+  if (Array.isArray(mod.lekcje)) return mod.lekcje
+  return []
+}
+
+// ================================================================
+const ADMIN_EMAIL = 'psp45rostyslav@gmail.com'
 if (!firebase.apps.length) firebase.initializeApp(FIREBASE_CONFIG)
 const db = firebase.firestore()
-const ADMIN_EMAIL = 'psp45rostyslav@gmail.com'
 
 let currentUser = null
 let kursData = { modules: [] }
 let completed = new Set()
-let notesCache = {}
-let hwCache = {}
-let quizResults = {}
+let notesCache = {}, hwCache = {}, quizResults = {}
 let unlockedAch = new Set()
 let currentMod = 0, currentLes = 0, nextMod = 0, nextLes = 0
 let streak = 0, notesCount = 0
@@ -521,15 +441,18 @@ firebase.auth().onAuthStateChanged(async user => {
   currentUser = user
   try {
     const kursDoc = await db.collection('konfiguracja').doc('kurs').get()
-    kursData = (kursDoc.exists && kursDoc.data() && Array.isArray(kursDoc.data().modules))
-      ? kursDoc.data()
-      : getKursData()
+    if (kursDoc.exists) {
+      const d = kursDoc.data()
+      kursData = (d && Array.isArray(d.modules) && d.modules.length > 0) ? d : getKursData()
+    } else {
+      kursData = getKursData()
+    }
     const userDoc = await db.collection('uczniowie').doc(user.uid).get()
     if (userDoc.exists) {
       const d = userDoc.data()
-      completed = new Set(d.completed || [])
-      unlockedAch = new Set(d.achievements || [])
-      streak = d.streak || 0
+      completed = new Set(Array.isArray(d.completed) ? d.completed : [])
+      unlockedAch = new Set(Array.isArray(d.achievements) ? d.achievements : [])
+      streak = Number(d.streak) || 0
     }
     const notesSnap = await db.collection('uczniowie').doc(user.uid).collection('notatki').get()
     notesSnap.forEach(doc => { notesCache[doc.id] = doc.data().content || '' })
@@ -539,43 +462,32 @@ firebase.auth().onAuthStateChanged(async user => {
     const quizSnap = await db.collection('uczniowie').doc(user.uid).collection('quizy').get()
     quizSnap.forEach(doc => { quizResults[doc.id] = doc.data() })
     updateStreak()
-  } catch (e) {
-    console.warn('Firebase error, falling back to local storage:', e)
+  } catch(e) {
+    console.warn('Firebase error:', e)
     kursData = getKursData()
-    const s = KV.get('completed_' + user.uid)
-    completed = new Set(s || [])
+    completed = new Set(KV.get('completed_' + user.uid) || [])
     streak = KV.get('streak_' + user.uid) || 0
   }
-  // Upewnij się że kursData.modules zawsze jest tablicą
-  if (!kursData || !Array.isArray(kursData.modules)) {
-    kursData = { modules: [] }
-  }
+  if (!kursData || !Array.isArray(kursData.modules)) kursData = { modules: [] }
   document.getElementById('loading').style.display = 'none'
   document.getElementById('app').style.display = 'grid'
   initUI()
 })
 
-function doLogout() {
-  firebase.auth().signOut().then(() => { window.location.href = 'index.html' })
-}
+function doLogout() { firebase.auth().signOut().then(() => location.href = 'index.html') }
 
 async function updateStreak() {
-  const today = new Date().toDateString()
   const uid = currentUser ? currentUser.uid : ''
-  const lastDay = KV.get('last_study_' + uid)
+  const today = new Date().toDateString()
+  const last = KV.get('last_study_' + uid)
   const yesterday = new Date(Date.now() - 86400000).toDateString()
-  if (lastDay === today) return
-  if (lastDay === yesterday) streak++
-  else streak = 1
+  if (last === today) return
+  streak = (last === yesterday) ? streak + 1 : 1
   KV.set('last_study_' + uid, today)
   KV.set('streak_' + uid, streak)
-  try { await db.collection('uczniowie').doc(currentUser.uid).set({ streak }, { merge: true }) } catch (e) {}
+  try { await db.collection('uczniowie').doc(uid).set({ streak }, { merge: true }) } catch(e) {}
   const el = document.getElementById('streak-num')
   if (el) el.textContent = streak
-}
-
-function safeModules() {
-  return (kursData && Array.isArray(kursData.modules)) ? kursData.modules : []
 }
 
 function initUI() {
@@ -590,148 +502,107 @@ function initUI() {
   document.getElementById('cert-sig-student').textContent = name
   document.getElementById('cert-date-preview').textContent = new Date().toLocaleDateString('pl-PL', { year:'numeric', month:'long', day:'numeric' })
   const mods = safeModules()
-  const total = mods.reduce((a, m) => a + (Array.isArray(m.lessons) ? m.lessons.length : 0), 0)
+  const total = mods.reduce((a, m) => a + safeLessons(m).length, 0)
   document.getElementById('cert-meta-lessons').textContent = total || '—'
   document.getElementById('cert-meta-modules').textContent = mods.length || '—'
-  calcTimeLeft()
-  buildSidebar()
-  updateProgress()
-  updateDashboard()
-  renderAchievements()
-  checkAchievements()
-  loadTheme()
+  calcTimeLeft(); buildSidebar(); updateProgress(); updateDashboard(); renderAchievements(); checkAchievements(); loadTheme()
 }
 
 function calcTimeLeft() {
   let mins = 0
-  safeModules().forEach(mod => {
-    (Array.isArray(mod.lessons) ? mod.lessons : []).forEach(les => {
-      if (!completed.has(les.id)) {
-        const m = parseInt((les.time || '0').match(/\d+/)?.[0] || 0)
-        mins += m
-      }
-    })
-  })
-  const h = Math.floor(mins / 60), m = mins % 60
+  safeModules().forEach(mod => safeLessons(mod).forEach(les => {
+    if (!completed.has(les.id)) mins += parseInt((les.time || '0').match(/\d+/)?.[0] || 0)
+  }))
   const el = document.getElementById('time-left')
-  if (el) el.textContent = mins > 0 ? (h > 0 ? h + 'h ' : '') + m + ' min' : 'Kurs ukończony!'
+  if (el) el.textContent = mins > 0 ? (Math.floor(mins/60) > 0 ? Math.floor(mins/60)+'h ' : '') + (mins%60) + ' min' : 'Kurs ukończony!'
 }
 
 function buildSidebar() {
   const mods = safeModules()
-  const total = mods.reduce((a, m) => a + (Array.isArray(m.lessons) ? m.lessons.length : 0), 0)
+  const total = mods.reduce((a,m) => a + safeLessons(m).length, 0)
   document.getElementById('sb-total').textContent = total
   const wrap = document.getElementById('sb-modules')
   wrap.innerHTML = ''
+  const lessonView = document.getElementById('view-lesson')
+  const isLessonOpen = lessonView && lessonView.style.display !== 'none'
   mods.forEach((mod, mi) => {
-    const lessons = Array.isArray(mod.lessons) ? mod.lessons : []
+    const lessons = safeLessons(mod)
     const doneLes = lessons.filter(l => completed.has(l.id)).length
-    const isOpen = mi === currentMod && document.getElementById('view-lesson').style.display !== 'none'
-    const group = document.createElement('div')
-    group.className = 'mod-group' + (isOpen ? ' open' : '')
-    group.id = 'mod-group-' + mi
-    group.innerHTML = `
-      <div class="mod-toggle" onclick="toggleMod(${mi})">
+    const isOpen = mi === currentMod && isLessonOpen
+    const g = document.createElement('div')
+    g.className = 'mod-group' + (isOpen ? ' open' : '')
+    g.id = 'mod-group-' + mi
+    g.innerHTML = `<div class="mod-toggle" onclick="toggleMod(${mi})">
         <div class="mod-toggle-left"><span class="mod-toggle-icon">▶</span><span class="mod-title-text">M${mod.id}: ${mod.title}</span></div>
-        <span class="mod-prog-text">${doneLes}/${lessons.length}</span>
-      </div>
+        <span class="mod-prog-text">${doneLes}/${lessons.length}</span></div>
       <div class="mod-lessons" id="mod-lessons-${mi}">
-        ${lessons.map((les, li) => `
-          <button class="lesson-btn ${completed.has(les.id) ? 'done' : ''} ${(mi === currentMod && li === currentLes && document.getElementById('view-lesson').style.display !== 'none') ? 'active' : ''}"
-            onclick="openLesson(${mi},${li})">
-            <span class="lesson-num">${mod.id}.${li + 1}</span>
-            <span style="flex:1;line-height:1.3">${les.title}</span>
-            <span class="lesson-check">${completed.has(les.id) ? '✓' : ''}</span>
-          </button>`).join('')}
+        ${lessons.map((les,li) => `<button class="lesson-btn ${completed.has(les.id)?'done':''} ${(mi===currentMod&&li===currentLes&&isLessonOpen)?'active':''}" onclick="openLesson(${mi},${li})">
+          <span class="lesson-num">${mod.id}.${li+1}</span>
+          <span style="flex:1;line-height:1.3">${les.title}</span>
+          <span class="lesson-check">${completed.has(les.id)?'✓':''}</span></button>`).join('')}
       </div>`
-    wrap.appendChild(group)
+    wrap.appendChild(g)
   })
 }
 
-function toggleMod(mi) {
-  document.getElementById('mod-group-' + mi).classList.toggle('open')
-}
+function toggleMod(mi) { document.getElementById('mod-group-'+mi).classList.toggle('open') }
 
 function doSearch(q) {
   const res = document.getElementById('search-results')
   if (!q.trim()) { res.classList.remove('show'); return }
   const hits = []
-  safeModules().forEach((mod, mi) => {
-    (Array.isArray(mod.lessons) ? mod.lessons : []).forEach((les, li) => {
-      if (les.title.toLowerCase().includes(q.toLowerCase())) hits.push({ mod, mi, les, li })
-    })
-  })
-  if (!hits.length) {
-    res.innerHTML = '<div class="search-result-item" style="color:var(--muted)">Brak wyników</div>'
-    res.classList.add('show')
-    return
-  }
-  res.innerHTML = hits.slice(0, 6).map(h => `
-    <div class="search-result-item" onclick="openLesson(${h.mi},${h.li});document.getElementById('search-input').value='';document.getElementById('search-results').classList.remove('show')">
-      ${h.les.title}
-      <div class="search-result-mod">Moduł ${h.mod.id}: ${h.mod.title}</div>
-    </div>`).join('')
+  safeModules().forEach((mod,mi) => safeLessons(mod).forEach((les,li) => {
+    if (les.title.toLowerCase().includes(q.toLowerCase())) hits.push({mod,mi,les,li})
+  }))
+  if (!hits.length) { res.innerHTML='<div class="search-result-item" style="color:var(--muted)">Brak wyników</div>'; res.classList.add('show'); return }
+  res.innerHTML = hits.slice(0,6).map(h => `<div class="search-result-item" onclick="openLesson(${h.mi},${h.li});document.getElementById('search-input').value='';document.getElementById('search-results').classList.remove('show')">${h.les.title}<div class="search-result-mod">Moduł ${h.mod.id}: ${h.mod.title}</div></div>`).join('')
   res.classList.add('show')
 }
-
-document.addEventListener('click', e => {
-  if (!e.target.closest('.search-wrap')) document.getElementById('search-results').classList.remove('show')
-})
+document.addEventListener('click', e => { if (!e.target.closest('.search-wrap')) document.getElementById('search-results').classList.remove('show') })
 
 function updateProgress() {
   const mods = safeModules()
-  const total = mods.reduce((a, m) => a + (Array.isArray(m.lessons) ? m.lessons.length : 0), 0)
+  const total = mods.reduce((a,m) => a + safeLessons(m).length, 0)
   const done = completed.size
-  const pct = total > 0 ? Math.round(done / total * 100) : 0
-  document.getElementById('sb-pct').textContent = pct + '%'
-  document.getElementById('sb-bar').style.width = pct + '%'
+  const pct = total > 0 ? Math.round(done/total*100) : 0
+  document.getElementById('sb-pct').textContent = pct+'%'
+  document.getElementById('sb-bar').style.width = pct+'%'
   document.getElementById('sb-done').textContent = done
   document.getElementById('sb-total').textContent = total
-  document.getElementById('cert-bar').style.width = pct + '%'
-  document.getElementById('cert-done-text').textContent = done + ' / ' + total + ' lekcji'
-  document.getElementById('cert-pct-text').textContent = pct + '%'
-  document.getElementById('cert-sub').textContent = pct < 100
-    ? `Ukończ jeszcze ${total - done} lekcji żeby odblokować certyfikat.`
-    : 'Gratulacje! Możesz pobrać swój certyfikat.'
+  document.getElementById('cert-bar').style.width = pct+'%'
+  document.getElementById('cert-done-text').textContent = done+' / '+total+' lekcji'
+  document.getElementById('cert-pct-text').textContent = pct+'%'
+  document.getElementById('cert-sub').textContent = pct < 100 ? `Ukończ jeszcze ${total-done} lekcji żeby odblokować certyfikat.` : 'Gratulacje! Możesz pobrać swój certyfikat.'
   const certBtn = document.getElementById('cert-btn')
-  if (done === total && total > 0) {
-    certBtn.disabled = false
-    document.getElementById('cert-header-sub').textContent = 'Kurs ukończony! Twój certyfikat czeka.'
-  } else {
-    certBtn.disabled = true
-  }
+  if (done === total && total > 0) { certBtn.disabled = false; document.getElementById('cert-header-sub').textContent = 'Kurs ukończony! Twój certyfikat czeka.' }
+  else certBtn.disabled = true
   calcTimeLeft()
 }
 
 function updateDashboard() {
   const mods = safeModules()
-  const total = mods.reduce((a, m) => a + (Array.isArray(m.lessons) ? m.lessons.length : 0), 0)
+  const total = mods.reduce((a,m) => a + safeLessons(m).length, 0)
   const done = completed.size
-  const pct = total > 0 ? Math.round(done / total * 100) : 0
-  const modsDone = mods.filter(m => Array.isArray(m.lessons) && m.lessons.every(l => completed.has(l.id))).length
+  const pct = total > 0 ? Math.round(done/total*100) : 0
+  const modsDone = mods.filter(m => safeLessons(m).length > 0 && safeLessons(m).every(l => completed.has(l.id))).length
   document.getElementById('ds-done').textContent = done
-  document.getElementById('ds-pct').textContent = pct + '%'
-  document.getElementById('ds-mod').textContent = modsDone + '/' + mods.length
+  document.getElementById('ds-pct').textContent = pct+'%'
+  document.getElementById('ds-mod').textContent = modsDone+'/'+mods.length
   let foundNext = false
-  mods.forEach((mod, mi) => {
-    (Array.isArray(mod.lessons) ? mod.lessons : []).forEach((les, li) => {
-      if (!foundNext && !completed.has(les.id)) {
-        foundNext = true; nextMod = mi; nextLes = li
-        document.getElementById('next-title').textContent = les.title
-        document.getElementById('next-meta').textContent = `Moduł ${mod.id}: ${mod.title} · ${les.time}`
-      }
-    })
-  })
-  if (!foundNext) {
-    document.getElementById('next-title').textContent = 'Ukończyłeś cały kurs! 🎉'
-    document.getElementById('next-meta').textContent = 'Czas odebrać certyfikat'
-  }
+  mods.forEach((mod,mi) => safeLessons(mod).forEach((les,li) => {
+    if (!foundNext && !completed.has(les.id)) {
+      foundNext=true; nextMod=mi; nextLes=li
+      document.getElementById('next-title').textContent = les.title
+      document.getElementById('next-meta').textContent = `Moduł ${mod.id}: ${mod.title} · ${les.time||''}`
+    }
+  }))
+  if (!foundNext) { document.getElementById('next-title').textContent='Ukończyłeś cały kurs! 🎉'; document.getElementById('next-meta').textContent='Czas odebrać certyfikat' }
   const al = document.getElementById('activity-list')
   const recent = [...completed].slice(-4).reverse()
-  if (!recent.length) { al.innerHTML = '<p style="color:var(--muted);font-size:.84rem">Jeszcze nie ukończyłeś żadnej lekcji. Zacznij teraz!</p>'; return }
+  if (!recent.length) { al.innerHTML='<p style="color:var(--muted);font-size:.84rem">Jeszcze nie ukończyłeś żadnej lekcji. Zacznij teraz!</p>'; return }
   al.innerHTML = recent.map(id => {
     let found = null
-    mods.forEach(m => (Array.isArray(m.lessons) ? m.lessons : []).forEach(l => { if (l.id === id) found = { l, m } }))
+    mods.forEach(m => safeLessons(m).forEach(l => { if (l.id===id) found={l,m} }))
     if (!found) return ''
     return `<div class="activity-item"><span class="activity-check">✓</span><div class="activity-info"><div class="activity-title">${found.l.title}</div><div class="activity-mod">Moduł ${found.m.id}: ${found.m.title}</div></div></div>`
   }).join('')
@@ -739,10 +610,10 @@ function updateDashboard() {
 
 function showView(name) {
   ['dashboard','lesson','achievements','cert'].forEach(v => {
-    document.getElementById('view-' + v).style.display = v === name ? 'block' : 'none'
+    document.getElementById('view-'+v).style.display = v===name ? 'block' : 'none'
   })
   document.querySelectorAll('[id^="nav-"]').forEach(b => b.classList.remove('active'))
-  const n = document.getElementById('nav-' + name)
+  const n = document.getElementById('nav-'+name)
   if (n) n.classList.add('active')
 }
 
@@ -755,78 +626,61 @@ function openLesson(mi, li) {
   const mods = safeModules()
   if (mi < 0 || mi >= mods.length) return
   const mod = mods[mi]
-  const lessons = Array.isArray(mod.lessons) ? mod.lessons : []
+  const lessons = safeLessons(mod)
   if (li < 0 || li >= lessons.length) return
   const les = lessons[li]
-  currentMod = mi; currentLes = li
-  document.getElementById('l-breadcrumb').textContent = `Moduł ${mod.id}: ${mod.title} › Lekcja ${mod.id}.${li + 1}`
+  currentMod=mi; currentLes=li
+  document.getElementById('l-breadcrumb').textContent = `Moduł ${mod.id}: ${mod.title} › Lekcja ${mod.id}.${li+1}`
   document.getElementById('l-title').textContent = les.title
-  document.getElementById('l-time').textContent = '⏱ ' + (les.time || '')
-  document.getElementById('l-desc').innerHTML = les.desc || ''
+  document.getElementById('l-time').textContent = '⏱ '+(les.time||'')
+  document.getElementById('l-desc').innerHTML = les.desc||''
   const done = completed.has(les.id)
   const sEl = document.getElementById('l-status')
   sEl.textContent = done ? '✓ Ukończona' : 'W toku'
   sEl.className = done ? 'badge badge-green' : 'badge badge-gray'
   const va = document.getElementById('video-area')
-  if (les.ytId) {
-    va.innerHTML = `<div class="video-container"><div class="video-placeholder" onclick="loadVideo('${les.ytId}',this.parentElement)"><div class="play-circle">▶</div><p>${les.title}</p></div></div>`
-  } else {
-    va.innerHTML = `<div class="no-video"><div style="font-size:2rem">🎬</div><p>Wideo będzie dostępne wkrótce.</p></div>`
-  }
+  if (les.ytId) va.innerHTML = `<div class="video-container"><div class="video-placeholder" onclick="loadVideo('${les.ytId}',this.parentElement)"><div class="play-circle">▶</div><p>${les.title}</p></div></div>`
+  else va.innerHTML = `<div class="no-video"><div style="font-size:2rem">🎬</div><p>Wideo będzie dostępne wkrótce.</p></div>`
   const pdfsEl = document.getElementById('l-pdfs')
-  if (les.pdfs && les.pdfs.length) {
-    pdfsEl.innerHTML = les.pdfs.map(p => `<a href="${p.url}" class="pdf-item" target="_blank"><span class="pdf-icon">📄</span><div><div class="pdf-name">${p.name}</div><div class="pdf-meta">${p.size || ''}</div></div><span class="pdf-dl">↓ Pobierz</span></a>`).join('')
-  } else { pdfsEl.innerHTML = '<div class="no-pdfs">Brak materiałów PDF do tej lekcji.</div>' }
+  if (les.pdfs && les.pdfs.length) pdfsEl.innerHTML = les.pdfs.map(p => `<a href="${p.url}" class="pdf-item" target="_blank"><span class="pdf-icon">📄</span><div><div class="pdf-name">${p.name}</div><div class="pdf-meta">${p.size||''}</div></div><span class="pdf-dl">↓ Pobierz</span></a>`).join('')
+  else pdfsEl.innerHTML = '<div class="no-pdfs">Brak materiałów PDF do tej lekcji.</div>'
   const hwa = document.getElementById('hw-area')
   if (les.homework) {
-    const savedHw = hwCache[les.id] || ''
     hwa.innerHTML = `<div class="homework-box"><div class="homework-label">📋 Zadanie domowe</div><div class="homework-text">${les.homework}</div></div>
-      <div style="margin-top:1rem">
-        <textarea class="input" id="hw-ta" placeholder="Twoja odpowiedź..." style="min-height:150px;resize:vertical">${savedHw}</textarea>
-        <div style="margin-top:.75rem"><button class="btn btn-green btn-sm" onclick="saveHomework('${les.id}')">Zapisz odpowiedź</button><span class="notes-saved" id="hw-saved">✓ Zapisano!</span></div>
-      </div>`
-  } else { hwa.innerHTML = '<div class="no-pdfs">Brak zadania domowego do tej lekcji.</div>' }
+      <div style="margin-top:1rem"><textarea class="input" id="hw-ta" placeholder="Twoja odpowiedź..." style="min-height:150px">${hwCache[les.id]||''}</textarea>
+      <div style="margin-top:.75rem"><button class="btn btn-green btn-sm" onclick="saveHomework('${les.id}')">Zapisz odpowiedź</button><span class="notes-saved" id="hw-saved">✓ Zapisano!</span></div></div>`
+  } else hwa.innerHTML = '<div class="no-pdfs">Brak zadania domowego do tej lekcji.</div>'
   renderQuiz(les)
   renderComments(les.id)
-  document.getElementById('notes-ta').value = notesCache[les.id] || ''
+  document.getElementById('notes-ta').value = notesCache[les.id]||''
   document.getElementById('notes-saved').classList.remove('show')
   const cb = document.getElementById('btn-complete')
-  if (done) { cb.textContent = '✓ Ukończona'; cb.className = 'btn btn-sm btn-complete-done' }
-  else { cb.textContent = 'Oznacz jako ukończoną ✓'; cb.className = 'btn btn-green btn-sm' }
-  document.getElementById('btn-prev').disabled = (mi === 0 && li === 0)
-  document.getElementById('btn-next').disabled = (mi === mods.length - 1 && li === lessons.length - 1)
-  document.querySelectorAll('.tab-btn').forEach((b, i) => b.classList.toggle('active', i === 0))
-  document.querySelectorAll('.tab-pane').forEach((p, i) => p.classList.toggle('active', i === 0))
-  buildSidebar()
-  showView('lesson')
+  if (done) { cb.textContent='✓ Ukończona'; cb.className='btn btn-sm btn-complete-done' }
+  else { cb.textContent='Oznacz jako ukończoną ✓'; cb.className='btn btn-green btn-sm' }
+  document.getElementById('btn-prev').disabled = (mi===0 && li===0)
+  document.getElementById('btn-next').disabled = (mi===mods.length-1 && li===lessons.length-1)
+  document.querySelectorAll('.tab-btn').forEach((b,i) => b.classList.toggle('active', i===0))
+  document.querySelectorAll('.tab-pane').forEach((p,i) => p.classList.toggle('active', i===0))
+  buildSidebar(); showView('lesson')
   document.getElementById('main-content').scrollTop = 0
 }
 
-function loadVideo(ytId, container) {
-  container.innerHTML = `<iframe src="https://www.youtube.com/embed/${ytId}?autoplay=1" allowfullscreen></iframe>`
-}
-
+function loadVideo(ytId, container) { container.innerHTML = `<iframe src="https://www.youtube.com/embed/${ytId}?autoplay=1" allowfullscreen></iframe>` }
 function switchTab(name, btn) {
   document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'))
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'))
-  document.getElementById('tab-' + name).classList.add('active')
-  btn.classList.add('active')
+  document.getElementById('tab-'+name).classList.add('active'); btn.classList.add('active')
 }
 
 function renderQuiz(les) {
   const area = document.getElementById('quiz-area')
-  if (!les.quiz || !les.quiz.length) { area.innerHTML = '<div class="no-pdfs">Brak quizu do tej lekcji.</div>'; return }
+  if (!les.quiz || !les.quiz.length) { area.innerHTML='<div class="no-pdfs">Brak quizu do tej lekcji.</div>'; return }
   const prev = quizResults[les.id]
-  if (prev) {
-    area.innerHTML = `<div class="quiz-wrap"><div class="quiz-title">❓ Quiz — wynik</div><div class="quiz-result"><div class="quiz-score ${prev.score >= 70 ? 'pass' : 'fail'}">${prev.score}%</div><p style="color:var(--muted);margin-top:.5rem">${prev.score >= 70 ? '✓ Quiz zaliczony!' : 'Spróbuj ponownie.'}</p><button class="btn btn-outline btn-sm" style="margin-top:1rem" onclick="resetQuiz('${les.id}')">Powtórz quiz</button></div></div>`
-    return
-  }
+  if (prev) { area.innerHTML=`<div class="quiz-wrap"><div class="quiz-title">❓ Quiz — wynik</div><div class="quiz-result"><div class="quiz-score ${prev.score>=70?'pass':'fail'}">${prev.score}%</div><p style="color:var(--muted);margin-top:.5rem">${prev.score>=70?'✓ Quiz zaliczony!':'Spróbuj ponownie.'}</p><button class="btn btn-outline btn-sm" style="margin-top:1rem" onclick="resetQuiz('${les.id}')">Powtórz quiz</button></div></div>`; return }
   let html = '<div class="quiz-wrap"><div class="quiz-title">❓ Quiz — sprawdź wiedzę</div>'
-  les.quiz.forEach((q, qi) => {
-    html += `<div class="quiz-question"><div class="quiz-q-text">${qi + 1}. ${q.question}</div><div class="quiz-options">`
-    q.options.forEach((opt, oi) => {
-      html += `<label class="quiz-option" id="qopt-${qi}-${oi}"><input type="radio" name="q${qi}" value="${oi}" style="flex-shrink:0"> ${opt}</label>`
-    })
+  les.quiz.forEach((q,qi) => {
+    html += `<div class="quiz-question"><div class="quiz-q-text">${qi+1}. ${q.question}</div><div class="quiz-options">`
+    q.options.forEach((opt,oi) => { html += `<label class="quiz-option" id="qopt-${qi}-${oi}"><input type="radio" name="q${qi}" value="${oi}" style="flex-shrink:0"> ${opt}</label>` })
     html += '</div></div>'
   })
   html += `<button class="btn btn-green" onclick="submitQuiz('${les.id}')">Sprawdź odpowiedzi →</button></div>`
@@ -836,187 +690,159 @@ function renderQuiz(les) {
 async function submitQuiz(lesId) {
   const mods = safeModules()
   if (!mods[currentMod]) return
-  const lessons = Array.isArray(mods[currentMod].lessons) ? mods[currentMod].lessons : []
-  const les = lessons[currentLes]
+  const les = safeLessons(mods[currentMod])[currentLes]
   if (!les || !les.quiz) return
   let correct = 0
-  les.quiz.forEach((q, qi) => {
+  les.quiz.forEach((q,qi) => {
     const sel = document.querySelector(`input[name="q${qi}"]:checked`)
-    const opts = document.querySelectorAll(`[id^="qopt-${qi}-"]`)
-    opts.forEach(o => { o.style.pointerEvents = 'none' })
+    document.querySelectorAll(`[id^="qopt-${qi}-"]`).forEach(o => o.style.pointerEvents='none')
     if (sel) {
       const val = parseInt(sel.value)
-      document.getElementById(`qopt-${qi}-${val}`).classList.add(val === q.correct ? 'correct' : 'wrong')
-      if (val === q.correct) correct++
+      document.getElementById(`qopt-${qi}-${val}`).classList.add(val===q.correct?'correct':'wrong')
+      if (val===q.correct) correct++
       else document.getElementById(`qopt-${qi}-${q.correct}`).classList.add('correct')
-    } else { document.getElementById(`qopt-${qi}-${q.correct}`).classList.add('correct') }
+    } else document.getElementById(`qopt-${qi}-${q.correct}`).classList.add('correct')
   })
-  const score = Math.round(correct / les.quiz.length * 100)
-  quizResults[lesId] = { score, correct, total: les.quiz.length, date: new Date().toISOString() }
-  try { await db.collection('uczniowie').doc(currentUser.uid).collection('quizy').doc(lesId).set(quizResults[lesId]) } catch (e) {}
+  const score = Math.round(correct/les.quiz.length*100)
+  quizResults[lesId] = { score, correct, total:les.quiz.length, date:new Date().toISOString() }
+  try { await db.collection('uczniowie').doc(currentUser.uid).collection('quizy').doc(lesId).set(quizResults[lesId]) } catch(e) {}
   setTimeout(() => {
-    document.getElementById('quiz-area').innerHTML += `<div style="margin-top:1rem;padding:1rem;background:rgba(29,158,117,0.08);border:1px solid rgba(29,158,117,0.2);border-radius:var(--radius);text-align:center"><div style="font-family:Syne,sans-serif;font-weight:800;font-size:2rem;color:${score >= 70 ? 'var(--green)' : 'var(--red)'}">${score}%</div><div style="font-size:.85rem;color:var(--muted);margin-top:.3rem">${correct}/${les.quiz.length} poprawnych · ${score >= 70 ? '✓ Zaliczono!' : 'Spróbuj ponownie'}</div></div>`
-    if (score >= 70) showToast('Quiz zaliczony! ' + score + '%', 'success')
-    else showToast('Quiz niezaliczony. ' + score + '% — próbuj dalej!', 'error')
+    document.getElementById('quiz-area').innerHTML += `<div style="margin-top:1rem;padding:1rem;background:rgba(29,158,117,0.08);border:1px solid rgba(29,158,117,0.2);border-radius:var(--radius);text-align:center"><div style="font-family:Syne,sans-serif;font-weight:800;font-size:2rem;color:${score>=70?'var(--green)':'var(--red)'}">${score}%</div><div style="font-size:.85rem;color:var(--muted);margin-top:.3rem">${correct}/${les.quiz.length} poprawnych · ${score>=70?'✓ Zaliczono!':'Spróbuj ponownie'}</div></div>`
+    showToast(score>=70 ? 'Quiz zaliczony! '+score+'%' : 'Spróbuj ponownie. '+score+'%', score>=70?'success':'error')
   }, 600)
 }
 
 function resetQuiz(lesId) {
   delete quizResults[lesId]
-  const mods = safeModules()
-  if (mods[currentMod]) {
-    const lessons = Array.isArray(mods[currentMod].lessons) ? mods[currentMod].lessons : []
-    if (lessons[currentLes]) renderQuiz(lessons[currentLes])
-  }
+  const les = safeLessons(safeModules()[currentMod] || {})[currentLes]
+  if (les) renderQuiz(les)
 }
 
 async function renderComments(lesId) {
   const area = document.getElementById('comments-area')
   area.innerHTML = `<div style="margin-bottom:1rem">
-    <textarea class="input" id="new-comment" placeholder="Zadaj pytanie do tej lekcji..." style="min-height:90px;resize:vertical"></textarea>
-    <button class="btn btn-green btn-sm" style="margin-top:.5rem" onclick="addComment('${lesId}')">Wyślij pytanie →</button>
-  </div>
+    <textarea class="input" id="new-comment" placeholder="Zadaj pytanie do tej lekcji..." style="min-height:90px"></textarea>
+    <button class="btn btn-green btn-sm" style="margin-top:.5rem" onclick="addComment('${lesId}')">Wyślij pytanie →</button></div>
   <div id="comments-list"><div style="color:var(--muted);font-size:.85rem;padding:1rem 0">Ładowanie pytań...</div></div>`
   try {
     const snap = await db.collection('komentarze').doc(lesId).collection('wpisy').orderBy('createdAt','desc').limit(20).get()
     const list = document.getElementById('comments-list')
     if (!list) return
-    if (snap.empty) { list.innerHTML = '<div style="color:var(--muted);font-size:.84rem;padding:.5rem 0">Brak pytań do tej lekcji. Bądź pierwszy!</div>'; return }
+    if (snap.empty) { list.innerHTML='<div style="color:var(--muted);font-size:.84rem;padding:.5rem 0">Brak pytań. Bądź pierwszy!</div>'; return }
     list.innerHTML = snap.docs.map(doc => {
       const d = doc.data()
       const date = d.createdAt ? new Date(d.createdAt.toDate()).toLocaleDateString('pl-PL') : ''
-      return `<div class="comment-item">
-        <div class="comment-header"><div class="comment-avatar">${(d.authorName || '?')[0].toUpperCase()}</div><span class="comment-author">${d.authorName || 'Uczestnik'}</span><span class="comment-date">${date}</span></div>
-        <div class="comment-text">${d.text}</div>
-        ${d.reply ? `<div class="comment-reply"><div class="comment-header"><div class="comment-avatar" style="background:rgba(29,158,117,0.2);color:var(--green)">A</div><span class="comment-author">AI Kurs dla każdego</span></div><div class="comment-text">${d.reply}</div></div>` : ''}
-      </div>`
+      return `<div class="comment-item"><div class="comment-header"><div class="comment-avatar">${(d.authorName||'?')[0].toUpperCase()}</div><span class="comment-author">${d.authorName||'Uczestnik'}</span><span class="comment-date">${date}</span></div><div class="comment-text">${d.text}</div>${d.reply?`<div class="comment-reply"><div class="comment-header"><div class="comment-avatar" style="background:rgba(29,158,117,0.2);color:var(--green)">A</div><span class="comment-author">AI Kurs dla każdego</span></div><div class="comment-text">${d.reply}</div></div>`:''}</div>`
     }).join('')
-  } catch (e) {
-    const list = document.getElementById('comments-list')
-    if (list) list.innerHTML = '<div style="color:var(--muted);font-size:.84rem">Nie można załadować pytań.</div>'
-  }
+  } catch(e) { const l=document.getElementById('comments-list'); if(l) l.innerHTML='<div style="color:var(--muted);font-size:.84rem">Nie można załadować pytań.</div>' }
 }
 
 async function addComment(lesId) {
   const text = document.getElementById('new-comment').value.trim()
   if (!text) return
   try {
-    await db.collection('komentarze').doc(lesId).collection('wpisy').add({
-      text, authorName: getUserDisplayName(currentUser), authorId: currentUser.uid,
-      createdAt: firebase.firestore.FieldValue.serverTimestamp()
-    })
+    await db.collection('komentarze').doc(lesId).collection('wpisy').add({ text, authorName:getUserDisplayName(currentUser), authorId:currentUser.uid, createdAt:firebase.firestore.FieldValue.serverTimestamp() })
     document.getElementById('new-comment').value = ''
     showToast('Pytanie wysłane!', 'success')
     renderComments(lesId)
-  } catch (e) { showToast('Błąd wysyłania pytania.', 'error') }
+  } catch(e) { showToast('Błąd wysyłania pytania.', 'error') }
 }
 
 async function toggleComplete() {
   const mods = safeModules()
   if (!mods[currentMod]) return
-  const lessons = Array.isArray(mods[currentMod].lessons) ? mods[currentMod].lessons : []
-  const les = lessons[currentLes]
+  const les = safeLessons(mods[currentMod])[currentLes]
   if (!les) return
   const btn = document.getElementById('btn-complete')
   btn.disabled = true
-  if (completed.has(les.id)) { completed.delete(les.id); showToast('Oznaczono jako nieukończona', 'info') }
-  else { completed.add(les.id); showToast('Brawo! Lekcja ukończona ✓', 'success') }
+  if (completed.has(les.id)) { completed.delete(les.id); showToast('Oznaczono jako nieukończona','info') }
+  else { completed.add(les.id); showToast('Brawo! Lekcja ukończona ✓','success') }
   try {
-    await db.collection('uczniowie').doc(currentUser.uid).set({
-      completed: Array.from(completed),
-      lastActivity: firebase.firestore.FieldValue.serverTimestamp(),
-      email: currentUser.email, name: getUserDisplayName(currentUser)
-    }, { merge: true })
-  } catch (e) { KV.set('completed_' + currentUser.uid, [...completed]) }
+    await db.collection('uczniowie').doc(currentUser.uid).set({ completed:Array.from(completed), lastActivity:firebase.firestore.FieldValue.serverTimestamp(), email:currentUser.email, name:getUserDisplayName(currentUser) }, { merge:true })
+  } catch(e) { KV.set('completed_'+currentUser.uid, [...completed]) }
   btn.disabled = false
   updateProgress(); updateDashboard(); checkAchievements(); openLesson(currentMod, currentLes)
 }
 
 function goPrev() {
-  let mi = currentMod, li = currentLes - 1
+  let mi=currentMod, li=currentLes-1
   if (li < 0) {
     mi--
     if (mi < 0) return
-    const prevLessons = Array.isArray(safeModules()[mi]?.lessons) ? safeModules()[mi].lessons : []
-    li = prevLessons.length - 1
+    li = safeLessons(safeModules()[mi]||{}).length - 1
   }
   openLesson(mi, li)
 }
 
 function goNext2() {
   const mods = safeModules()
-  const mod = mods[currentMod]
-  const lessons = mod && Array.isArray(mod.lessons) ? mod.lessons : []
-  let mi = currentMod, li = currentLes + 1
-  if (li >= lessons.length) { mi++; li = 0 }
+  const lessons = safeLessons(mods[currentMod]||{})
+  let mi=currentMod, li=currentLes+1
+  if (li >= lessons.length) { mi++; li=0 }
   if (mi >= mods.length) return
   openLesson(mi, li)
 }
 
 async function saveNotes() {
-  const mods = safeModules()
-  if (!mods[currentMod]) return
-  const lessons = Array.isArray(mods[currentMod].lessons) ? mods[currentMod].lessons : []
-  const les = lessons[currentLes]
+  const les = safeLessons(safeModules()[currentMod]||{})[currentLes]
   if (!les) return
   const text = document.getElementById('notes-ta').value
   notesCache[les.id] = text
   try {
-    await db.collection('uczniowie').doc(currentUser.uid).collection('notatki').doc(les.id).set({
-      content: text, updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-    })
+    await db.collection('uczniowie').doc(currentUser.uid).collection('notatki').doc(les.id).set({ content:text, updatedAt:firebase.firestore.FieldValue.serverTimestamp() })
     notesCount = Object.keys(notesCache).filter(k => notesCache[k].trim()).length
     const el = document.getElementById('notes-saved')
-    el.classList.add('show'); setTimeout(() => el.classList.remove('show'), 2500)
+    el.classList.add('show'); setTimeout(()=>el.classList.remove('show'), 2500)
     checkAchievements()
-  } catch (e) { KV.set('notes_' + currentUser.uid + '_' + les.id, text) }
+  } catch(e) { KV.set('notes_'+currentUser.uid+'_'+les.id, text) }
 }
 
 async function saveHomework(lesId) {
   const text = document.getElementById('hw-ta').value
   hwCache[lesId] = text
   try {
-    await db.collection('uczniowie').doc(currentUser.uid).collection('zadania').doc(lesId).set({
-      content: text, updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-    })
+    await db.collection('uczniowie').doc(currentUser.uid).collection('zadania').doc(lesId).set({ content:text, updatedAt:firebase.firestore.FieldValue.serverTimestamp() })
     const el = document.getElementById('hw-saved')
-    el.classList.add('show'); setTimeout(() => el.classList.remove('show'), 2500)
-    showToast('Zadanie zapisane!', 'success')
-  } catch (e) { KV.set('hw_' + currentUser.uid + '_' + lesId, text) }
+    el.classList.add('show'); setTimeout(()=>el.classList.remove('show'), 2500)
+    showToast('Zadanie zapisane!','success')
+  } catch(e) { KV.set('hw_'+currentUser.uid+'_'+lesId, text) }
 }
-
 
 function checkAchievements() {
   const mods = safeModules()
-  const total = mods.reduce((a, m) => a + (Array.isArray(m.lessons) ? m.lessons.length : 0), 0)
+  const total = mods.reduce((a,m) => a + safeLessons(m).length, 0)
   const done = completed.size
-  const modsDone = mods.filter(m => Array.isArray(m.lessons) && m.lessons.every(l => completed.has(l.id))).length
+  const modsDone = mods.filter(m => safeLessons(m).length > 0 && safeLessons(m).every(l => completed.has(l.id))).length
   const achList = (typeof ACHIEVEMENTS !== 'undefined' && Array.isArray(ACHIEVEMENTS)) ? ACHIEVEMENTS : []
   achList.forEach(ach => {
-    if (!unlockedAch.has(ach.id) && typeof ach.condition === 'function' && ach.condition(done, total, streak, modsDone, notesCount)) {
-      unlockedAch.add(ach.id)
-      saveAchievement(ach.id)
-      showAchievementPopup(ach)
+    if (!unlockedAch.has(ach.id) && typeof ach.condition === 'function') {
+      try {
+        if (ach.condition(done, total, streak, modsDone, notesCount)) {
+          unlockedAch.add(ach.id)
+          saveAchievement(ach.id)
+          showAchievementPopup(ach)
+        }
+      } catch(e) {}
     }
   })
   renderAchievements()
   const count = unlockedAch.size
   const badge = document.getElementById('ach-count-badge')
-  if (badge) { badge.textContent = count; badge.style.display = count > 0 ? 'inline' : 'none' }
+  if (badge) { badge.textContent=count; badge.style.display=count>0?'inline':'none' }
 }
 
 async function saveAchievement(id) {
-  try { await db.collection('uczniowie').doc(currentUser.uid).set({ achievements: Array.from(unlockedAch) }, { merge: true }) } catch (e) {}
+  try { await db.collection('uczniowie').doc(currentUser.uid).set({ achievements:Array.from(unlockedAch) }, { merge:true }) } catch(e) {}
 }
 
 function showAchievementPopup(ach) {
   const popup = document.getElementById('achievement-popup')
   if (!popup) return
   document.getElementById('ach-popup-icon').textContent = ach.icon
-  document.getElementById('ach-popup-title').textContent = '🏅 ' + ach.title
+  document.getElementById('ach-popup-title').textContent = '🏅 '+ach.title
   document.getElementById('ach-popup-desc').textContent = ach.desc
   popup.classList.add('show')
-  setTimeout(() => popup.classList.remove('show'), 4000)
+  setTimeout(()=>popup.classList.remove('show'), 4000)
 }
 
 function renderAchievements() {
@@ -1025,252 +851,165 @@ function renderAchievements() {
   const achList = (typeof ACHIEVEMENTS !== 'undefined' && Array.isArray(ACHIEVEMENTS)) ? ACHIEVEMENTS : []
   grid.innerHTML = achList.map(ach => {
     const unlocked = unlockedAch.has(ach.id)
-    return `<div class="ach-card ${unlocked ? 'unlocked' : 'locked'}">
-      <div class="ach-card-icon">${ach.icon}</div>
-      <div class="ach-card-title">${ach.title}</div>
-      <div class="ach-card-desc">${ach.desc}</div>
-      ${unlocked ? '<div style="margin-top:.5rem"><span class="badge badge-yellow">✓ Odblokowane</span></div>' : ''}
-    </div>`
+    return `<div class="ach-card ${unlocked?'unlocked':'locked'}"><div class="ach-card-icon">${ach.icon}</div><div class="ach-card-title">${ach.title}</div><div class="ach-card-desc">${ach.desc}</div>${unlocked?'<div style="margin-top:.5rem"><span class="badge badge-yellow">✓ Odblokowane</span></div>':''}</div>`
   }).join('')
 }
 
-// ─────────────────────────────────────────────
-//  CERTYFIKAT PDF — NAPRAWIONA WERSJA
-// ─────────────────────────────────────────────
+// ================================================================
+//  CERTYFIKAT PDF
+// ================================================================
 function plToAscii(str) {
   if (!str) return ''
-  return str
-    .replace(/ą/g,'a').replace(/Ą/g,'A')
-    .replace(/ć/g,'c').replace(/Ć/g,'C')
-    .replace(/ę/g,'e').replace(/Ę/g,'E')
-    .replace(/ł/g,'l').replace(/Ł/g,'L')
-    .replace(/ń/g,'n').replace(/Ń/g,'N')
-    .replace(/ó/g,'o').replace(/Ó/g,'O')
-    .replace(/ś/g,'s').replace(/Ś/g,'S')
-    .replace(/ź/g,'z').replace(/Ź/g,'Z')
-    .replace(/ż/g,'z').replace(/Ż/g,'Z')
-    .replace(/[^\x00-\x7F]/g,'?')
+  return String(str)
+    .replace(/ą/g,'a').replace(/Ą/g,'A').replace(/ć/g,'c').replace(/Ć/g,'C')
+    .replace(/ę/g,'e').replace(/Ę/g,'E').replace(/ł/g,'l').replace(/Ł/g,'L')
+    .replace(/ń/g,'n').replace(/Ń/g,'N').replace(/ó/g,'o').replace(/Ó/g,'O')
+    .replace(/ś/g,'s').replace(/Ś/g,'S').replace(/ź/g,'z').replace(/Ź/g,'Z')
+    .replace(/ż/g,'z').replace(/Ż/g,'Z').replace(/[^\x00-\x7F]/g,'?')
 }
-function pt(s) { return plToAscii(String(s || '')) }
+function pt(s) { return plToAscii(String(s||'')) }
 
 function downloadCert() {
   const btn = document.getElementById('cert-btn')
   btn.disabled = true
   btn.innerHTML = '<span class="spinner"></span> Generuje PDF...'
-
   try {
-    // Sprawdź czy biblioteka jsPDF jest załadowana
     if (!window.jspdf || !window.jspdf.jsPDF) {
-      showToast('Biblioteka PDF jeszcze sie laduje, sprobuj za chwile.', 'error')
-      btn.disabled = false
-      btn.innerHTML = '🏆 Pobierz certyfikat PDF'
-      return
+      showToast('Biblioteka PDF jeszcze sie laduje, sprobuj za chwile.','error')
+      btn.disabled=false; btn.innerHTML='🏆 Pobierz certyfikat PDF'; return
+    }
+    const { jsPDF } = window.jspdf
+    const doc = new jsPDF({ orientation:'landscape', unit:'mm', format:'a4' })
+    const W=297, H=210, CX=W/2
+
+    // TŁO
+    doc.setFillColor(7,17,31); doc.rect(0,0,W,H,'F')
+    doc.setFillColor(11,26,46); doc.rect(35,25,W-70,H-50,'F')
+
+    // RAMKI
+    doc.setDrawColor(29,158,117); doc.setLineWidth(1.5); doc.roundedRect(8,8,W-16,H-16,4,4)
+    doc.setDrawColor(201,168,76); doc.setLineWidth(0.5); doc.roundedRect(13,13,W-26,H-26,3,3)
+
+    // NAROŻNIKI — używamy pętli for zamiast forEach żeby uniknąć problemu
+    doc.setDrawColor(201,168,76); doc.setLineWidth(1.2)
+    const corners = [[22,22],[W-22,22],[22,H-22],[W-22,H-22]]
+    for (let i=0; i<corners.length; i++) {
+      const cx=corners[i][0], cy=corners[i][1]
+      const sx=cx<CX?1:-1, sy=cy<H/2?1:-1
+      doc.line(cx,cy,cx+sx*15,cy); doc.line(cx,cy,cx,cy+sy*15)
     }
 
-    const { jsPDF } = window.jspdf
-    const doc = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' })
-    const W = 297, H = 210, CX = W / 2
+    // LINIE DEKORACYJNE — pętla for zamiast forEach
+    doc.setDrawColor(29,158,117); doc.setLineWidth(0.4)
+    doc.line(35,50,W-35,50); doc.line(35,H-50,W-35,H-50)
+    doc.setFillColor(201,168,76)
+    const diamonds = [[CX-5,50],[CX+5,50],[CX-5,H-50],[CX+5,H-50]]
+    for (let i=0; i<diamonds.length; i++) {
+      doc.rect(diamonds[i][0]-2.5, diamonds[i][1]-2.5, 5, 5, 'F')
+    }
 
-    // === TŁO ===
-    doc.setFillColor(7, 17, 31)
-    doc.rect(0, 0, W, H, 'F')
-    doc.setFillColor(11, 26, 46)
-    doc.rect(35, 25, W - 70, H - 50, 'F')
+    // LOGO
+    doc.setFillColor(29,158,117); doc.roundedRect(CX-8,16,16,16,3,3,'F')
+    doc.setFont('helvetica','bold'); doc.setFontSize(10); doc.setTextColor(255,255,255)
+    doc.text('AI',CX,26,{align:'center'})
 
-    // === RAMKI ===
-    doc.setDrawColor(29, 158, 117)
-    doc.setLineWidth(1.5)
-    doc.roundedRect(8, 8, W - 16, H - 16, 4, 4)
-    doc.setDrawColor(201, 168, 76)
-    doc.setLineWidth(0.5)
-    doc.roundedRect(13, 13, W - 26, H - 26, 3, 3)
+    // NAZWA PLATFORMY
+    doc.setFontSize(14); doc.text('AI Kurs dla kazdego',CX,42,{align:'center'})
 
-    // === NAROŻNIKI ===
-    doc.setDrawColor(201, 168, 76)
-    doc.setLineWidth(1.2)
-    const cs = 15
-    [[22,22],[W-22,22],[22,H-22],[W-22,H-22]].forEach(([cx,cy]) => {
-      const sx = cx < CX ? 1 : -1, sy = cy < H / 2 ? 1 : -1
-      doc.line(cx, cy, cx + sx * cs, cy)
-      doc.line(cx, cy, cx, cy + sy * cs)
-    })
+    // NAGŁÓWEK
+    doc.setFont('helvetica','normal'); doc.setFontSize(7.5); doc.setTextColor(201,168,76)
+    doc.text('*  C E R T Y F I K A T   U K O N C Z E N I A  *',CX,59,{align:'center'})
 
-    // === LINIE DEKORACYJNE ===
-    doc.setDrawColor(29, 158, 117)
-    doc.setLineWidth(0.4)
-    doc.line(35, 50, W - 35, 50)
-    doc.line(35, H - 50, W - 35, H - 50)
-    doc.setFillColor(201, 168, 76)
-    ;[[CX-5,50],[CX+5,50],[CX-5,H-50],[CX+5,H-50]].forEach(([rx,ry]) => {
-      doc.rect(rx - 2.5, ry - 2.5, 5, 5, 'F')
-    })
+    // INTRO
+    doc.setFontSize(10); doc.setTextColor(160,160,180)
+    doc.text('Niniejszym zaswiadcza sie, ze',CX,72,{align:'center'})
 
-    // === LOGO AI ===
-    doc.setFillColor(29, 158, 117)
-    doc.roundedRect(CX - 8, 16, 16, 16, 3, 3, 'F')
-    doc.setFont('helvetica', 'bold')
-    doc.setFontSize(10)
-    doc.setTextColor(255, 255, 255)
-    doc.text('AI', CX, 26, { align: 'center' })
-
-    // === NAZWA PLATFORMY ===
-    doc.setFont('helvetica', 'bold')
-    doc.setFontSize(14)
-    doc.setTextColor(255, 255, 255)
-    doc.text('AI Kurs dla kazdego', CX, 42, { align: 'center' })
-
-    // === NAGŁÓWEK ===
-    doc.setFont('helvetica', 'normal')
-    doc.setFontSize(7.5)
-    doc.setTextColor(201, 168, 76)
-    doc.text('*  C E R T Y F I K A T   U K O N C Z E N I A  *', CX, 59, { align: 'center' })
-
-    // === INTRO ===
-    doc.setFontSize(10)
-    doc.setTextColor(160, 160, 180)
-    doc.text('Niniejszym zaswiadcza sie, ze', CX, 72, { align: 'center' })
-
-    // === IMIĘ ===
+    // IMIĘ
     const name = getUserDisplayName(currentUser) || 'Kursant'
-    doc.setFont('helvetica', 'bold')
-    doc.setFontSize(32)
-    doc.setTextColor(255, 255, 255)
-    doc.text(pt(name), CX, 93, { align: 'center' })
-    const nw = Math.min(doc.getTextWidth(pt(name)) + 16, W - 70)
-    doc.setDrawColor(29, 158, 117)
-    doc.setLineWidth(0.7)
-    doc.line(CX - nw / 2, 97, CX + nw / 2, 97)
+    doc.setFont('helvetica','bold'); doc.setFontSize(32); doc.setTextColor(255,255,255)
+    doc.text(pt(name),CX,93,{align:'center'})
+    const nw = Math.min(doc.getTextWidth(pt(name))+16, W-70)
+    doc.setDrawColor(29,158,117); doc.setLineWidth(0.7)
+    doc.line(CX-nw/2,97,CX+nw/2,97)
 
-    // === TEKST ===
-    doc.setFont('helvetica', 'normal')
-    doc.setFontSize(10)
-    doc.setTextColor(160, 160, 180)
-    doc.text('ukonczyl/a z wynikiem pozytywnym kurs', CX, 108, { align: 'center' })
+    // TEKST
+    doc.setFont('helvetica','normal'); doc.setFontSize(10); doc.setTextColor(160,160,180)
+    doc.text('ukonczyl/a z wynikiem pozytywnym kurs',CX,108,{align:'center'})
 
-    // === KURS ===
-    const courseLabel = 'AI ktore oszczedza Twoje pieniadze'
-    doc.setFontSize(11)
-    doc.setFont('helvetica', 'bold')
-    const courseW = doc.getTextWidth(courseLabel) + 28
-    doc.setFillColor(15, 30, 52)
-    doc.setDrawColor(29, 158, 117)
-    doc.setLineWidth(0.6)
-    doc.roundedRect(CX - courseW / 2, 112, courseW, 14, 3, 3, 'FD')
-    doc.setTextColor(29, 158, 117)
-    doc.text(courseLabel, CX, 121, { align: 'center' })
+    // KURS
+    const courseLabel='AI ktore oszczedza Twoje pieniadze'
+    doc.setFontSize(11); doc.setFont('helvetica','bold')
+    const courseW = doc.getTextWidth(courseLabel)+28
+    doc.setFillColor(15,30,52); doc.setDrawColor(29,158,117); doc.setLineWidth(0.6)
+    doc.roundedRect(CX-courseW/2,112,courseW,14,3,3,'FD')
+    doc.setTextColor(29,158,117); doc.text(courseLabel,CX,121,{align:'center'})
 
-    // === STATYSTYKI — odczyt z DOM (zawsze działa, niezależnie od kursData) ===
-    const domLessons = document.getElementById('cert-meta-lessons')
-    const domModules = document.getElementById('cert-meta-modules')
-    const totalLessonsVal = (domLessons && domLessons.textContent && domLessons.textContent !== '—')
-      ? domLessons.textContent.trim()
-      : String((function(){
-          try {
-            const m = (kursData && Array.isArray(kursData.modules)) ? kursData.modules : []
-            return m.reduce((a,mod) => a + (Array.isArray(mod.lessons) ? mod.lessons.length : 0), 0)
-          } catch(e){ return 0 }
-        })())
-    const totalModulesVal = (domModules && domModules.textContent && domModules.textContent !== '—')
-      ? domModules.textContent.trim()
-      : String((function(){
-          try {
-            return (kursData && Array.isArray(kursData.modules)) ? kursData.modules.length : 0
-          } catch(e){ return 0 }
-        })())
+    // STATYSTYKI — odczyt z DOM, absolutnie bezpieczny
+    const elLes = document.getElementById('cert-meta-lessons')
+    const elMod = document.getElementById('cert-meta-modules')
+    const lesVal = (elLes && elLes.textContent && elLes.textContent.trim() !== '—') ? elLes.textContent.trim() : '0'
+    const modVal = (elMod && elMod.textContent && elMod.textContent.trim() !== '—') ? elMod.textContent.trim() : '0'
 
     const stats = [
-      { val: totalLessonsVal, label: 'LEKCJI'    },
-      { val: totalModulesVal, label: 'MODULOW'   },
-      { val: '100%',          label: 'UKONCZONO' },
+      { val: lesVal, label: 'LEKCJI' },
+      { val: modVal, label: 'MODULOW' },
+      { val: '100%', label: 'UKONCZONO' }
     ]
-    const gap = 52
-    stats.forEach((s, i) => {
-      const x = CX + (i - 1) * gap
-      doc.setFont('helvetica', 'bold')
-      doc.setFontSize(16)
-      doc.setTextColor(29, 158, 117)
-      doc.text(s.val, x, 142, { align: 'center' })
-      doc.setFont('helvetica', 'normal')
-      doc.setFontSize(7)
-      doc.setTextColor(120, 120, 140)
-      doc.text(s.label, x, 148, { align: 'center' })
-    })
+    for (let i=0; i<stats.length; i++) {
+      const x = CX + (i-1)*52
+      doc.setFont('helvetica','bold'); doc.setFontSize(16); doc.setTextColor(29,158,117)
+      doc.text(stats[i].val, x, 142, {align:'center'})
+      doc.setFont('helvetica','normal'); doc.setFontSize(7); doc.setTextColor(120,120,140)
+      doc.text(stats[i].label, x, 148, {align:'center'})
+    }
 
-    // === DATA ===
-    const months = ['stycznia','lutego','marca','kwietnia','maja','czerwca','lipca','sierpnia','wrzesnia','pazdziernika','listopada','grudnia']
-    const now = new Date()
-    const dateStr = now.getDate() + ' ' + months[now.getMonth()] + ' ' + now.getFullYear()
-    doc.setFont('helvetica', 'normal')
-    doc.setFontSize(9)
-    doc.setTextColor(130, 130, 150)
-    doc.text(dateStr, CX, 160, { align: 'center' })
+    // DATA
+    const months=['stycznia','lutego','marca','kwietnia','maja','czerwca','lipca','sierpnia','wrzesnia','pazdziernika','listopada','grudnia']
+    const now=new Date()
+    doc.setFont('helvetica','normal'); doc.setFontSize(9); doc.setTextColor(130,130,150)
+    doc.text(now.getDate()+' '+months[now.getMonth()]+' '+now.getFullYear(), CX, 160, {align:'center'})
 
-    // === PIECZĘĆ ===
-    doc.setDrawColor(201, 168, 76)
-    doc.setLineWidth(1)
-    doc.circle(CX, 170, 9)
-    doc.setLineWidth(0.4)
-    doc.circle(CX, 170, 7)
-    doc.setFont('helvetica', 'bold')
-    doc.setFontSize(14)
-    doc.setTextColor(201, 168, 76)
-    doc.text('*', CX, 173.5, { align: 'center' })
+    // PIECZĘĆ
+    doc.setDrawColor(201,168,76); doc.setLineWidth(1); doc.circle(CX,170,9)
+    doc.setLineWidth(0.4); doc.circle(CX,170,7)
+    doc.setFont('helvetica','bold'); doc.setFontSize(14); doc.setTextColor(201,168,76)
+    doc.text('*',CX,173.5,{align:'center'})
 
-    // === PODPISY ===
-    const sigY = H - 24
-    doc.setDrawColor(80, 80, 100)
-    doc.setLineWidth(0.3)
-    const lx = 75
-    doc.line(lx - 32, sigY, lx + 32, sigY)
-    doc.setFont('helvetica', 'normal')
-    doc.setFontSize(7.5)
-    doc.setTextColor(110, 110, 130)
-    doc.text('AI Kurs dla kazdego', lx, sigY + 5, { align: 'center' })
-    const rx2 = W - 75
-    doc.line(rx2 - 32, sigY, rx2 + 32, sigY)
-    doc.text(pt(name), rx2, sigY + 5, { align: 'center' })
+    // PODPISY
+    const sigY=H-24
+    doc.setDrawColor(80,80,100); doc.setLineWidth(0.3)
+    doc.line(75-32,sigY,75+32,sigY)
+    doc.setFont('helvetica','normal'); doc.setFontSize(7.5); doc.setTextColor(110,110,130)
+    doc.text('AI Kurs dla kazdego',75,sigY+5,{align:'center'})
+    doc.line(W-75-32,sigY,W-75+32,sigY)
+    doc.text(pt(name),W-75,sigY+5,{align:'center'})
 
-    // === NR CERTYFIKATU ===
-    const certId = 'AIKURS-' + currentUser.uid.slice(0, 6).toUpperCase() + '-' + Date.now().toString(36).toUpperCase()
-    doc.setFontSize(6)
-    doc.setTextColor(60, 60, 75)
-    doc.text('Nr: ' + certId, CX, H - 10, { align: 'center' })
+    // NR CERTYFIKATU
+    const certId='AIKURS-'+currentUser.uid.slice(0,6).toUpperCase()+'-'+Date.now().toString(36).toUpperCase()
+    doc.setFontSize(6); doc.setTextColor(60,60,75)
+    doc.text('Nr: '+certId, CX, H-10, {align:'center'})
 
-    doc.save('certyfikat-ai-kurs-' + pt(name).replace(/\s+/g, '-').toLowerCase() + '.pdf')
-    showToast('Certyfikat pobrany! 🏆', 'success')
-
-    const idEl = document.getElementById('cert-id-preview')
-    if (idEl) idEl.textContent = 'Nr: ' + certId
-
-    db.collection('uczniowie').doc(currentUser.uid).set({
-      certDownloaded: true,
-      certDate: firebase.firestore.FieldValue.serverTimestamp(),
-      certId
-    }, { merge: true }).catch(() => {})
-
-  } catch (e) {
-    showToast('Blad generowania PDF: ' + e.message, 'error')
+    doc.save('certyfikat-ai-kurs-'+pt(name).replace(/\s+/g,'-').toLowerCase()+'.pdf')
+    showToast('Certyfikat pobrany! 🏆','success')
+    const idEl=document.getElementById('cert-id-preview')
+    if (idEl) idEl.textContent='Nr: '+certId
+    db.collection('uczniowie').doc(currentUser.uid).set({ certDownloaded:true, certDate:firebase.firestore.FieldValue.serverTimestamp(), certId }, { merge:true }).catch(()=>{})
+  } catch(e) {
     console.error('downloadCert error:', e)
+    showToast('Blad generowania PDF: '+e.message,'error')
   }
-
-  btn.disabled = false
-  btn.innerHTML = '🏆 Pobierz certyfikat PDF'
+  btn.disabled=false; btn.innerHTML='🏆 Pobierz certyfikat PDF'
 }
 
-// ─────────────────────────────────────────────
-//  MOTYW
-// ─────────────────────────────────────────────
+// MOTYW
 function toggleTheme() {
-  const isLight = document.body.classList.toggle('light')
-  KV.set('theme', isLight ? 'light' : 'dark')
-  document.getElementById('theme-btn').textContent = isLight ? '☀️' : '🌙'
+  const isLight=document.body.classList.toggle('light')
+  KV.set('theme', isLight?'light':'dark')
+  document.getElementById('theme-btn').textContent=isLight?'☀️':'🌙'
 }
 function loadTheme() {
-  const t = KV.get('theme')
-  if (t === 'light') { document.body.classList.add('light'); document.getElementById('theme-btn').textContent = '☀️' }
+  if (KV.get('theme')==='light') { document.body.classList.add('light'); document.getElementById('theme-btn').textContent='☀️' }
 }
-
-
 </script>
 </body>
 </html>
