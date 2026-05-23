@@ -810,8 +810,14 @@ function downloadCert() {
   btn.innerHTML = '<span class="spinner"></span> Generuje PDF...'
 
   try {
+    if (!window.jspdf || !window.jspdf.jsPDF) {
+      showToast("Biblioteka PDF jeszcze sie laduje, sprobuj za chwile.", "error")
+      btn.disabled = false
+      btn.innerHTML = "🏆 Pobierz certyfikat PDF"
+      return
+    }
     const { jsPDF } = window.jspdf
-    const doc = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' })
+    const doc = new jsPDF({ orientation: "landscape", unit: "mm", format: "a4" })
     const W = 297, H = 210
     const CX = W / 2  // centrum X = 148.5
 
@@ -908,8 +914,9 @@ function downloadCert() {
     doc.text(courseLabel, CX, 121, { align: 'center' })
 
     // === STATYSTYKI ===
-    const total = kursData.modules.reduce((a, m) => a + m.lessons.length, 0)
-    const modCount = kursData.modules.length
+    const modules = (kursData && kursData.modules) ? kursData.modules : []
+    const total = modules.reduce((a, m) => a + ((m.lessons || []).length), 0)
+    const modCount = modules.length
     const gap = 52
     const stats = [
       { val: String(total),    label: 'LEKCJI'    },
