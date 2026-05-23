@@ -45,6 +45,9 @@
 .confirm-btns{display:flex;gap:.75rem;justify-content:center}
 .drag-handle{cursor:grab;color:var(--muted);font-size:1rem;flex-shrink:0;padding:0 .25rem}.drag-handle:active{cursor:grabbing}
 .add-module-btn{border:1px dashed rgba(29,158,117,0.3);border-radius:var(--radius-lg);padding:1rem;text-align:center;cursor:pointer;color:var(--green);font-size:.9rem;transition:all .2s;background:transparent;width:100%;font-family:'DM Sans',sans-serif;margin-top:.5rem}.add-module-btn:hover{background:rgba(29,158,117,0.06);border-color:rgba(29,158,117,0.5)}
+.autosave-indicator{font-size:.72rem;color:var(--muted);display:flex;align-items:center;gap:.4rem;padding:.4rem .8rem;border-radius:50px;background:var(--surface);border:1px solid var(--border);transition:all .3s}
+.autosave-indicator.saving{color:#F5A623;border-color:rgba(245,166,35,0.3)}
+.autosave-indicator.saved{color:var(--green);border-color:rgba(29,158,117,0.3)}
 @media(max-width:900px){.admin-stats{grid-template-columns:repeat(2,1fr)}.form-row{grid-template-columns:1fr}}
 </style>
 </head>
@@ -134,13 +137,21 @@
 
       <!-- KURS EDITOR -->
       <div id="section-kurs" style="display:none">
-        <div class="page-header"><h1>Zarządzaj kursem</h1><p>Edytuj, dodawaj i usuwaj moduły oraz lekcje.</p></div>
+        <div class="page-header">
+          <div>
+            <h1>Zarządzaj kursem</h1>
+            <p>Edytuj, dodawaj i usuwaj moduły oraz lekcje.</p>
+          </div>
+          <div id="autosave-indicator" class="autosave-indicator" style="display:none">
+            <span id="autosave-dot">●</span>
+            <span id="autosave-text">Zapisano</span>
+          </div>
+        </div>
 
-        <!-- PRZYCISKI IMPORTU/EKSPORTU -->
         <div class="card" style="margin-bottom:1.5rem;padding:1.25rem">
           <div style="font-size:.78rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:.85rem">💾 Zapis i synchronizacja</div>
           <div class="export-btns">
-            <button class="btn btn-green btn-sm" onclick="saveKursToFirestore()">💾 Zapisz do bazy Firebase</button>
+            <button class="btn btn-green btn-sm" id="btn-save-firebase" onclick="saveKursToFirestore()">💾 Zapisz do bazy Firebase</button>
             <button class="btn btn-outline btn-sm" onclick="addModule()">➕ Dodaj moduł</button>
           </div>
           <hr class="divider" style="margin:1rem 0">
@@ -156,6 +167,7 @@
             <label class="btn btn-outline btn-sm" style="cursor:pointer">📦 Importuj JSON<input type="file" accept=".json" onchange="importJSON(this)" style="display:none"></label>
             <label class="btn btn-outline btn-sm" style="cursor:pointer">📊 Importuj CSV<input type="file" accept=".csv" onchange="importCSV(this)" style="display:none"></label>
           </div>
+          <p style="font-size:.72rem;color:var(--muted);margin-top:.5rem">💡 Używaj JSON do pełnego importu (z quizami, zadaniami, PDF-ami). CSV nie obsługuje quizów.</p>
         </div>
 
         <div id="kurs-modules"></div>
@@ -341,6 +353,36 @@ let currentUser = null
 let kursData = null
 let confirmCallback = null
 
+// ===== AUTO-SAVE DO FIRESTORE =====
+// KLUCZOWA POPRAWKA: każda zmiana od razu trafia do Firestore.
+// Bez tego po odświeżeniu dane wracają, bo Firestore ma starą wersję.
+async function autoSave() {
+  const ind = document.getElementById('autosave-indicator')
+  const dot = document.getElementById('autosave-dot')
+  const txt = document.getElementById('autosave-text')
+  if (ind) {
+    ind.style.display = 'flex'
+    ind.className = 'autosave-indicator saving'
+    dot.textContent = '●'
+    txt.textContent = 'Zapisuję...'
+  }
+  try {
+    await db.collection('konfiguracja').doc('kurs').set(kursData)
+    if (typeof KV !== 'undefined') KV.set('kurs_data', kursData)
+    if (ind) {
+      ind.className = 'autosave-indicator saved'
+      txt.textContent = 'Zapisano ✓'
+      setTimeout(() => { ind.style.display = 'none' }, 2500)
+    }
+  } catch (e) {
+    if (ind) {
+      ind.className = 'autosave-indicator'
+      txt.textContent = 'Błąd zapisu!'
+    }
+    showToast('Błąd auto-zapisu: ' + e.message, 'error')
+  }
+}
+
 // ===== AUTH =====
 firebase.auth().onAuthStateChanged(async user => {
   if (!user) { window.location.href = 'index.html'; return }
@@ -376,7 +418,7 @@ function confirmOk() { if (confirmCallback) confirmCallback(); closeConfirm() }
 
 // ===== SECTIONS =====
 function showSection(name) {
-  ['overview','kurs','users','comments','invite'].forEach(s => {
+  ;['overview','kurs','users','comments','invite'].forEach(s => {
     document.getElementById('section-' + s).style.display = s === name ? 'block' : 'none'
   })
   document.querySelectorAll('[id^="nav-"]').forEach(b => b.classList.remove('active'))
@@ -438,8 +480,9 @@ function renderKursEditor() {
         </div>
       </div>
       <div class="mod-admin-body">
-        ${mod.lessons.length === 0 ? '<div style="color:var(--muted);font-size:.85rem;padding:.5rem;text-align:center">Brak lekcji. Kliknij ➕ żeby dodać.</div>' :
-        mod.lessons.map((les, li) => `
+        ${mod.lessons.length === 0
+          ? '<div style="color:var(--muted);font-size:.85rem;padding:.5rem;text-align:center">Brak lekcji. Kliknij ➕ żeby dodać.</div>'
+          : mod.lessons.map((les, li) => `
           <div class="lesson-row">
             <span class="lesson-row-num">${mod.id}.${li+1}</span>
             <div style="flex:1;min-width:0">
@@ -466,11 +509,8 @@ function toggleModAdmin(mi) { document.getElementById('mod-admin-' + mi).classLi
 // ===== DODAJ MODUŁ =====
 function addModule() {
   const nextId = kursData.modules.length + 1
-  kursData.modules.push({
-    id: nextId,
-    title: 'Nowy moduł ' + nextId,
-    lessons: []
-  })
+  kursData.modules.push({ id: nextId, title: 'Nowy moduł ' + nextId, lessons: [] })
+  autoSave() // <-- ZAPIS DO FIRESTORE
   renderKursEditor()
   renderOverview()
   showToast('Moduł dodany! Kliknij ✏️ żeby edytować.', 'success')
@@ -493,7 +533,7 @@ function saveModule() {
   kursData.modules[mi].id = parseInt(document.getElementById('edit-module-num').value) || kursData.modules[mi].id
   kursData.modules[mi].title = document.getElementById('edit-module-title').value.trim() || kursData.modules[mi].title
   document.getElementById('modal-module').classList.remove('open')
-  KV.set('kurs_data', kursData)
+  autoSave() // <-- ZAPIS DO FIRESTORE
   renderKursEditor()
   renderOverview()
   showToast('Moduł zaktualizowany!', 'success')
@@ -508,7 +548,7 @@ function deleteModule(mi) {
     '🗑️', 'Usuń moduł',
     () => {
       kursData.modules.splice(mi, 1)
-      KV.set('kurs_data', kursData)
+      autoSave() // <-- ZAPIS DO FIRESTORE (bez tego wraca po odświeżeniu!)
       renderKursEditor()
       renderOverview()
       showToast('Moduł usunięty!', 'info')
@@ -525,9 +565,9 @@ function addLessonToModule(mi) {
     id: newId, title: 'Nowa lekcja ' + (li + 1), time: '10 min',
     ytId: '', pdfs: [], homework: '', desc: '', quiz: []
   })
+  autoSave() // <-- ZAPIS DO FIRESTORE
   renderKursEditor()
   document.getElementById('mod-admin-' + mi).classList.add('open')
-  KV.set('kurs_data', kursData)
   showToast('Lekcja dodana! Kliknij ✏️ żeby edytować.', 'success')
 }
 
@@ -540,7 +580,7 @@ function deleteLesson(mi, li) {
     '🗑️', 'Usuń lekcję',
     () => {
       kursData.modules[mi].lessons.splice(li, 1)
-      KV.set('kurs_data', kursData)
+      autoSave() // <-- ZAPIS DO FIRESTORE (bez tego wraca po odświeżeniu!)
       renderKursEditor()
       renderOverview()
       showToast('Lekcja usunięta!', 'info')
@@ -591,8 +631,8 @@ function addPdfRowWithData(pdf) {
   const row = document.createElement('div')
   row.className = 'pdf-row'
   row.innerHTML = `
-    <input class="input pdf-name" type="text" placeholder="Nazwa pliku" value="${pdf.name||''}" style="flex:1.2">
-    <input class="input pdf-url" type="url" placeholder="Link do PDF (https://...)" value="${pdf.url||''}" style="flex:2">
+    <input class="input pdf-name" type="text" placeholder="Nazwa pliku" value="${(pdf.name||'').replace(/"/g,'&quot;')}" style="flex:1.2">
+    <input class="input pdf-url" type="url" placeholder="Link do PDF (https://...)" value="${(pdf.url||'').replace(/"/g,'&quot;')}" style="flex:2">
     <button class="btn btn-danger btn-sm" onclick="this.parentElement.remove()" title="Usuń">✕</button>`
   wrap.appendChild(row)
 }
@@ -607,8 +647,9 @@ function renderQuizManager(quiz) {
 
 function addQuizQuestion() {
   const count = document.querySelectorAll('.quiz-row').length
-  const empty = document.getElementById('quiz-manager').querySelector('div[style*="Brak pytań"]')
-  if (empty) empty.remove()
+  const wrap = document.getElementById('quiz-manager')
+  const empty = wrap.querySelector('div')
+  if (empty && empty.textContent.includes('Brak pytań')) empty.remove()
   addQuizQuestionWithData({ question: '', options: ['', '', '', ''], correct: 0 }, count)
 }
 
@@ -616,19 +657,20 @@ function addQuizQuestionWithData(q, qi) {
   const wrap = document.getElementById('quiz-manager')
   const row = document.createElement('div')
   row.className = 'quiz-row'
-  const uid = Date.now() + qi
+  const uid = Date.now() + '_' + qi
+  const options = (q.options && q.options.length) ? q.options : ['', '', '', '']
   row.innerHTML = `
     <div class="quiz-row-header">
       <span style="font-size:.78rem;color:var(--muted);font-weight:600">Pytanie ${qi+1}</span>
       <button class="btn btn-danger btn-sm" onclick="this.closest('.quiz-row').remove();renumberQuiz()">Usuń</button>
     </div>
     <div class="input-group" style="margin-bottom:.6rem">
-      <input class="input quiz-question" type="text" placeholder="Treść pytania..." value="${(q.question||'').replace(/"/g,'&quot;')}">
+      <input class="input quiz-question" type="text" placeholder="Treść pytania..." value="${(q.question||'').replace(/"/g,'&quot;').replace(/</g,'&lt;')}">
     </div>
-    ${(q.options||['','','','']).map((opt, oi) => `
+    ${options.map((opt, oi) => `
       <div class="option-row">
-        <input type="radio" name="correct-${uid}" class="quiz-correct" value="${oi}" ${oi===q.correct?'checked':''}>
-        <input class="input quiz-option" type="text" placeholder="Odpowiedź ${oi+1}" value="${(opt||'').replace(/"/g,'&quot;')}" style="flex:1">
+        <input type="radio" name="correct-${uid}" class="quiz-correct" value="${oi}" ${oi === (q.correct || 0) ? 'checked' : ''}>
+        <input class="input quiz-option" type="text" placeholder="Odpowiedź ${oi+1}" value="${(opt||'').replace(/"/g,'&quot;').replace(/</g,'&lt;')}" style="flex:1">
         <span class="option-correct">✓ poprawna</span>
       </div>`).join('')}
     <p style="font-size:.7rem;color:var(--muted);margin-top:.4rem">Zaznacz ● przy poprawnej odpowiedzi</p>`
@@ -659,37 +701,37 @@ function saveLesson() {
     if (name && url) les.pdfs.push({ name, url, size: '' })
   })
   les.quiz = []
-  document.querySelectorAll('.quiz-row').forEach((row) => {
+  document.querySelectorAll('.quiz-row').forEach(row => {
     const question = row.querySelector('.quiz-question').value.trim()
     const options = [...row.querySelectorAll('.quiz-option')].map(i => i.value.trim())
     const correctEl = row.querySelector('.quiz-correct:checked')
     const correct = correctEl ? parseInt(correctEl.value) : 0
     if (question) les.quiz.push({ question, options, correct })
   })
-  KV.set('kurs_data', kursData)
+  autoSave() // <-- ZAPIS DO FIRESTORE
   closeModal()
   showToast('Lekcja zapisana!', 'success')
   renderKursEditor()
   renderOverview()
 }
 
-// ===== SAVE TO FIRESTORE =====
+// ===== SAVE TO FIRESTORE (ręczny przycisk) =====
 async function saveKursToFirestore() {
-  const btn = document.querySelector('.btn-green[onclick="saveKursToFirestore()"]')
+  const btn = document.getElementById('btn-save-firebase')
   if (btn) { btn.disabled = true; btn.innerHTML = '<span class="spinner"></span> Zapisuję...' }
   try {
     await db.collection('konfiguracja').doc('kurs').set(kursData)
-    KV.set('kurs_data', kursData)
+    if (typeof KV !== 'undefined') KV.set('kurs_data', kursData)
     showToast('Kurs zapisany do Firebase! ✓', 'success')
   } catch (e) { showToast('Błąd zapisu: ' + e.message, 'error') }
   if (btn) { btn.disabled = false; btn.innerHTML = '💾 Zapisz do bazy Firebase' }
 }
 
-// ===== EXPORT JSON =====
+// ===== EXPORT JSON (pełny z quizami, zadaniami, PDF) =====
 function exportJSON() {
   const blob = new Blob([JSON.stringify(kursData, null, 2)], { type: 'application/json' })
   downloadBlob(blob, 'kurs-naffy.json')
-  showToast('Wyeksportowano JSON!', 'success')
+  showToast('Wyeksportowano JSON (z quizami i zadaniami)!', 'success')
 }
 
 // ===== EXPORT CSV =====
@@ -710,7 +752,7 @@ function exportCSV() {
   const csv = rows.map(r => r.map(c => `"${c}"`).join(',')).join('\n')
   const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8' })
   downloadBlob(blob, 'kurs-naffy.csv')
-  showToast('Wyeksportowano CSV!', 'success')
+  showToast('Wyeksportowano CSV! (Quizy i PDF-y tylko w JSON)', 'success')
 }
 
 // ===== EXPORT HTML =====
@@ -723,6 +765,9 @@ h3{color:#1D9E75;margin-top:1.5rem}.lesson{border:1px solid #ddd;border-radius:8
 .meta{font-size:.85rem;color:#666;margin-bottom:.5rem}.badge{display:inline-block;padding:2px 8px;border-radius:12px;font-size:.78rem;margin-right:.3rem}
 .badge-green{background:#d5f5e3;color:#1e8449}.badge-blue{background:#d6eaf8;color:#1a5276}
 .badge-red{background:#fadbd8;color:#96281b}.badge-yellow{background:#fef9e7;color:#9a7d0a}
+.quiz-block{background:#fef9e7;border:1px solid #f5a623;border-radius:8px;padding:.75rem;margin-top:.5rem}
+.quiz-q{font-weight:600;margin-bottom:.4rem;font-size:.9rem}
+.quiz-opt{font-size:.87rem;padding:.2rem 0}.quiz-opt.correct{color:#1D9E75;font-weight:600}
 </style></head><body>
 <h1>Kurs: AI które oszczędza Twoje pieniądze</h1>
 <p style="color:#666">Wygenerowano: ${new Date().toLocaleDateString('pl-PL')}</p>`
@@ -742,14 +787,20 @@ h3{color:#1D9E75;margin-top:1.5rem}.lesson{border:1px solid #ddd;border-radius:8
         ${les.ytId ? `<p><strong>YouTube:</strong> <a href="https://youtube.com/watch?v=${les.ytId}" target="_blank">https://youtube.com/watch?v=${les.ytId}</a></p>` : ''}
         ${les.pdfs&&les.pdfs.length ? `<p><strong>PDF:</strong> ${les.pdfs.map(p=>`<a href="${p.url}">${p.name}</a>`).join(', ')}</p>` : ''}
         ${les.homework ? `<p><strong>Zadanie domowe:</strong> ${les.homework}</p>` : ''}
-        ${les.quiz&&les.quiz.length ? `<p><strong>Quiz:</strong> ${les.quiz.length} pytań jednokrotnego wyboru</p>` : ''}
+        ${les.quiz&&les.quiz.length ? `<div class="quiz-block"><strong>Quiz (${les.quiz.length} pytań):</strong>
+          ${les.quiz.map((q,qi) => `<div style="margin-top:.75rem">
+            <div class="quiz-q">${qi+1}. ${q.question}</div>
+            ${(q.options||[]).map((opt,oi) => `<div class="quiz-opt ${oi===q.correct?'correct':''}">
+              ${oi===q.correct?'✓':'○'} ${opt}</div>`).join('')}
+          </div>`).join('')}
+        </div>` : ''}
       </div>`
     })
   })
   html += '</body></html>'
   const blob = new Blob([html], { type: 'text/html;charset=utf-8' })
   downloadBlob(blob, 'kurs-naffy.html')
-  showToast('Wyeksportowano HTML!', 'success')
+  showToast('Wyeksportowano HTML (z quizami)!', 'success')
 }
 
 function downloadBlob(blob, filename) {
@@ -760,7 +811,7 @@ function downloadBlob(blob, filename) {
   setTimeout(() => URL.revokeObjectURL(a.href), 1000)
 }
 
-// ===== IMPORT JSON =====
+// ===== IMPORT JSON (pełny — quiz, zadania, PDF) =====
 function importJSON(input) {
   const file = input.files[0]
   if (!file) return
@@ -768,21 +819,46 @@ function importJSON(input) {
   reader.onload = e => {
     try {
       const data = JSON.parse(e.target.result)
-      if (!data.modules || !Array.isArray(data.modules)) throw new Error('Nieprawidłowy format JSON')
-      showConfirm('Importuj JSON?', `Plik zawiera ${data.modules.length} modułów. Zastąpi to obecny kurs. Czy kontynuować?`, '📦', 'Importuj', () => {
-        kursData = data
-        KV.set('kurs_data', kursData)
-        renderKursEditor()
-        renderOverview()
-        showToast('Zaimportowano kurs z JSON!', 'success')
+      if (!data.modules || !Array.isArray(data.modules)) throw new Error('Nieprawidłowy format — brak pola "modules"')
+      // Uzupełnij brakujące pola żeby import był zawsze bezpieczny
+      data.modules.forEach(mod => {
+        if (!Array.isArray(mod.lessons)) mod.lessons = []
+        mod.lessons.forEach(les => {
+          if (!Array.isArray(les.pdfs)) les.pdfs = []
+          if (!Array.isArray(les.quiz)) les.quiz = []
+          if (les.homework === undefined) les.homework = ''
+          if (les.desc === undefined) les.desc = ''
+          if (les.ytId === undefined) les.ytId = ''
+          // Upewnij się że każde pytanie quizu ma pole correct
+          les.quiz.forEach(q => {
+            if (!Array.isArray(q.options)) q.options = ['', '', '', '']
+            if (q.correct === undefined) q.correct = 0
+          })
+        })
       })
-    } catch (err) { showToast('Błąd importu: ' + err.message, 'error') }
+      const totalLessons = data.modules.reduce((a,m) => a + m.lessons.length, 0)
+      const totalQuiz = data.modules.reduce((a,m) => a + m.lessons.reduce((b,l) => b + (l.quiz||[]).length, 0), 0)
+      const totalPdf = data.modules.reduce((a,m) => a + m.lessons.reduce((b,l) => b + (l.pdfs||[]).length, 0), 0)
+      const totalHomework = data.modules.reduce((a,m) => a + m.lessons.filter(l => l.homework).length, 0)
+      showConfirm(
+        'Importuj JSON?',
+        `Plik zawiera: ${data.modules.length} modułów, ${totalLessons} lekcji, ${totalQuiz} pytań quizu, ${totalPdf} PDF, ${totalHomework} zadań domowych. Zastąpi to obecny kurs.`,
+        '📦', 'Importuj',
+        async () => {
+          kursData = data
+          await autoSave() // <-- od razu zapisz do Firestore
+          renderKursEditor()
+          renderOverview()
+          showToast(`Zaimportowano! ${totalLessons} lekcji, ${totalQuiz} pytań, ${totalPdf} PDF.`, 'success')
+        }
+      )
+    } catch (err) { showToast('Błąd importu JSON: ' + err.message, 'error') }
   }
   reader.readAsText(file)
   input.value = ''
 }
 
-// ===== IMPORT CSV =====
+// ===== IMPORT CSV (bez quizów — ograniczenie formatu) =====
 function importCSV(input) {
   const file = input.files[0]
   if (!file) return
@@ -806,13 +882,18 @@ function importCSV(input) {
       })
       const mods = Object.values(modules)
       if (!mods.length) throw new Error('Brak danych w pliku CSV')
-      showConfirm('Importuj CSV?', `Znaleziono ${mods.length} modułów. Zastąpi to obecny kurs.`, '📊', 'Importuj', () => {
-        kursData = { modules: mods }
-        KV.set('kurs_data', kursData)
-        renderKursEditor()
-        renderOverview()
-        showToast('Zaimportowano kurs z CSV!', 'success')
-      })
+      showConfirm(
+        'Importuj CSV?',
+        `Znaleziono ${mods.length} modułów. Uwaga: CSV nie zawiera quizów ani PDF — zostaną puste. Użyj JSON dla pełnego importu.`,
+        '📊', 'Importuj',
+        async () => {
+          kursData = { modules: mods }
+          await autoSave() // <-- od razu zapisz do Firestore
+          renderKursEditor()
+          renderOverview()
+          showToast('Zaimportowano z CSV! Dodaj quizy i PDF-y ręcznie.', 'success')
+        }
+      )
     } catch (err) { showToast('Błąd importu CSV: ' + err.message, 'error') }
   }
   reader.readAsText(file, 'UTF-8')
@@ -927,7 +1008,10 @@ async function sendInvite() {
     const secondApp = firebase.initializeApp(FIREBASE_CONFIG, 'invite-' + Date.now())
     const cred = await firebase.auth(secondApp).createUserWithEmailAndPassword(email, pass)
     if (name) await cred.user.updateProfile({ displayName: name })
-    await db.collection('uczniowie').doc(cred.user.uid).set({ email, name: name || email, completed: [], streak: 0, createdAt: firebase.firestore.FieldValue.serverTimestamp() })
+    await db.collection('uczniowie').doc(cred.user.uid).set({
+      email, name: name || email, completed: [], streak: 0,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    })
     await firebase.auth(secondApp).signOut()
     alertEl.innerHTML = `<div style="color:var(--green);background:rgba(29,158,117,0.08);border:1px solid rgba(29,158,117,0.2);border-radius:var(--radius);padding:.75rem 1rem;font-size:.87rem;margin-bottom:.75rem">
       ✓ Konto utworzone!<br><strong>E-mail:</strong> ${email}<br><strong>Hasło:</strong> ${pass}<br>
