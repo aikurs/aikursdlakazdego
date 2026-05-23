@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Panel ucznia — Naffy.ai</title>
+<title>Panel ucznia — AI Kurs dla każdego</title>
 <link rel="stylesheet" href="style.css">
 <style>
 .mod-group{margin-bottom:.4rem}.mod-toggle{display:flex;align-items:center;justify-content:space-between;padding:.48rem .75rem;cursor:pointer;border-radius:8px;transition:background .15s}.mod-toggle:hover{background:var(--surface2)}.mod-toggle-left{display:flex;align-items:center;gap:.6rem}.mod-toggle-icon{font-size:.72rem;color:var(--muted);transition:transform .2s}.mod-group.open .mod-toggle-icon{transform:rotate(90deg)}.mod-title-text{font-size:.8rem;font-weight:600;color:rgba(255,255,255,0.8)}.mod-prog-text{font-size:.67rem;color:var(--green)}.mod-lessons{display:none;padding-left:.4rem}.mod-group.open .mod-lessons{display:block}.lesson-btn{display:flex;align-items:center;gap:.6rem;padding:.48rem .75rem;border-radius:7px;cursor:pointer;transition:background .15s;border:none;background:transparent;width:100%;text-align:left;font-family:'DM Sans',sans-serif;font-size:.8rem;color:rgba(255,255,255,0.6);margin-bottom:1px}.lesson-btn:hover{background:var(--surface2);color:var(--white)}.lesson-btn.active{background:rgba(29,158,117,0.12);color:var(--green)}.lesson-btn.done .lesson-check{color:var(--green)}.lesson-btn .lesson-check{margin-left:auto;font-size:.72rem;color:rgba(255,255,255,0.12);flex-shrink:0}.lesson-btn .lesson-num{font-size:.66rem;color:rgba(255,255,255,0.22);flex-shrink:0;width:22px}
@@ -16,9 +16,77 @@
 .pdf-list{display:grid;gap:.7rem}.pdf-item{display:flex;align-items:center;gap:1rem;padding:.85rem 1.1rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);text-decoration:none;color:var(--white);transition:border-color .2s}.pdf-item:hover{border-color:rgba(29,158,117,0.35)}.pdf-icon{font-size:1.4rem;flex-shrink:0}.pdf-name{font-size:.88rem;font-weight:500}.pdf-meta{font-size:.73rem;color:var(--muted);margin-top:.12rem}.pdf-dl{margin-left:auto;color:var(--green);font-size:.78rem;flex-shrink:0}.no-pdfs{color:var(--muted);font-size:.87rem;text-align:center;padding:2rem}
 .homework-box{background:rgba(55,138,221,0.05);border:1px solid rgba(55,138,221,0.2);border-radius:var(--radius);padding:1.25rem;margin-bottom:1rem}.homework-label{font-size:.7rem;color:var(--blue);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.5rem}.homework-text{font-size:.9rem;line-height:1.6;color:rgba(255,255,255,0.8)}
 .lesson-nav{display:flex;justify-content:space-between;align-items:center;margin-top:2rem;padding-top:1.5rem;border-top:1px solid var(--border);gap:1rem}.btn-complete-done{background:rgba(29,158,117,0.12)!important;color:var(--green)!important;border:1px solid rgba(29,158,117,0.25)!important}
-.cert-center{max-width:600px;margin:0 auto;text-align:center}.cert-icon-big{font-size:5rem;margin-bottom:1.5rem}
-.cert-preview{background:linear-gradient(135deg,#0a0f1e 0%,#0f1628 50%,#0a0f1e 100%);border:2px solid rgba(29,158,117,0.4);border-radius:16px;padding:3rem 2.5rem;margin:1.5rem 0;position:relative;overflow:hidden}.cert-preview::before{content:'';position:absolute;inset:8px;border:1px solid rgba(29,158,117,0.15);border-radius:12px;pointer-events:none}.cert-preview::after{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(ellipse at center,rgba(29,158,117,0.04) 0%,transparent 60%);pointer-events:none}.cert-logo{font-family:'Syne',sans-serif;font-size:1.5rem;font-weight:800;color:var(--green);margin-bottom:1.5rem;letter-spacing:-.02em}.cert-logo span{color:rgba(255,255,255,0.4)}.cert-headline{font-size:.72rem;text-transform:uppercase;letter-spacing:.25em;color:var(--muted);margin-bottom:.75rem}.cert-recipient{font-family:'Syne',sans-serif;font-size:2rem;font-weight:800;color:#fff;margin-bottom:.5rem;line-height:1.2}.cert-course-label{font-size:.75rem;color:var(--muted);margin-bottom:.4rem}.cert-course-name{font-size:1rem;font-weight:600;color:rgba(255,255,255,0.85);margin-bottom:1.5rem}.cert-divider{width:80px;height:2px;background:linear-gradient(90deg,transparent,var(--green),transparent);margin:1.25rem auto}.cert-date{font-size:.78rem;color:var(--muted)}.cert-stamp{position:absolute;bottom:1.5rem;right:1.5rem;width:64px;height:64px;border-radius:50%;border:2px solid rgba(29,158,117,0.3);display:flex;align-items:center;justify-content:center;font-size:1.8rem;color:var(--green);opacity:.6}
-@media(max-width:768px){.dash-stats{grid-template-columns:repeat(2,1fr)}.next-card{flex-direction:column;align-items:flex-start}}
+
+/* ===== CERTYFIKAT — nowy wygląd ===== */
+.cert-center{max-width:680px;margin:0 auto;text-align:center}
+.cert-icon-big{font-size:5rem;margin-bottom:1.5rem}
+
+.cert-preview{
+  position:relative;
+  border-radius:20px;
+  padding:3px;
+  background:linear-gradient(135deg,#1d9e75 0%,#0f6e56 25%,#c9a84c 50%,#1d9e75 75%,#0f6e56 100%);
+  margin:1.5rem 0;
+  box-shadow:0 0 60px rgba(29,158,117,0.18);
+}
+.cert-inner{
+  background:linear-gradient(160deg,#07111f 0%,#0b1a2e 40%,#071620 100%);
+  border-radius:18px;
+  padding:3rem 2.8rem 2.6rem;
+  position:relative;
+  overflow:hidden;
+}
+.cert-inner::before{
+  content:'';
+  position:absolute;
+  inset:0;
+  background:
+    radial-gradient(ellipse 60% 40% at 15% 10%,rgba(29,158,117,0.07) 0%,transparent 60%),
+    radial-gradient(ellipse 50% 35% at 85% 85%,rgba(201,168,76,0.06) 0%,transparent 60%);
+  pointer-events:none;
+}
+.cert-corner{position:absolute;width:56px;height:56px;opacity:.45}
+.cert-corner.tl{top:18px;left:18px;border-top:2px solid #c9a84c;border-left:2px solid #c9a84c;border-radius:4px 0 0 0}
+.cert-corner.tr{top:18px;right:18px;border-top:2px solid #c9a84c;border-right:2px solid #c9a84c;border-radius:0 4px 0 0}
+.cert-corner.bl{bottom:18px;left:18px;border-bottom:2px solid #c9a84c;border-left:2px solid #c9a84c;border-radius:0 0 0 4px}
+.cert-corner.br{bottom:18px;right:18px;border-bottom:2px solid #c9a84c;border-right:2px solid #c9a84c;border-radius:0 0 4px 0}
+
+.cert-brand{display:flex;align-items:center;justify-content:center;gap:.6rem;margin-bottom:1.6rem}
+.cert-brand-icon{width:38px;height:38px;background:linear-gradient(135deg,#1d9e75,#0f6e56);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.2rem}
+.cert-brand-name{font-family:'Syne',sans-serif;font-size:1.15rem;font-weight:800;color:#fff;letter-spacing:-.01em}
+.cert-brand-name span{color:rgba(255,255,255,0.35)}
+
+.cert-ornament{display:flex;align-items:center;gap:.8rem;margin-bottom:1.4rem}
+.cert-ornament-line{flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(201,168,76,0.4),transparent)}
+.cert-ornament-diamond{width:6px;height:6px;background:#c9a84c;transform:rotate(45deg);opacity:.7}
+
+.cert-headline-text{font-size:.62rem;text-transform:uppercase;letter-spacing:.28em;color:rgba(201,168,76,0.7);margin-bottom:1.2rem;font-weight:600}
+.cert-intro{font-size:.8rem;color:rgba(255,255,255,0.4);margin-bottom:.6rem;letter-spacing:.02em}
+.cert-recipient{font-family:'Syne',sans-serif;font-size:2.1rem;font-weight:800;color:#fff;line-height:1.15;margin-bottom:1.2rem;text-shadow:0 0 30px rgba(29,158,117,0.3)}
+
+.cert-course-wrap{background:rgba(29,158,117,0.08);border:1px solid rgba(29,158,117,0.2);border-radius:12px;padding:.9rem 1.4rem;display:inline-block;margin-bottom:1.4rem}
+.cert-course-label{font-size:.67rem;text-transform:uppercase;letter-spacing:.14em;color:rgba(255,255,255,0.35);margin-bottom:.3rem}
+.cert-course-name{font-family:'Syne',sans-serif;font-size:1.05rem;font-weight:700;color:#fff}
+
+.cert-meta-row{display:flex;justify-content:center;gap:2.5rem;margin-bottom:1.4rem}
+.cert-meta-item{text-align:center}
+.cert-meta-num{font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;color:#1d9e75}
+.cert-meta-label{font-size:.63rem;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:.1em;margin-top:.15rem}
+
+.cert-seal{width:68px;height:68px;border-radius:50%;border:2px solid rgba(201,168,76,0.5);display:flex;align-items:center;justify-content:center;font-size:2rem;margin:0 auto 1rem;background:rgba(201,168,76,0.06)}
+
+.cert-date-text{font-size:.75rem;color:rgba(255,255,255,0.3);letter-spacing:.05em}
+.cert-sig-row{display:flex;justify-content:space-between;align-items:flex-end;margin-top:1.8rem;padding-top:1.2rem;border-top:1px solid rgba(255,255,255,0.07)}
+.cert-sig{text-align:center}
+.cert-sig-line{width:100px;height:1px;background:rgba(255,255,255,0.2);margin:0 auto .4rem}
+.cert-sig-name{font-size:.7rem;color:rgba(255,255,255,0.3);letter-spacing:.05em}
+
+.cert-id-text{font-size:.6rem;color:rgba(255,255,255,0.15);margin-top:.6rem;letter-spacing:.04em}
+
+/* ===== Progress + button ===== */
+.cert-progress-card{background:rgba(29,158,117,0.05);border:1px solid rgba(29,158,117,0.15);border-radius:16px;padding:1.5rem;margin-bottom:1rem}
+
+@media(max-width:768px){.dash-stats{grid-template-columns:repeat(2,1fr)}.next-card{flex-direction:column;align-items:flex-start}.cert-meta-row{gap:1.2rem}.cert-recipient{font-size:1.5rem}.cert-sig-row{flex-direction:column;gap:1rem;align-items:center}}
 </style>
 </head>
 <body>
@@ -33,7 +101,7 @@
 <div class="app-layout" id="app" style="display:none">
   <div class="sidebar" id="sidebar">
     <div class="sidebar-header">
-      <a href="index.html" class="logo">Naffy<span>.ai</span></a>
+      <a href="index.html" class="logo" style="font-size:.95rem;line-height:1.2">AI Kurs<span> dla każdego</span></a>
       <button class="theme-toggle" onclick="toggleTheme()" title="Zmień motyw" id="theme-btn">🌙</button>
     </div>
     <div class="sidebar-body">
@@ -173,21 +241,75 @@
           </div>
 
           <!-- Podgląd certyfikatu -->
-          <div class="cert-preview" id="cert-preview-box">
-            <div class="cert-logo">Naffy<span>.ai</span></div>
-            <div class="cert-headline">Certyfikat ukończenia kursu</div>
-            <div class="cert-divider"></div>
-            <div style="font-size:.78rem;color:var(--muted);margin-bottom:.5rem">Niniejszym zaświadcza się, że</div>
-            <div class="cert-recipient" id="cert-name-preview">—</div>
-            <div class="cert-course-label">ukończył/a kurs</div>
-            <div class="cert-course-name">AI które oszczędza Twoje pieniądze</div>
-            <div class="cert-divider"></div>
-            <div class="cert-date" id="cert-date-preview">—</div>
-            <div class="cert-stamp">🏆</div>
+          <div class="cert-preview">
+            <div class="cert-inner">
+              <div class="cert-corner tl"></div>
+              <div class="cert-corner tr"></div>
+              <div class="cert-corner bl"></div>
+              <div class="cert-corner br"></div>
+
+              <div class="cert-brand">
+                <div class="cert-brand-icon">🎓</div>
+                <div class="cert-brand-name">AI Kurs<span> dla każdego</span></div>
+              </div>
+
+              <div class="cert-ornament">
+                <div class="cert-ornament-line"></div>
+                <div class="cert-ornament-diamond"></div>
+                <div style="font-size:.58rem;text-transform:uppercase;letter-spacing:.22em;color:rgba(201,168,76,0.6);white-space:nowrap;font-weight:600">Certyfikat ukończenia</div>
+                <div class="cert-ornament-diamond"></div>
+                <div class="cert-ornament-line"></div>
+              </div>
+
+              <div class="cert-intro">Niniejszym zaświadcza się, że</div>
+              <div class="cert-recipient" id="cert-name-preview">—</div>
+
+              <div class="cert-intro" style="margin-bottom:.8rem">ukończył/a kurs</div>
+              <div class="cert-course-wrap">
+                <div class="cert-course-label">Nazwa kursu</div>
+                <div class="cert-course-name">AI które oszczędza Twoje pieniądze</div>
+              </div>
+
+              <div class="cert-meta-row" id="cert-meta-row">
+                <div class="cert-meta-item">
+                  <div class="cert-meta-num" id="cert-meta-lessons">—</div>
+                  <div class="cert-meta-label">Lekcji</div>
+                </div>
+                <div class="cert-meta-item">
+                  <div class="cert-meta-num" id="cert-meta-modules">—</div>
+                  <div class="cert-meta-label">Modułów</div>
+                </div>
+                <div class="cert-meta-item">
+                  <div class="cert-meta-num">100%</div>
+                  <div class="cert-meta-label">Ukończono</div>
+                </div>
+              </div>
+
+              <div class="cert-ornament" style="margin-bottom:1rem">
+                <div class="cert-ornament-line"></div>
+                <div class="cert-ornament-diamond"></div>
+                <div class="cert-ornament-line"></div>
+              </div>
+
+              <div class="cert-seal">🏆</div>
+              <div class="cert-date-text" id="cert-date-preview">—</div>
+
+              <div class="cert-sig-row">
+                <div class="cert-sig">
+                  <div class="cert-sig-line"></div>
+                  <div class="cert-sig-name">AI Kurs dla każdego</div>
+                </div>
+                <div class="cert-sig">
+                  <div class="cert-sig-line"></div>
+                  <div class="cert-sig-name" id="cert-sig-student">Kursant</div>
+                </div>
+              </div>
+              <div class="cert-id-text" id="cert-id-preview"></div>
+            </div>
           </div>
 
           <!-- Pasek postępu -->
-          <div class="card" style="padding:1.5rem;margin-bottom:1rem">
+          <div class="cert-progress-card">
             <div class="progress-meta" style="margin-bottom:.5rem">
               <span id="cert-done-text">0 / 0 lekcji</span>
               <span id="cert-pct-text" style="color:var(--green);font-weight:600">0%</span>
@@ -210,7 +332,6 @@
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-<!-- jsPDF do generowania certyfikatu -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="app.js"></script>
 <script>
@@ -229,14 +350,12 @@ let unlockedAch = new Set()
 let currentMod = 0, currentLes = 0, nextMod = 0, nextLes = 0
 let streak = 0, notesCount = 0
 
-// ===== AUTH =====
 firebase.auth().onAuthStateChanged(async user => {
   if (!user) { window.location.href = 'index.html'; return }
   currentUser = user
   try {
     const kursDoc = await db.collection('konfiguracja').doc('kurs').get()
     kursData = kursDoc.exists ? kursDoc.data() : getKursData()
-
     const userDoc = await db.collection('uczniowie').doc(user.uid).get()
     if (userDoc.exists) {
       const d = userDoc.data()
@@ -244,17 +363,13 @@ firebase.auth().onAuthStateChanged(async user => {
       unlockedAch = new Set(d.achievements || [])
       streak = d.streak || 0
     }
-
     const notesSnap = await db.collection('uczniowie').doc(user.uid).collection('notatki').get()
     notesSnap.forEach(doc => { notesCache[doc.id] = doc.data().content || '' })
     notesCount = notesSnap.size
-
     const hwSnap = await db.collection('uczniowie').doc(user.uid).collection('zadania').get()
     hwSnap.forEach(doc => { hwCache[doc.id] = doc.data().content || '' })
-
     const quizSnap = await db.collection('uczniowie').doc(user.uid).collection('quizy').get()
     quizSnap.forEach(doc => { quizResults[doc.id] = doc.data() })
-
     updateStreak()
   } catch (e) {
     kursData = getKursData()
@@ -269,7 +384,6 @@ firebase.auth().onAuthStateChanged(async user => {
 
 function doLogout() { firebase.auth().signOut().then(() => { window.location.href = 'index.html' }) }
 
-// ===== STREAK =====
 async function updateStreak() {
   const today = new Date().toDateString()
   const lastDay = KV.get('last_study_' + (currentUser ? currentUser.uid : ''))
@@ -279,26 +393,24 @@ async function updateStreak() {
   else if (lastDay !== today) streak = 1
   KV.set('last_study_' + currentUser.uid, today)
   KV.set('streak_' + currentUser.uid, streak)
-  try {
-    await db.collection('uczniowie').doc(currentUser.uid).set({ streak }, { merge: true })
-  } catch (e) {}
+  try { await db.collection('uczniowie').doc(currentUser.uid).set({ streak }, { merge: true }) } catch (e) {}
   document.getElementById('streak-num').textContent = streak
 }
 
-// ===== INIT =====
 function initUI() {
   const name = getUserDisplayName(currentUser)
   document.getElementById('sb-avatar').textContent = name[0].toUpperCase()
   document.getElementById('sb-name').textContent = name
   document.getElementById('sb-email').textContent = currentUser.email
-  if (currentUser.email === ADMIN_EMAIL) {
-    document.getElementById('admin-link').style.display = 'block'
-  }
+  if (currentUser.email === ADMIN_EMAIL) document.getElementById('admin-link').style.display = 'block'
   document.getElementById('dash-greeting').textContent = 'Cześć, ' + name.split(' ')[0] + '! 👋'
   document.getElementById('streak-num').textContent = streak
-  // Podgląd certyfikatu — imię i data
   document.getElementById('cert-name-preview').textContent = name
+  document.getElementById('cert-sig-student').textContent = name
   document.getElementById('cert-date-preview').textContent = new Date().toLocaleDateString('pl-PL', { year: 'numeric', month: 'long', day: 'numeric' })
+  const total = (kursData.modules || []).reduce((a, m) => a + m.lessons.length, 0)
+  document.getElementById('cert-meta-lessons').textContent = total || '—'
+  document.getElementById('cert-meta-modules').textContent = (kursData.modules || []).length || '—'
   calcTimeLeft()
   buildSidebar()
   updateProgress()
@@ -308,7 +420,6 @@ function initUI() {
   loadTheme()
 }
 
-// ===== CZAS DO KOŃCA =====
 function calcTimeLeft() {
   let mins = 0
   kursData.modules.forEach(mod => mod.lessons.forEach(les => {
@@ -321,7 +432,6 @@ function calcTimeLeft() {
   document.getElementById('time-left').textContent = mins > 0 ? (h > 0 ? h + 'h ' : '') + m + ' min' : 'Kurs ukończony!'
 }
 
-// ===== SIDEBAR =====
 function buildSidebar() {
   const total = kursData.modules.reduce((a, m) => a + m.lessons.length, 0)
   document.getElementById('sb-total').textContent = total
@@ -353,7 +463,6 @@ function buildSidebar() {
 
 function toggleMod(mi) { document.getElementById('mod-group-' + mi).classList.toggle('open') }
 
-// ===== SEARCH =====
 function doSearch(q) {
   const res = document.getElementById('search-results')
   if (!q.trim()) { res.classList.remove('show'); return }
@@ -374,7 +483,6 @@ document.addEventListener('click', e => {
   if (!e.target.closest('.search-wrap')) document.getElementById('search-results').classList.remove('show')
 })
 
-// ===== PROGRESS =====
 function updateProgress() {
   const total = kursData.modules.reduce((a, m) => a + m.lessons.length, 0)
   const done = completed.size
@@ -393,13 +501,10 @@ function updateProgress() {
   if (done === total && total > 0) {
     certBtn.disabled = false
     document.getElementById('cert-header-sub').textContent = 'Kurs ukończony! Twój certyfikat czeka.'
-  } else {
-    certBtn.disabled = true
-  }
+  } else { certBtn.disabled = true }
   calcTimeLeft()
 }
 
-// ===== DASHBOARD =====
 function updateDashboard() {
   const total = kursData.modules.reduce((a, m) => a + m.lessons.length, 0)
   const done = completed.size
@@ -428,7 +533,6 @@ function updateDashboard() {
   }).join('')
 }
 
-// ===== VIEWS =====
 function showView(name) {
   ['dashboard', 'lesson', 'achievements', 'cert'].forEach(v => {
     document.getElementById('view-' + v).style.display = v === name ? 'block' : 'none'
@@ -443,7 +547,6 @@ function goNext() {
   openLesson(nextMod, nextLes)
 }
 
-// ===== OPEN LESSON =====
 function openLesson(mi, li) {
   currentMod = mi; currentLes = li
   const mod = kursData.modules[mi], les = mod.lessons[li]
@@ -500,7 +603,6 @@ function switchTab(name, btn) {
   btn.classList.add('active')
 }
 
-// ===== QUIZ =====
 function renderQuiz(les) {
   const area = document.getElementById('quiz-area')
   if (!les.quiz || !les.quiz.length) { area.innerHTML = '<div class="no-pdfs">Brak quizu do tej lekcji.</div>'; return }
@@ -548,7 +650,6 @@ async function submitQuiz(lesId) {
 
 function resetQuiz(lesId) { delete quizResults[lesId]; renderQuiz(kursData.modules[currentMod].lessons[currentLes]) }
 
-// ===== COMMENTS =====
 async function renderComments(lesId) {
   const area = document.getElementById('comments-area')
   area.innerHTML = `<div style="margin-bottom:1rem">
@@ -566,7 +667,7 @@ async function renderComments(lesId) {
       return `<div class="comment-item">
         <div class="comment-header"><div class="comment-avatar">${(d.authorName || '?')[0].toUpperCase()}</div><span class="comment-author">${d.authorName || 'Uczestnik'}</span><span class="comment-date">${date}</span></div>
         <div class="comment-text">${d.text}</div>
-        ${d.reply ? `<div class="comment-reply"><div class="comment-header"><div class="comment-avatar" style="background:rgba(226,75,74,0.2);color:var(--red)">N</div><span class="comment-author">Naffy.ai</span></div><div class="comment-text">${d.reply}</div></div>` : ''}
+        ${d.reply ? `<div class="comment-reply"><div class="comment-header"><div class="comment-avatar" style="background:rgba(29,158,117,0.2);color:var(--green)">A</div><span class="comment-author">AI Kurs dla każdego</span></div><div class="comment-text">${d.reply}</div></div>` : ''}
       </div>`
     }).join('')
   } catch (e) { document.getElementById('comments-list').innerHTML = '<div style="color:var(--muted);font-size:.84rem">Nie można załadować pytań.</div>' }
@@ -586,7 +687,6 @@ async function addComment(lesId) {
   } catch (e) { showToast('Błąd wysyłania pytania.', 'error') }
 }
 
-// ===== TOGGLE COMPLETE =====
 async function toggleComplete() {
   const les = kursData.modules[currentMod].lessons[currentLes]
   const btn = document.getElementById('btn-complete')
@@ -617,7 +717,6 @@ function goNext2() {
   openLesson(mi, li)
 }
 
-// ===== NOTES =====
 async function saveNotes() {
   const les = kursData.modules[currentMod].lessons[currentLes]
   const text = document.getElementById('notes-ta').value
@@ -642,7 +741,6 @@ async function saveHomework(lesId) {
   } catch (e) { KV.set('hw_' + currentUser.uid + '_' + lesId, text) }
 }
 
-// ===== ACHIEVEMENTS =====
 function checkAchievements() {
   const total = kursData.modules.reduce((a, m) => a + m.lessons.length, 0)
   const done = completed.size
@@ -687,7 +785,7 @@ function renderAchievements() {
   }).join('')
 }
 
-// ===== CERTYFIKAT PDF =====
+// ===== CERTYFIKAT PDF — zaktualizowany =====
 function downloadCert() {
   const btn = document.getElementById('cert-btn')
   btn.disabled = true
@@ -696,104 +794,161 @@ function downloadCert() {
   try {
     const { jsPDF } = window.jspdf
     const doc = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' })
-
     const W = 297, H = 210
 
-    // Tło
-    doc.setFillColor(10, 15, 30)
+    // Tło granatowe
+    doc.setFillColor(7, 17, 31)
     doc.rect(0, 0, W, H, 'F')
 
-    // Ramka zewnętrzna
-    doc.setDrawColor(29, 158, 117)
-    doc.setLineWidth(1.2)
-    doc.rect(10, 10, W - 20, H - 20)
+    // Subtelny gradient środkowy — imitacja
+    doc.setFillColor(11, 26, 46)
+    doc.rect(40, 30, W - 80, H - 60, 'F')
 
-    // Ramka wewnętrzna
-    doc.setDrawColor(29, 158, 117, 0.3)
-    doc.setLineWidth(0.3)
-    doc.rect(14, 14, W - 28, H - 28)
-
-    // Dekoracyjne linie
+    // Zewnętrzna ramka złoto-zielona (gradient imitowany przez dwie linie)
     doc.setDrawColor(29, 158, 117)
+    doc.setLineWidth(1.5)
+    doc.roundedRect(8, 8, W - 16, H - 16, 4, 4)
+
+    doc.setDrawColor(201, 168, 76)
     doc.setLineWidth(0.5)
-    doc.line(30, 55, W - 30, 55)
-    doc.line(30, H - 55, W - 30, H - 55)
+    doc.roundedRect(12, 12, W - 24, H - 24, 3, 3)
 
-    // Logo
+    // Narożniki ozdobne
+    const corners = [[20,20],[W-20,20],[20,H-20],[W-20,H-20]]
+    doc.setDrawColor(201, 168, 76)
+    doc.setLineWidth(1)
+    const cs = 14
+    corners.forEach(([cx,cy]) => {
+      const sx = cx < W/2 ? 1 : -1
+      const sy = cy < H/2 ? 1 : -1
+      doc.line(cx, cy, cx + sx*cs, cy)
+      doc.line(cx, cy, cx, cy + sy*cs)
+    })
+
+    // Linie ozdobne poziome
+    doc.setDrawColor(29, 158, 117)
+    doc.setLineWidth(0.4)
+    doc.line(30, 52, W - 30, 52)
+    doc.line(30, H - 52, W - 30, H - 52)
+
+    // Romby na linii
+    ;[[W/2-6, 52],[W/2+6, 52],[W/2-6, H-52],[W/2+6, H-52]].forEach(([rx,ry]) => {
+      doc.setFillColor(201, 168, 76)
+      doc.rect(rx-2, ry-2, 4, 4, 'F')
+    })
+
+    // Ikona / brand
+    doc.setFillColor(29, 158, 117)
+    doc.roundedRect(W/2 - 7, 19, 14, 14, 3, 3, 'F')
     doc.setFont('helvetica', 'bold')
-    doc.setFontSize(28)
-    doc.setTextColor(29, 158, 117)
-    doc.text('Naffy', W / 2 - 12, 35, { align: 'center' })
-    doc.setTextColor(120, 120, 140)
-    doc.text('.ai', W / 2 + 14, 35, { align: 'center' })
+    doc.setFontSize(9)
+    doc.setTextColor(255, 255, 255)
+    doc.text('AI', W/2, 27.5, { align: 'center' })
 
-    // Nagłówek
+    // Nazwa platformy
+    doc.setFont('helvetica', 'bold')
+    doc.setFontSize(13)
+    doc.setTextColor(255, 255, 255)
+    doc.text('AI Kurs dla każdego', W/2, 42, { align: 'center' })
+
+    // Ozdobny napis
+    doc.setFont('helvetica', 'normal')
+    doc.setFontSize(7)
+    doc.setTextColor(201, 168, 76)
+    doc.text('✦  C E R T Y F I K A T   U K O Ń C Z E N I A  ✦', W/2, 60, { align: 'center' })
+
+    // Intro
     doc.setFont('helvetica', 'normal')
     doc.setFontSize(10)
-    doc.setTextColor(120, 120, 140)
-    doc.text('CERTYFIKAT UKOŃCZENIA KURSU', W / 2, 46, { align: 'center' })
-
-    // Podtytuł
-    doc.setFontSize(11)
     doc.setTextColor(160, 160, 180)
-    doc.text('Niniejszym zaświadcza się, że', W / 2, 72, { align: 'center' })
+    doc.text('Niniejszym zaświadcza się, że', W/2, 73, { align: 'center' })
 
-    // Imię ucznia
+    // Imię
     const name = getUserDisplayName(currentUser)
     doc.setFont('helvetica', 'bold')
-    doc.setFontSize(36)
+    doc.setFontSize(34)
     doc.setTextColor(255, 255, 255)
-    doc.text(name, W / 2, 95, { align: 'center' })
+    doc.text(name, W/2, 95, { align: 'center' })
 
-    // Opis
+    // Linia pod imieniem
+    const nameWidth = Math.min(doc.getTextWidth(name) + 20, W - 80)
+    doc.setDrawColor(29, 158, 117)
+    doc.setLineWidth(0.6)
+    doc.line(W/2 - nameWidth/2, 99, W/2 + nameWidth/2, 99)
+
+    // Tekst po imieniu
     doc.setFont('helvetica', 'normal')
-    doc.setFontSize(11)
+    doc.setFontSize(10)
     doc.setTextColor(160, 160, 180)
-    doc.text('ukończył/a z wynikiem pozytywnym kurs', W / 2, 110, { align: 'center' })
+    doc.text('ukończył/a z wynikiem pozytywnym kurs', W/2, 110, { align: 'center' })
 
-    // Nazwa kursu
+    // Ramka z nazwą kursu
+    doc.setFillColor(15, 30, 52)
+    doc.setDrawColor(29, 158, 117)
+    doc.setLineWidth(0.5)
+    const courseText = 'AI które oszczędza Twoje pieniądze'
+    doc.roundedRect(W/2 - 70, 114, 140, 14, 3, 3, 'FD')
     doc.setFont('helvetica', 'bold')
-    doc.setFontSize(16)
+    doc.setFontSize(12)
     doc.setTextColor(29, 158, 117)
-    doc.text('AI które oszczędza Twoje pieniądze', W / 2, 122, { align: 'center' })
+    doc.text(courseText, W/2, 123, { align: 'center' })
 
     // Statystyki
     const total = kursData.modules.reduce((a, m) => a + m.lessons.length, 0)
     const modCount = kursData.modules.length
-    doc.setFont('helvetica', 'normal')
-    doc.setFontSize(9)
-    doc.setTextColor(100, 100, 120)
-    doc.text(`${total} lekcji · ${modCount} modułów`, W / 2, 132, { align: 'center' })
+    const stats = [
+      { label: 'Lekcji', val: String(total) },
+      { label: 'Modułów', val: String(modCount) },
+      { label: 'Ukończono', val: '100%' },
+    ]
+    const colW = 36
+    stats.forEach((s, i) => {
+      const x = W/2 + (i - 1) * (colW + 12)
+      doc.setFont('helvetica', 'bold')
+      doc.setFontSize(14)
+      doc.setTextColor(29, 158, 117)
+      doc.text(s.val, x, 143, { align: 'center' })
+      doc.setFont('helvetica', 'normal')
+      doc.setFontSize(7)
+      doc.setTextColor(120, 120, 140)
+      doc.text(s.label.toUpperCase(), x, 148, { align: 'center' })
+    })
 
     // Data
     const date = new Date().toLocaleDateString('pl-PL', { year: 'numeric', month: 'long', day: 'numeric' })
-    doc.setFontSize(10)
-    doc.setTextColor(120, 120, 140)
-    doc.text(date, W / 2, 158, { align: 'center' })
+    doc.setFontSize(9)
+    doc.setTextColor(130, 130, 150)
+    doc.text(date, W/2, 162, { align: 'center' })
 
-    // Podpis — linia lewa
+    // Pieczęć — okrąg
+    doc.setDrawColor(201, 168, 76)
+    doc.setLineWidth(0.8)
+    doc.circle(W/2, 172, 10)
+    doc.setFontSize(16)
+    doc.setTextColor(201, 168, 76)
+    doc.text('★', W/2, 175, { align: 'center' })
+
+    // Podpisy
     doc.setDrawColor(80, 80, 100)
-    doc.setLineWidth(0.4)
-    doc.line(50, 175, 120, 175)
-    doc.setFontSize(8)
-    doc.setTextColor(100, 100, 120)
-    doc.text('Naffy.ai — Platforma edukacyjna', 85, 180, { align: 'center' })
+    doc.setLineWidth(0.3)
+    doc.line(50, H - 26, 120, H - 26)
+    doc.line(W - 120, H - 26, W - 50, H - 26)
+    doc.setFontSize(7.5)
+    doc.setTextColor(110, 110, 130)
+    doc.text('AI Kurs dla każdego', 85, H - 21, { align: 'center' })
+    doc.text(name, W - 85, H - 21, { align: 'center' })
 
-    // Podpis — linia prawa
-    doc.line(177, 175, 247, 175)
-    doc.text('Kursant', 212, 180, { align: 'center' })
+    // Nr certyfikatu
+    const certId = 'AIKURS-' + currentUser.uid.slice(0, 6).toUpperCase() + '-' + Date.now().toString(36).toUpperCase()
+    doc.setFontSize(6)
+    doc.setTextColor(60, 60, 75)
+    doc.text('Nr: ' + certId, W/2, H - 12, { align: 'center' })
 
-    // Numer certyfikatu
-    const certId = 'NAFFY-' + currentUser.uid.slice(0, 6).toUpperCase() + '-' + Date.now().toString(36).toUpperCase()
-    doc.setFontSize(7)
-    doc.setTextColor(60, 60, 80)
-    doc.text('Nr: ' + certId, W / 2, H - 16, { align: 'center' })
-
-    // Zapisz
-    doc.save('certyfikat-naffy-' + name.replace(/\s+/g, '-').toLowerCase() + '.pdf')
+    doc.save('certyfikat-ai-kurs-' + name.replace(/\s+/g, '-').toLowerCase() + '.pdf')
     showToast('Certyfikat pobrany! 🏆', 'success')
 
-    // Zapisz info o certyfikacie do Firestore
+    document.getElementById('cert-id-preview').textContent = 'Nr: ' + certId
+
     db.collection('uczniowie').doc(currentUser.uid).set({
       certDownloaded: true,
       certDate: firebase.firestore.FieldValue.serverTimestamp(),
@@ -809,7 +964,6 @@ function downloadCert() {
   btn.innerHTML = '🏆 Pobierz certyfikat PDF'
 }
 
-// ===== THEME =====
 function toggleTheme() {
   const isLight = document.body.classList.toggle('light')
   KV.set('theme', isLight ? 'light' : 'dark')
