@@ -16,7 +16,8 @@
 .pdf-list{display:grid;gap:.7rem}.pdf-item{display:flex;align-items:center;gap:1rem;padding:.85rem 1.1rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);text-decoration:none;color:var(--white);transition:border-color .2s}.pdf-item:hover{border-color:rgba(29,158,117,0.35)}.pdf-icon{font-size:1.4rem;flex-shrink:0}.pdf-name{font-size:.88rem;font-weight:500}.pdf-meta{font-size:.73rem;color:var(--muted);margin-top:.12rem}.pdf-dl{margin-left:auto;color:var(--green);font-size:.78rem;flex-shrink:0}.no-pdfs{color:var(--muted);font-size:.87rem;text-align:center;padding:2rem}
 .homework-box{background:rgba(55,138,221,0.05);border:1px solid rgba(55,138,221,0.2);border-radius:var(--radius);padding:1.25rem;margin-bottom:1rem}.homework-label{font-size:.7rem;color:var(--blue);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.5rem}.homework-text{font-size:.9rem;line-height:1.6;color:rgba(255,255,255,0.8)}
 .lesson-nav{display:flex;justify-content:space-between;align-items:center;margin-top:2rem;padding-top:1.5rem;border-top:1px solid var(--border);gap:1rem}.btn-complete-done{background:rgba(29,158,117,0.12)!important;color:var(--green)!important;border:1px solid rgba(29,158,117,0.25)!important}
-.cert-center{max-width:540px;margin:0 auto;text-align:center}.cert-icon-big{font-size:5rem;margin-bottom:1.5rem}
+.cert-center{max-width:600px;margin:0 auto;text-align:center}.cert-icon-big{font-size:5rem;margin-bottom:1.5rem}
+.cert-preview{background:linear-gradient(135deg,#0a0f1e 0%,#0f1628 50%,#0a0f1e 100%);border:2px solid rgba(29,158,117,0.4);border-radius:16px;padding:3rem 2.5rem;margin:1.5rem 0;position:relative;overflow:hidden}.cert-preview::before{content:'';position:absolute;inset:8px;border:1px solid rgba(29,158,117,0.15);border-radius:12px;pointer-events:none}.cert-preview::after{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(ellipse at center,rgba(29,158,117,0.04) 0%,transparent 60%);pointer-events:none}.cert-logo{font-family:'Syne',sans-serif;font-size:1.5rem;font-weight:800;color:var(--green);margin-bottom:1.5rem;letter-spacing:-.02em}.cert-logo span{color:rgba(255,255,255,0.4)}.cert-headline{font-size:.72rem;text-transform:uppercase;letter-spacing:.25em;color:var(--muted);margin-bottom:.75rem}.cert-recipient{font-family:'Syne',sans-serif;font-size:2rem;font-weight:800;color:#fff;margin-bottom:.5rem;line-height:1.2}.cert-course-label{font-size:.75rem;color:var(--muted);margin-bottom:.4rem}.cert-course-name{font-size:1rem;font-weight:600;color:rgba(255,255,255,0.85);margin-bottom:1.5rem}.cert-divider{width:80px;height:2px;background:linear-gradient(90deg,transparent,var(--green),transparent);margin:1.25rem auto}.cert-date{font-size:.78rem;color:var(--muted)}.cert-stamp{position:absolute;bottom:1.5rem;right:1.5rem;width:64px;height:64px;border-radius:50%;border:2px solid rgba(29,158,117,0.3);display:flex;align-items:center;justify-content:center;font-size:1.8rem;color:var(--green);opacity:.6}
 @media(max-width:768px){.dash-stats{grid-template-columns:repeat(2,1fr)}.next-card{flex-direction:column;align-items:flex-start}}
 </style>
 </head>
@@ -107,7 +108,7 @@
         <div class="dash-stats">
           <div class="card stat-card"><div class="stat-num" id="ds-done">0</div><div class="stat-label">Ukończonych lekcji</div></div>
           <div class="card stat-card"><div class="stat-num" id="ds-pct">0%</div><div class="stat-label">Postęp kursu</div></div>
-          <div class="card stat-card"><div class="stat-num" id="ds-mod">0/6</div><div class="stat-label">Modułów</div></div>
+          <div class="card stat-card"><div class="stat-num" id="ds-mod">0/0</div><div class="stat-label">Modułów</div></div>
         </div>
         <div class="next-card" onclick="goNext()">
           <div>
@@ -166,15 +167,39 @@
       <!-- CERTYFIKAT -->
       <div id="view-cert" style="display:none">
         <div class="cert-center">
-          <div class="page-header" style="text-align:center"><h1>Certyfikat ukończenia</h1><p>Ukończ wszystkie lekcje żeby odblokować certyfikat.</p></div>
-          <div class="card" style="text-align:center;padding:3rem">
-            <div class="cert-icon-big" id="cert-icon">🔒</div>
-            <h2 id="cert-title" style="margin-bottom:.5rem">Kurs w trakcie</h2>
-            <p id="cert-sub" style="color:var(--muted);margin-bottom:2rem;font-size:.9rem"></p>
-            <div class="progress-meta" style="max-width:300px;margin:0 auto .5rem"><span id="cert-done-text">0 / 0</span><span id="cert-pct-text">0%</span></div>
-            <div class="progress-track" style="max-width:300px;margin:0 auto 1.5rem"><div class="progress-fill" id="cert-bar" style="width:0%"></div></div>
-            <button class="btn btn-green btn-lg" id="cert-btn" disabled onclick="downloadCert()">🏆 Pobierz certyfikat PDF</button>
+          <div class="page-header" style="text-align:center">
+            <h1>Certyfikat ukończenia 🏆</h1>
+            <p id="cert-header-sub">Ukończ wszystkie lekcje żeby odblokować certyfikat.</p>
           </div>
+
+          <!-- Podgląd certyfikatu -->
+          <div class="cert-preview" id="cert-preview-box">
+            <div class="cert-logo">Naffy<span>.ai</span></div>
+            <div class="cert-headline">Certyfikat ukończenia kursu</div>
+            <div class="cert-divider"></div>
+            <div style="font-size:.78rem;color:var(--muted);margin-bottom:.5rem">Niniejszym zaświadcza się, że</div>
+            <div class="cert-recipient" id="cert-name-preview">—</div>
+            <div class="cert-course-label">ukończył/a kurs</div>
+            <div class="cert-course-name">AI które oszczędza Twoje pieniądze</div>
+            <div class="cert-divider"></div>
+            <div class="cert-date" id="cert-date-preview">—</div>
+            <div class="cert-stamp">🏆</div>
+          </div>
+
+          <!-- Pasek postępu -->
+          <div class="card" style="padding:1.5rem;margin-bottom:1rem">
+            <div class="progress-meta" style="margin-bottom:.5rem">
+              <span id="cert-done-text">0 / 0 lekcji</span>
+              <span id="cert-pct-text" style="color:var(--green);font-weight:600">0%</span>
+            </div>
+            <div class="progress-track"><div class="progress-fill" id="cert-bar" style="width:0%"></div></div>
+            <p id="cert-sub" style="color:var(--muted);font-size:.84rem;margin-top:.75rem;text-align:center"></p>
+          </div>
+
+          <button class="btn btn-green btn-lg" id="cert-btn" disabled onclick="downloadCert()" style="width:100%;font-size:1rem;padding:1rem">
+            🏆 Pobierz certyfikat PDF
+          </button>
+          <p style="font-size:.73rem;color:var(--muted);margin-top:.75rem">Certyfikat zostanie wygenerowany jako plik PDF gotowy do druku i udostępnienia.</p>
         </div>
       </div>
 
@@ -185,6 +210,8 @@
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<!-- jsPDF do generowania certyfikatu -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="app.js"></script>
 <script>
 if (!firebase.apps.length) firebase.initializeApp(FIREBASE_CONFIG)
@@ -269,6 +296,9 @@ function initUI() {
   }
   document.getElementById('dash-greeting').textContent = 'Cześć, ' + name.split(' ')[0] + '! 👋'
   document.getElementById('streak-num').textContent = streak
+  // Podgląd certyfikatu — imię i data
+  document.getElementById('cert-name-preview').textContent = name
+  document.getElementById('cert-date-preview').textContent = new Date().toLocaleDateString('pl-PL', { year: 'numeric', month: 'long', day: 'numeric' })
   calcTimeLeft()
   buildSidebar()
   updateProgress()
@@ -280,7 +310,6 @@ function initUI() {
 
 // ===== CZAS DO KOŃCA =====
 function calcTimeLeft() {
-  const total = kursData.modules.reduce((a, m) => a + m.lessons.length, 0)
   let mins = 0
   kursData.modules.forEach(mod => mod.lessons.forEach(les => {
     if (!completed.has(les.id)) {
@@ -355,13 +384,17 @@ function updateProgress() {
   document.getElementById('sb-done').textContent = done
   document.getElementById('sb-total').textContent = total
   document.getElementById('cert-bar').style.width = pct + '%'
-  document.getElementById('cert-done-text').textContent = done + ' / ' + total
+  document.getElementById('cert-done-text').textContent = done + ' / ' + total + ' lekcji'
   document.getElementById('cert-pct-text').textContent = pct + '%'
-  document.getElementById('cert-sub').textContent = pct < 100 ? `Ukończ jeszcze ${total - done} lekcji żeby odblokować certyfikat.` : 'Gratulacje! Certyfikat jest gotowy!'
+  document.getElementById('cert-sub').textContent = pct < 100
+    ? `Ukończ jeszcze ${total - done} lekcji żeby odblokować certyfikat.`
+    : 'Gratulacje! Możesz pobrać swój certyfikat.'
+  const certBtn = document.getElementById('cert-btn')
   if (done === total && total > 0) {
-    document.getElementById('cert-icon').textContent = '🏆'
-    document.getElementById('cert-title').textContent = 'Kurs ukończony!'
-    document.getElementById('cert-btn').disabled = false
+    certBtn.disabled = false
+    document.getElementById('cert-header-sub').textContent = 'Kurs ukończony! Twój certyfikat czeka.'
+  } else {
+    certBtn.disabled = true
   }
   calcTimeLeft()
 }
@@ -499,8 +532,8 @@ async function submitQuiz(lesId) {
     if (sel) {
       const val = parseInt(sel.value)
       document.getElementById(`qopt-${qi}-${val}`).classList.add(val === q.correct ? 'correct' : 'wrong')
-      if (val === q.correct) { correct++; document.getElementById(`qopt-${qi}-${val}`).classList.add('correct') }
-      else { document.getElementById(`qopt-${qi}-${q.correct}`).classList.add('correct') }
+      if (val === q.correct) correct++
+      else document.getElementById(`qopt-${qi}-${q.correct}`).classList.add('correct')
     } else { document.getElementById(`qopt-${qi}-${q.correct}`).classList.add('correct') }
   })
   const score = Math.round(correct / les.quiz.length * 100)
@@ -654,11 +687,126 @@ function renderAchievements() {
   }).join('')
 }
 
-// ===== CERTYFIKAT =====
+// ===== CERTYFIKAT PDF =====
 function downloadCert() {
-  const name = getUserDisplayName(currentUser)
-  const date = new Date().toLocaleDateString('pl-PL')
-  alert(`🏆 CERTYFIKAT UKOŃCZENIA\n\nKursant: ${name}\nKurs: AI które oszczędza Twoje pieniądze\nData: ${date}\n\n(Generowanie PDF wkrótce dostępne)`)
+  const btn = document.getElementById('cert-btn')
+  btn.disabled = true
+  btn.innerHTML = '<span class="spinner"></span> Generuję PDF...'
+
+  try {
+    const { jsPDF } = window.jspdf
+    const doc = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' })
+
+    const W = 297, H = 210
+
+    // Tło
+    doc.setFillColor(10, 15, 30)
+    doc.rect(0, 0, W, H, 'F')
+
+    // Ramka zewnętrzna
+    doc.setDrawColor(29, 158, 117)
+    doc.setLineWidth(1.2)
+    doc.rect(10, 10, W - 20, H - 20)
+
+    // Ramka wewnętrzna
+    doc.setDrawColor(29, 158, 117, 0.3)
+    doc.setLineWidth(0.3)
+    doc.rect(14, 14, W - 28, H - 28)
+
+    // Dekoracyjne linie
+    doc.setDrawColor(29, 158, 117)
+    doc.setLineWidth(0.5)
+    doc.line(30, 55, W - 30, 55)
+    doc.line(30, H - 55, W - 30, H - 55)
+
+    // Logo
+    doc.setFont('helvetica', 'bold')
+    doc.setFontSize(28)
+    doc.setTextColor(29, 158, 117)
+    doc.text('Naffy', W / 2 - 12, 35, { align: 'center' })
+    doc.setTextColor(120, 120, 140)
+    doc.text('.ai', W / 2 + 14, 35, { align: 'center' })
+
+    // Nagłówek
+    doc.setFont('helvetica', 'normal')
+    doc.setFontSize(10)
+    doc.setTextColor(120, 120, 140)
+    doc.text('CERTYFIKAT UKOŃCZENIA KURSU', W / 2, 46, { align: 'center' })
+
+    // Podtytuł
+    doc.setFontSize(11)
+    doc.setTextColor(160, 160, 180)
+    doc.text('Niniejszym zaświadcza się, że', W / 2, 72, { align: 'center' })
+
+    // Imię ucznia
+    const name = getUserDisplayName(currentUser)
+    doc.setFont('helvetica', 'bold')
+    doc.setFontSize(36)
+    doc.setTextColor(255, 255, 255)
+    doc.text(name, W / 2, 95, { align: 'center' })
+
+    // Opis
+    doc.setFont('helvetica', 'normal')
+    doc.setFontSize(11)
+    doc.setTextColor(160, 160, 180)
+    doc.text('ukończył/a z wynikiem pozytywnym kurs', W / 2, 110, { align: 'center' })
+
+    // Nazwa kursu
+    doc.setFont('helvetica', 'bold')
+    doc.setFontSize(16)
+    doc.setTextColor(29, 158, 117)
+    doc.text('AI które oszczędza Twoje pieniądze', W / 2, 122, { align: 'center' })
+
+    // Statystyki
+    const total = kursData.modules.reduce((a, m) => a + m.lessons.length, 0)
+    const modCount = kursData.modules.length
+    doc.setFont('helvetica', 'normal')
+    doc.setFontSize(9)
+    doc.setTextColor(100, 100, 120)
+    doc.text(`${total} lekcji · ${modCount} modułów`, W / 2, 132, { align: 'center' })
+
+    // Data
+    const date = new Date().toLocaleDateString('pl-PL', { year: 'numeric', month: 'long', day: 'numeric' })
+    doc.setFontSize(10)
+    doc.setTextColor(120, 120, 140)
+    doc.text(date, W / 2, 158, { align: 'center' })
+
+    // Podpis — linia lewa
+    doc.setDrawColor(80, 80, 100)
+    doc.setLineWidth(0.4)
+    doc.line(50, 175, 120, 175)
+    doc.setFontSize(8)
+    doc.setTextColor(100, 100, 120)
+    doc.text('Naffy.ai — Platforma edukacyjna', 85, 180, { align: 'center' })
+
+    // Podpis — linia prawa
+    doc.line(177, 175, 247, 175)
+    doc.text('Kursant', 212, 180, { align: 'center' })
+
+    // Numer certyfikatu
+    const certId = 'NAFFY-' + currentUser.uid.slice(0, 6).toUpperCase() + '-' + Date.now().toString(36).toUpperCase()
+    doc.setFontSize(7)
+    doc.setTextColor(60, 60, 80)
+    doc.text('Nr: ' + certId, W / 2, H - 16, { align: 'center' })
+
+    // Zapisz
+    doc.save('certyfikat-naffy-' + name.replace(/\s+/g, '-').toLowerCase() + '.pdf')
+    showToast('Certyfikat pobrany! 🏆', 'success')
+
+    // Zapisz info o certyfikacie do Firestore
+    db.collection('uczniowie').doc(currentUser.uid).set({
+      certDownloaded: true,
+      certDate: firebase.firestore.FieldValue.serverTimestamp(),
+      certId
+    }, { merge: true }).catch(() => {})
+
+  } catch (e) {
+    showToast('Błąd generowania PDF: ' + e.message, 'error')
+    console.error(e)
+  }
+
+  btn.disabled = false
+  btn.innerHTML = '🏆 Pobierz certyfikat PDF'
 }
 
 // ===== THEME =====
