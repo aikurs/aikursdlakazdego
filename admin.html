@@ -9,35 +9,60 @@
 .admin-badge{background:rgba(226,75,74,0.12);border:1px solid rgba(226,75,74,0.25);color:var(--red);font-size:.7rem;padding:.2rem .6rem;border-radius:50px;font-weight:600}
 .admin-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:2rem}
 .admin-stat{text-align:center;padding:1.2rem}.admin-stat .n{font-family:'Syne',sans-serif;font-weight:800;font-size:1.9rem;color:var(--green)}.admin-stat .l{font-size:.73rem;color:var(--muted);margin-top:.3rem}
-.mod-admin{border:1px solid var(--border);border-radius:var(--radius-lg);margin-bottom:.75rem;overflow:hidden}
+.mod-admin{border:1px solid var(--border);border-radius:var(--radius-lg);margin-bottom:.75rem;overflow:hidden;transition:border-color .2s}
+.mod-admin:hover{border-color:rgba(255,255,255,0.15)}
 .mod-admin-header{display:flex;align-items:center;justify-content:space-between;padding:.9rem 1.2rem;background:var(--surface);cursor:pointer;transition:background .15s}.mod-admin-header:hover{background:var(--surface2)}
-.mod-admin-title{font-family:'Syne',sans-serif;font-weight:700;font-size:.93rem;display:flex;align-items:center;gap:.75rem}
+.mod-admin-title{font-family:'Syne',sans-serif;font-weight:700;font-size:.93rem;display:flex;align-items:center;gap:.75rem;flex:1;min-width:0}
+.mod-admin-actions{display:flex;gap:.4rem;flex-shrink:0}
 .mod-admin-body{display:none;padding:1rem;border-top:1px solid var(--border)}.mod-admin.open .mod-admin-body{display:block}
-.mod-chevron{color:var(--muted);transition:transform .2s;font-size:.8rem}.mod-admin.open .mod-chevron{transform:rotate(90deg)}
+.mod-chevron{color:var(--muted);transition:transform .2s;font-size:.8rem;flex-shrink:0}.mod-admin.open .mod-chevron{transform:rotate(90deg)}
 .lesson-row{display:flex;align-items:center;gap:.75rem;padding:.7rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:.4rem;transition:border-color .2s}.lesson-row:hover{border-color:rgba(255,255,255,0.15)}
 .lesson-row-num{font-size:.73rem;color:var(--muted);width:28px;flex-shrink:0;font-weight:600}
-.lesson-row-title{flex:1;font-size:.87rem;font-weight:500}
-.lesson-row-badges{display:flex;gap:.4rem}
+.lesson-row-title{flex:1;font-size:.87rem;font-weight:500;min-width:0}
+.lesson-row-badges{display:flex;gap:.4rem;flex-wrap:wrap;margin-top:.3rem}
+.lesson-row-actions{display:flex;gap:.4rem;flex-shrink:0}
 .indicator{width:8px;height:8px;border-radius:50%;flex-shrink:0}.indicator.on{background:var(--green)}.indicator.off{background:rgba(255,255,255,0.12)}
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
 .form-section{margin-bottom:1.2rem;padding-bottom:1.2rem;border-bottom:1px solid var(--border)}.form-section:last-child{border-bottom:none;margin-bottom:0}
-.form-section-title{font-size:.75rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:.75rem}
+.form-section-title{font-size:.75rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:.75rem;display:flex;align-items:center;justify-content:space-between}
 .pdf-row{display:flex;align-items:center;gap:.6rem;margin-bottom:.5rem}.pdf-row input{flex:1}
 .add-btn{font-size:.82rem;color:var(--green);background:transparent;border:1px dashed rgba(29,158,117,0.3);border-radius:var(--radius);padding:.5rem 1rem;cursor:pointer;width:100%;text-align:center;transition:all .2s;margin-top:.3rem;font-family:'DM Sans',sans-serif}.add-btn:hover{background:rgba(29,158,117,0.06);border-color:rgba(29,158,117,0.5)}
 .quiz-row{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:.9rem;margin-bottom:.6rem}
 .quiz-row-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:.6rem}
 .option-row{display:flex;align-items:center;gap:.5rem;margin-bottom:.4rem}
-.option-correct{color:var(--green);font-size:.8rem;white-space:nowrap}
+.option-correct{color:var(--green);font-size:.78rem;white-space:nowrap}
 .comment-admin-item{padding:.9rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:.6rem}
-.comment-admin-header{display:flex;align-items:center;gap:.6rem;margin-bottom:.5rem;font-size:.82rem}
+.comment-admin-header{display:flex;align-items:center;gap:.6rem;margin-bottom:.5rem;font-size:.82rem;flex-wrap:wrap}
 .comment-admin-text{font-size:.87rem;color:rgba(255,255,255,0.75);margin-bottom:.6rem}
 .reply-area{margin-top:.6rem;padding-top:.6rem;border-top:1px solid var(--border)}
 .yt-thumb{width:100%;border-radius:8px;max-height:160px;object-fit:cover;margin-top:.6rem;display:none}
-@media(max-width:900px){.admin-stats{grid-template-columns:repeat(2,1fr)}}
+.export-btns{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1.5rem}
+.confirm-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.8);display:none;align-items:center;justify-content:center;z-index:2000;backdrop-filter:blur(4px)}
+.confirm-overlay.open{display:flex}
+.confirm-box{background:var(--dark2,#0f1628);border:1px solid var(--border);border-radius:var(--radius-lg,16px);padding:2rem;max-width:400px;width:90%;text-align:center}
+.confirm-box h3{font-family:'Syne',sans-serif;font-weight:700;font-size:1.1rem;margin-bottom:.75rem}
+.confirm-box p{font-size:.87rem;color:var(--muted);margin-bottom:1.5rem;line-height:1.6}
+.confirm-btns{display:flex;gap:.75rem;justify-content:center}
+.drag-handle{cursor:grab;color:var(--muted);font-size:1rem;flex-shrink:0;padding:0 .25rem}.drag-handle:active{cursor:grabbing}
+.add-module-btn{border:1px dashed rgba(29,158,117,0.3);border-radius:var(--radius-lg);padding:1rem;text-align:center;cursor:pointer;color:var(--green);font-size:.9rem;transition:all .2s;background:transparent;width:100%;font-family:'DM Sans',sans-serif;margin-top:.5rem}.add-module-btn:hover{background:rgba(29,158,117,0.06);border-color:rgba(29,158,117,0.5)}
+@media(max-width:900px){.admin-stats{grid-template-columns:repeat(2,1fr)}.form-row{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 <div id="toast"></div>
+
+<!-- CONFIRM DIALOG -->
+<div class="confirm-overlay" id="confirm-overlay">
+  <div class="confirm-box">
+    <div style="font-size:2.5rem;margin-bottom:.75rem" id="confirm-icon">⚠️</div>
+    <h3 id="confirm-title">Czy na pewno?</h3>
+    <p id="confirm-msg">Ta operacja jest nieodwracalna.</p>
+    <div class="confirm-btns">
+      <button class="btn btn-outline btn-sm" onclick="closeConfirm()">Anuluj</button>
+      <button class="btn btn-danger btn-sm" id="confirm-ok-btn" onclick="confirmOk()">Usuń</button>
+    </div>
+  </div>
+</div>
 
 <div class="loading-overlay" id="loading">
   <div class="spinner spinner-lg" style="color:var(--red)"></div>
@@ -65,7 +90,7 @@
       <div class="nav-section">
         <div class="nav-label">Szybkie linki</div>
         <a class="nav-item" href="panel.html" target="_blank"><span class="nav-icon">👁️</span>Podgląd panelu ucznia</a>
-        <a class="nav-item" href="index.html" target="_blank"><span class="nav-icon">🌐</span>Strona główna</a>
+        <a class="nav-item" href="index.html" target="_blank"><span class="nav-icon">🌐</span>Strona logowania</a>
       </div>
     </div>
     <div class="sidebar-footer">
@@ -94,13 +119,13 @@
           <div class="card admin-stat"><div class="n" id="ov-pdfs">0</div><div class="l">Plików PDF</div></div>
         </div>
         <div class="card">
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:.5rem">
             <div style="font-family:Syne,sans-serif;font-weight:700;font-size:1rem">Status lekcji</div>
-            <div style="display:flex;gap:1rem;font-size:.75rem;color:var(--muted)">
+            <div style="display:flex;gap:1rem;font-size:.73rem;color:var(--muted);flex-wrap:wrap">
               <span><span class="indicator on" style="display:inline-block;margin-right:.3rem"></span>Wideo</span>
               <span><span class="indicator on" style="display:inline-block;margin-right:.3rem;background:var(--blue)"></span>PDF</span>
               <span><span class="indicator on" style="display:inline-block;margin-right:.3rem;background:var(--red)"></span>Zadanie</span>
-              <span><span class="indicator on" style="display:inline-block;margin-right:.3rem;background:var(--yellow)"></span>Quiz</span>
+              <span><span class="indicator on" style="display:inline-block;margin-right:.3rem;background:#F5A623"></span>Quiz</span>
             </div>
           </div>
           <div id="ov-lesson-list"></div>
@@ -109,12 +134,30 @@
 
       <!-- KURS EDITOR -->
       <div id="section-kurs" style="display:none">
-        <div class="page-header"><h1>Zarządzaj kursem</h1><p>Edytuj lekcje — wideo, PDF, zadania, quizy.</p></div>
-        <div style="display:flex;gap:.75rem;margin-bottom:1.5rem">
-          <button class="btn btn-green btn-sm" onclick="saveKursToFirestore()">💾 Zapisz wszystko do bazy</button>
-          <button class="btn btn-outline btn-sm" onclick="exportKurs()">📤 Eksportuj JSON</button>
-          <label class="btn btn-outline btn-sm" style="cursor:pointer">📥 Importuj JSON<input type="file" accept=".json" onchange="importKurs(this)" style="display:none"></label>
+        <div class="page-header"><h1>Zarządzaj kursem</h1><p>Edytuj, dodawaj i usuwaj moduły oraz lekcje.</p></div>
+
+        <!-- PRZYCISKI IMPORTU/EKSPORTU -->
+        <div class="card" style="margin-bottom:1.5rem;padding:1.25rem">
+          <div style="font-size:.78rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:.85rem">💾 Zapis i synchronizacja</div>
+          <div class="export-btns">
+            <button class="btn btn-green btn-sm" onclick="saveKursToFirestore()">💾 Zapisz do bazy Firebase</button>
+            <button class="btn btn-outline btn-sm" onclick="addModule()">➕ Dodaj moduł</button>
+          </div>
+          <hr class="divider" style="margin:1rem 0">
+          <div style="font-size:.78rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:.85rem">📤 Eksport kursu</div>
+          <div class="export-btns">
+            <button class="btn btn-outline btn-sm" onclick="exportJSON()">📦 Eksportuj JSON</button>
+            <button class="btn btn-outline btn-sm" onclick="exportCSV()">📊 Eksportuj CSV</button>
+            <button class="btn btn-outline btn-sm" onclick="exportHTML()">🌐 Eksportuj HTML</button>
+          </div>
+          <hr class="divider" style="margin:1rem 0">
+          <div style="font-size:.78rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:.85rem">📥 Import kursu</div>
+          <div class="export-btns">
+            <label class="btn btn-outline btn-sm" style="cursor:pointer">📦 Importuj JSON<input type="file" accept=".json" onchange="importJSON(this)" style="display:none"></label>
+            <label class="btn btn-outline btn-sm" style="cursor:pointer">📊 Importuj CSV<input type="file" accept=".csv" onchange="importCSV(this)" style="display:none"></label>
+          </div>
         </div>
+
         <div id="kurs-modules"></div>
       </div>
 
@@ -134,14 +177,13 @@
                 </tr>
               </thead>
               <tbody id="users-table">
-                <tr><td colspan="5" style="color:var(--muted);text-align:center;padding:2rem">
-                  <div class="spinner" style="color:var(--green)"></div>
-                </td></tr>
+                <tr><td colspan="5" style="color:var(--muted);text-align:center;padding:2rem"><div class="spinner" style="color:var(--green)"></div></td></tr>
               </tbody>
             </table>
           </div>
-          <div style="margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border)">
+          <div style="margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border);display:flex;gap:.5rem">
             <button class="btn btn-outline btn-sm" onclick="loadUsers()">🔄 Odśwież</button>
+            <button class="btn btn-outline btn-sm" onclick="exportUsersCSV()">📊 Eksportuj uczniów CSV</button>
           </div>
         </div>
       </div>
@@ -180,7 +222,7 @@
           <div style="font-size:.87rem;color:var(--muted);line-height:1.8">
             <p>1. Wpisujesz e-mail i hasło startowe ucznia</p>
             <p>2. System tworzy konto w Firebase Authentication</p>
-            <p>3. Wysyłasz uczniowi e-mail z danymi logowania ręcznie lub przez system</p>
+            <p>3. Wysyłasz uczniowi e-mail z danymi logowania ręcznie</p>
             <p>4. Uczeń loguje się na stronie — może zmienić hasło w ustawieniach</p>
           </div>
         </div>
@@ -192,7 +234,7 @@
 
 <!-- MODAL: EDYCJA LEKCJI -->
 <div class="modal-overlay" id="modal-lesson">
-  <div class="modal" style="max-width:620px">
+  <div class="modal" style="max-width:640px">
     <div class="modal-header">
       <div class="modal-title" id="modal-lesson-title">Edytuj lekcję</div>
       <button class="modal-close" onclick="closeModal()">✕</button>
@@ -206,13 +248,19 @@
         <label>Tytuł lekcji</label>
         <input class="input" type="text" id="edit-title">
       </div>
-      <div class="input-group">
-        <label>Czas trwania (np. "15 min")</label>
-        <input class="input" type="text" id="edit-time" placeholder="15 min">
+      <div class="form-row">
+        <div class="input-group">
+          <label>Czas trwania (np. "15 min")</label>
+          <input class="input" type="text" id="edit-time" placeholder="15 min">
+        </div>
+        <div class="input-group">
+          <label>ID lekcji (unikalne)</label>
+          <input class="input" type="text" id="edit-id" placeholder="np. 1-1" readonly style="opacity:.6">
+        </div>
       </div>
       <div class="input-group">
         <label>Opis lekcji (możesz użyć HTML)</label>
-        <textarea class="input" id="edit-desc" placeholder="Krótki opis..."></textarea>
+        <textarea class="input" id="edit-desc" placeholder="Krótki opis..." style="min-height:90px"></textarea>
       </div>
     </div>
 
@@ -223,28 +271,32 @@
         <input class="input" type="text" id="edit-ytid" placeholder="np. dQw4w9WgXcQ" oninput="previewYT(this.value)">
       </div>
       <p style="font-size:.73rem;color:var(--muted)">Skopiuj ID z: youtube.com/watch?v=<strong>ID_TUTAJ</strong></p>
-      <img id="yt-thumb" class="yt-thumb" alt="Podgląd">
+      <img id="yt-thumb" class="yt-thumb" alt="Podgląd wideo">
     </div>
 
     <div class="form-section">
-      <div class="form-section-title">📄 Pliki PDF</div>
+      <div class="form-section-title">
+        <span>📄 Pliki PDF</span>
+        <button class="btn btn-outline btn-sm" style="font-size:.72rem" onclick="addPdfRow()">+ Dodaj PDF</button>
+      </div>
       <div id="pdf-manager"></div>
-      <button class="add-btn" onclick="addPdfRow()">+ Dodaj plik PDF</button>
-      <p style="font-size:.71rem;color:var(--muted);margin-top:.4rem">Wklej link do PDF (Google Drive: Udostępnij → Każdy z linkiem)</p>
+      <p style="font-size:.71rem;color:var(--muted);margin-top:.4rem">Wklej link do PDF (Google Drive: Udostępnij → Każdy z linkiem → skopiuj link)</p>
     </div>
 
     <div class="form-section">
       <div class="form-section-title">📝 Zadanie domowe</div>
       <div class="input-group">
         <label>Treść zadania (zostaw puste jeśli brak)</label>
-        <textarea class="input" id="edit-homework" placeholder="np. Napisz 5 promptów dla swojej firmy..."></textarea>
+        <textarea class="input" id="edit-homework" placeholder="np. Napisz 5 promptów dla swojej firmy..." style="min-height:80px"></textarea>
       </div>
     </div>
 
     <div class="form-section">
-      <div class="form-section-title">❓ Quiz (pytania jednokrotnego wyboru)</div>
+      <div class="form-section-title">
+        <span>❓ Quiz (pytania jednokrotnego wyboru)</span>
+        <button class="btn btn-outline btn-sm" style="font-size:.72rem" onclick="addQuizQuestion()">+ Dodaj pytanie</button>
+      </div>
       <div id="quiz-manager"></div>
-      <button class="add-btn" onclick="addQuizQuestion()">+ Dodaj pytanie do quizu</button>
     </div>
 
     <div class="modal-footer">
@@ -254,25 +306,45 @@
   </div>
 </div>
 
+<!-- MODAL: EDYCJA MODUŁU -->
+<div class="modal-overlay" id="modal-module">
+  <div class="modal" style="max-width:460px">
+    <div class="modal-header">
+      <div class="modal-title" id="modal-module-title">Edytuj moduł</div>
+      <button class="modal-close" onclick="document.getElementById('modal-module').classList.remove('open')">✕</button>
+    </div>
+    <input type="hidden" id="edit-module-mi">
+    <div class="input-group">
+      <label>Numer modułu</label>
+      <input class="input" type="number" id="edit-module-num" min="1">
+    </div>
+    <div class="input-group">
+      <label>Tytuł modułu</label>
+      <input class="input" type="text" id="edit-module-title" placeholder="np. Podstawy AI">
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline btn-sm" onclick="document.getElementById('modal-module').classList.remove('open')">Anuluj</button>
+      <button class="btn btn-green btn-sm" onclick="saveModule()">Zapisz moduł ✓</button>
+    </div>
+  </div>
+</div>
+
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 <script src="app.js"></script>
 <script>
-if (!firebase.apps.length) {
-  firebase.initializeApp(FIREBASE_CONFIG)
-}
+if (!firebase.apps.length) firebase.initializeApp(FIREBASE_CONFIG)
 const db = firebase.firestore()
 const ADMIN_EMAIL = 'psp45rostyslav@gmail.com'
 let currentUser = null
 let kursData = null
+let confirmCallback = null
 
 // ===== AUTH =====
 firebase.auth().onAuthStateChanged(async user => {
   if (!user) { window.location.href = 'index.html'; return }
-  if (user.email !== ADMIN_EMAIL) {
-    window.location.href = 'panel.html'; return
-  }
+  if (user.email !== ADMIN_EMAIL) { window.location.href = 'panel.html'; return }
   currentUser = user
   const name = getUserDisplayName(user)
   document.getElementById('admin-avatar').textContent = name[0].toUpperCase()
@@ -288,8 +360,19 @@ firebase.auth().onAuthStateChanged(async user => {
   loadComments()
 })
 
-firebase.auth().onAuthStateChanged(u => { if (!u && document.getElementById('app').style.display !== 'none') window.location.href = 'index.html' })
 function doLogout() { firebase.auth().signOut().then(() => window.location.href = 'index.html') }
+
+// ===== CONFIRM DIALOG =====
+function showConfirm(title, msg, icon, okLabel, cb) {
+  document.getElementById('confirm-title').textContent = title
+  document.getElementById('confirm-msg').textContent = msg
+  document.getElementById('confirm-icon').textContent = icon || '⚠️'
+  document.getElementById('confirm-ok-btn').textContent = okLabel || 'Usuń'
+  confirmCallback = cb
+  document.getElementById('confirm-overlay').classList.add('open')
+}
+function closeConfirm() { document.getElementById('confirm-overlay').classList.remove('open'); confirmCallback = null }
+function confirmOk() { if (confirmCallback) confirmCallback(); closeConfirm() }
 
 // ===== SECTIONS =====
 function showSection(name) {
@@ -300,26 +383,27 @@ function showSection(name) {
   const el = document.getElementById('nav-' + name)
   if (el) el.classList.add('active')
   if (name === 'users') loadUsers()
+  if (name === 'comments') loadComments()
 }
 
 // ===== OVERVIEW =====
 function renderOverview() {
-  let totalV = 0, totalP = 0, ready = 0, total = 0
+  let totalV = 0, totalP = 0, total = 0
   let html = ''
   kursData.modules.forEach(mod => {
     mod.lessons.forEach((les, li) => {
       total++
-      if (les.ytId) { totalV++; ready++ }
+      if (les.ytId) totalV++
       if (les.pdfs) totalP += les.pdfs.length
       const hasV = !!les.ytId, hasP = les.pdfs && les.pdfs.length > 0
       const hasH = !!les.homework, hasQ = les.quiz && les.quiz.length > 0
       html += `<div style="display:flex;align-items:center;gap:.75rem;padding:.58rem .75rem;border-radius:8px;margin-bottom:2px;background:var(--surface)">
         <span style="font-size:.73rem;color:var(--muted);width:40px;flex-shrink:0">${mod.id}.${li+1}</span>
         <span style="flex:1;font-size:.84rem">${les.title}</span>
-        <span class="indicator ${hasV?'on':'off'}"></span>
-        <span class="indicator ${hasP?'on':'off'}" style="${hasP?'background:var(--blue)':''}"></span>
-        <span class="indicator ${hasH?'on':'off'}" style="${hasH?'background:var(--red)':''}"></span>
-        <span class="indicator ${hasQ?'on':'off'}" style="${hasQ?'background:var(--yellow)':''}"></span>
+        <span class="indicator ${hasV?'on':'off'}" title="Wideo"></span>
+        <span class="indicator ${hasP?'on':'off'}" style="${hasP?'background:var(--blue)':''}" title="PDF"></span>
+        <span class="indicator ${hasH?'on':'off'}" style="${hasH?'background:var(--red)':''}" title="Zadanie"></span>
+        <span class="indicator ${hasQ?'on':'off'}" style="${hasQ?'background:#F5A623':''}" title="Quiz"></span>
         <button class="btn btn-outline btn-sm" style="font-size:.7rem;padding:.28rem .65rem" onclick="editLesson(${kursData.modules.indexOf(mod)},${li})">Edytuj</button>
       </div>`
     })
@@ -344,24 +428,33 @@ function renderKursEditor() {
       <div class="mod-admin-header" onclick="toggleModAdmin(${mi})">
         <div class="mod-admin-title">
           <span class="mod-chevron">▶</span>
-          Moduł ${mod.id}: ${mod.title}
+          <span>Moduł ${mod.id}: ${mod.title}</span>
           <span class="badge badge-gray" style="font-size:.65rem">${vids}/${mod.lessons.length} wideo</span>
+        </div>
+        <div class="mod-admin-actions" onclick="event.stopPropagation()">
+          <button class="btn btn-outline btn-sm" style="font-size:.72rem" onclick="editModule(${mi})" title="Edytuj moduł">✏️</button>
+          <button class="btn btn-outline btn-sm" style="font-size:.72rem" onclick="addLessonToModule(${mi})" title="Dodaj lekcję">➕</button>
+          <button class="btn btn-danger btn-sm" style="font-size:.72rem" onclick="deleteModule(${mi})" title="Usuń moduł">🗑️</button>
         </div>
       </div>
       <div class="mod-admin-body">
-        ${mod.lessons.map((les, li) => `
+        ${mod.lessons.length === 0 ? '<div style="color:var(--muted);font-size:.85rem;padding:.5rem;text-align:center">Brak lekcji. Kliknij ➕ żeby dodać.</div>' :
+        mod.lessons.map((les, li) => `
           <div class="lesson-row">
             <span class="lesson-row-num">${mod.id}.${li+1}</span>
-            <div style="flex:1">
+            <div style="flex:1;min-width:0">
               <div class="lesson-row-title">${les.title}</div>
-              <div class="lesson-row-badges" style="margin-top:.3rem">
-                <span class="badge ${les.ytId?'badge-green':'badge-gray'}" style="font-size:.64rem">${les.ytId?'▶ Wideo':'Brak wideo'}</span>
-                <span class="badge ${les.pdfs&&les.pdfs.length?'badge-blue':'badge-gray'}" style="font-size:.64rem">${les.pdfs&&les.pdfs.length?les.pdfs.length+' PDF':'Brak PDF'}</span>
-                <span class="badge ${les.homework?'badge-red':'badge-gray'}" style="font-size:.64rem">${les.homework?'Zadanie':'Brak zadania'}</span>
-                <span class="badge ${les.quiz&&les.quiz.length?'badge-yellow':'badge-gray'}" style="font-size:.64rem">${les.quiz&&les.quiz.length?les.quiz.length+' pytań quizu':'Brak quizu'}</span>
+              <div class="lesson-row-badges">
+                <span class="badge ${les.ytId?'badge-green':'badge-gray'}" style="font-size:.62rem">${les.ytId?'▶ Wideo':'Brak wideo'}</span>
+                <span class="badge ${les.pdfs&&les.pdfs.length?'badge-blue':'badge-gray'}" style="font-size:.62rem">${les.pdfs&&les.pdfs.length?les.pdfs.length+' PDF':'Brak PDF'}</span>
+                <span class="badge ${les.homework?'badge-red':'badge-gray'}" style="font-size:.62rem">${les.homework?'Zadanie':'Brak'}</span>
+                <span class="badge ${les.quiz&&les.quiz.length?'badge-yellow':'badge-gray'}" style="font-size:.62rem">${les.quiz&&les.quiz.length?les.quiz.length+' Q':'Brak quizu'}</span>
               </div>
             </div>
-            <button class="btn btn-outline btn-sm" onclick="editLesson(${mi},${li})">✏️ Edytuj</button>
+            <div class="lesson-row-actions">
+              <button class="btn btn-outline btn-sm" style="font-size:.72rem" onclick="editLesson(${mi},${li})" title="Edytuj">✏️</button>
+              <button class="btn btn-danger btn-sm" style="font-size:.72rem" onclick="deleteLesson(${mi},${li})" title="Usuń">🗑️</button>
+            </div>
           </div>`).join('')}
       </div>`
     wrap.appendChild(div)
@@ -370,12 +463,98 @@ function renderKursEditor() {
 
 function toggleModAdmin(mi) { document.getElementById('mod-admin-' + mi).classList.toggle('open') }
 
+// ===== DODAJ MODUŁ =====
+function addModule() {
+  const nextId = kursData.modules.length + 1
+  kursData.modules.push({
+    id: nextId,
+    title: 'Nowy moduł ' + nextId,
+    lessons: []
+  })
+  renderKursEditor()
+  renderOverview()
+  showToast('Moduł dodany! Kliknij ✏️ żeby edytować.', 'success')
+  const newMod = document.getElementById('mod-admin-' + (kursData.modules.length - 1))
+  if (newMod) { newMod.scrollIntoView({ behavior: 'smooth', block: 'center' }); newMod.classList.add('open') }
+}
+
+// ===== EDYTUJ MODUŁ =====
+function editModule(mi) {
+  const mod = kursData.modules[mi]
+  document.getElementById('modal-module-title').textContent = `Edytuj: Moduł ${mod.id}`
+  document.getElementById('edit-module-mi').value = mi
+  document.getElementById('edit-module-num').value = mod.id
+  document.getElementById('edit-module-title').value = mod.title
+  document.getElementById('modal-module').classList.add('open')
+}
+
+function saveModule() {
+  const mi = parseInt(document.getElementById('edit-module-mi').value)
+  kursData.modules[mi].id = parseInt(document.getElementById('edit-module-num').value) || kursData.modules[mi].id
+  kursData.modules[mi].title = document.getElementById('edit-module-title').value.trim() || kursData.modules[mi].title
+  document.getElementById('modal-module').classList.remove('open')
+  KV.set('kurs_data', kursData)
+  renderKursEditor()
+  renderOverview()
+  showToast('Moduł zaktualizowany!', 'success')
+}
+
+// ===== USUŃ MODUŁ =====
+function deleteModule(mi) {
+  const mod = kursData.modules[mi]
+  showConfirm(
+    'Usuń moduł?',
+    `Czy na pewno chcesz usunąć "Moduł ${mod.id}: ${mod.title}" wraz z ${mod.lessons.length} lekcjami? Tej operacji nie można cofnąć.`,
+    '🗑️', 'Usuń moduł',
+    () => {
+      kursData.modules.splice(mi, 1)
+      KV.set('kurs_data', kursData)
+      renderKursEditor()
+      renderOverview()
+      showToast('Moduł usunięty!', 'info')
+    }
+  )
+}
+
+// ===== DODAJ LEKCJĘ DO MODUŁU =====
+function addLessonToModule(mi) {
+  const mod = kursData.modules[mi]
+  const li = mod.lessons.length
+  const newId = mod.id + '-' + (li + 1)
+  mod.lessons.push({
+    id: newId, title: 'Nowa lekcja ' + (li + 1), time: '10 min',
+    ytId: '', pdfs: [], homework: '', desc: '', quiz: []
+  })
+  renderKursEditor()
+  document.getElementById('mod-admin-' + mi).classList.add('open')
+  KV.set('kurs_data', kursData)
+  showToast('Lekcja dodana! Kliknij ✏️ żeby edytować.', 'success')
+}
+
+// ===== USUŃ LEKCJĘ =====
+function deleteLesson(mi, li) {
+  const les = kursData.modules[mi].lessons[li]
+  showConfirm(
+    'Usuń lekcję?',
+    `Czy na pewno chcesz usunąć "${les.title}"? Tej operacji nie można cofnąć.`,
+    '🗑️', 'Usuń lekcję',
+    () => {
+      kursData.modules[mi].lessons.splice(li, 1)
+      KV.set('kurs_data', kursData)
+      renderKursEditor()
+      renderOverview()
+      showToast('Lekcja usunięta!', 'info')
+    }
+  )
+}
+
 // ===== EDIT LESSON =====
 function editLesson(mi, li) {
   const mod = kursData.modules[mi], les = mod.lessons[li]
   document.getElementById('modal-lesson-title').textContent = `Moduł ${mod.id}.${li+1}: ${les.title}`
   document.getElementById('edit-mi').value = mi
   document.getElementById('edit-li').value = li
+  document.getElementById('edit-id').value = les.id || ''
   document.getElementById('edit-title').value = les.title || ''
   document.getElementById('edit-time').value = les.time || ''
   document.getElementById('edit-desc').value = les.desc || ''
@@ -388,7 +567,10 @@ function editLesson(mi, li) {
 }
 
 function closeModal() { document.getElementById('modal-lesson').classList.remove('open') }
-window.addEventListener('click', e => { if (e.target.id === 'modal-lesson') closeModal() })
+window.addEventListener('click', e => {
+  if (e.target.id === 'modal-lesson') closeModal()
+  if (e.target.id === 'modal-module') document.getElementById('modal-module').classList.remove('open')
+})
 
 function previewYT(id) {
   const thumb = document.getElementById('yt-thumb')
@@ -400,6 +582,7 @@ function previewYT(id) {
 function renderPdfManager(pdfs) {
   const wrap = document.getElementById('pdf-manager')
   wrap.innerHTML = ''
+  if (!pdfs.length) { wrap.innerHTML = '<div style="color:var(--muted);font-size:.82rem;padding:.4rem 0">Brak PDF. Kliknij "+ Dodaj PDF".</div>'; return }
   pdfs.forEach(pdf => addPdfRowWithData(pdf))
 }
 function addPdfRow() { addPdfRowWithData({ name: '', url: '', size: '' }) }
@@ -408,9 +591,9 @@ function addPdfRowWithData(pdf) {
   const row = document.createElement('div')
   row.className = 'pdf-row'
   row.innerHTML = `
-    <input class="input pdf-name" type="text" placeholder="Nazwa pliku" value="${pdf.name||''}" style="flex:1">
+    <input class="input pdf-name" type="text" placeholder="Nazwa pliku" value="${pdf.name||''}" style="flex:1.2">
     <input class="input pdf-url" type="url" placeholder="Link do PDF (https://...)" value="${pdf.url||''}" style="flex:2">
-    <button class="btn btn-danger btn-sm" onclick="this.parentElement.remove()">✕</button>`
+    <button class="btn btn-danger btn-sm" onclick="this.parentElement.remove()" title="Usuń">✕</button>`
   wrap.appendChild(row)
 }
 
@@ -418,11 +601,14 @@ function addPdfRowWithData(pdf) {
 function renderQuizManager(quiz) {
   const wrap = document.getElementById('quiz-manager')
   wrap.innerHTML = ''
+  if (!quiz.length) { wrap.innerHTML = '<div style="color:var(--muted);font-size:.82rem;padding:.4rem 0">Brak pytań. Kliknij "+ Dodaj pytanie".</div>'; return }
   quiz.forEach((q, qi) => addQuizQuestionWithData(q, qi))
 }
 
 function addQuizQuestion() {
   const count = document.querySelectorAll('.quiz-row').length
+  const empty = document.getElementById('quiz-manager').querySelector('div[style*="Brak pytań"]')
+  if (empty) empty.remove()
   addQuizQuestionWithData({ question: '', options: ['', '', '', ''], correct: 0 }, count)
 }
 
@@ -430,27 +616,28 @@ function addQuizQuestionWithData(q, qi) {
   const wrap = document.getElementById('quiz-manager')
   const row = document.createElement('div')
   row.className = 'quiz-row'
+  const uid = Date.now() + qi
   row.innerHTML = `
     <div class="quiz-row-header">
       <span style="font-size:.78rem;color:var(--muted);font-weight:600">Pytanie ${qi+1}</span>
       <button class="btn btn-danger btn-sm" onclick="this.closest('.quiz-row').remove();renumberQuiz()">Usuń</button>
     </div>
     <div class="input-group" style="margin-bottom:.6rem">
-      <input class="input quiz-question" type="text" placeholder="Treść pytania..." value="${q.question||''}">
+      <input class="input quiz-question" type="text" placeholder="Treść pytania..." value="${(q.question||'').replace(/"/g,'&quot;')}">
     </div>
     ${(q.options||['','','','']).map((opt, oi) => `
       <div class="option-row">
-        <input type="radio" name="correct-${qi}-${Date.now()}" class="quiz-correct" value="${oi}" ${oi===q.correct?'checked':''}>
-        <input class="input quiz-option" type="text" placeholder="Odpowiedź ${oi+1}" value="${opt||''}" style="flex:1">
-        <span class="option-correct" title="Zaznacz jako poprawna">← poprawna</span>
+        <input type="radio" name="correct-${uid}" class="quiz-correct" value="${oi}" ${oi===q.correct?'checked':''}>
+        <input class="input quiz-option" type="text" placeholder="Odpowiedź ${oi+1}" value="${(opt||'').replace(/"/g,'&quot;')}" style="flex:1">
+        <span class="option-correct">✓ poprawna</span>
       </div>`).join('')}
-    <p style="font-size:.7rem;color:var(--muted);margin-top:.4rem">Zaznacz radio przy poprawnej odpowiedzi</p>`
+    <p style="font-size:.7rem;color:var(--muted);margin-top:.4rem">Zaznacz ● przy poprawnej odpowiedzi</p>`
   wrap.appendChild(row)
 }
 
 function renumberQuiz() {
   document.querySelectorAll('.quiz-row').forEach((row, i) => {
-    const label = row.querySelector('span')
+    const label = row.querySelector('span[style*="font-weight:600"]')
     if (label) label.textContent = `Pytanie ${i+1}`
   })
 }
@@ -472,7 +659,7 @@ function saveLesson() {
     if (name && url) les.pdfs.push({ name, url, size: '' })
   })
   les.quiz = []
-  document.querySelectorAll('.quiz-row').forEach((row, qi) => {
+  document.querySelectorAll('.quiz-row').forEach((row) => {
     const question = row.querySelector('.quiz-question').value.trim()
     const options = [...row.querySelectorAll('.quiz-option')].map(i => i.value.trim())
     const correctEl = row.querySelector('.quiz-correct:checked')
@@ -481,43 +668,155 @@ function saveLesson() {
   })
   KV.set('kurs_data', kursData)
   closeModal()
-  showToast('Lekcja zapisana lokalnie!', 'success')
+  showToast('Lekcja zapisana!', 'success')
   renderKursEditor()
   renderOverview()
 }
 
 // ===== SAVE TO FIRESTORE =====
 async function saveKursToFirestore() {
+  const btn = document.querySelector('.btn-green[onclick="saveKursToFirestore()"]')
+  if (btn) { btn.disabled = true; btn.innerHTML = '<span class="spinner"></span> Zapisuję...' }
   try {
     await db.collection('konfiguracja').doc('kurs').set(kursData)
-    showToast('Kurs zapisany do bazy Firestore! ✓', 'success')
-  } catch (e) { showToast('Błąd zapisu do Firestore: ' + e.message, 'error') }
+    KV.set('kurs_data', kursData)
+    showToast('Kurs zapisany do Firebase! ✓', 'success')
+  } catch (e) { showToast('Błąd zapisu: ' + e.message, 'error') }
+  if (btn) { btn.disabled = false; btn.innerHTML = '💾 Zapisz do bazy Firebase' }
 }
 
-// ===== EXPORT / IMPORT =====
-function exportKurs() {
+// ===== EXPORT JSON =====
+function exportJSON() {
   const blob = new Blob([JSON.stringify(kursData, null, 2)], { type: 'application/json' })
+  downloadBlob(blob, 'kurs-naffy.json')
+  showToast('Wyeksportowano JSON!', 'success')
+}
+
+// ===== EXPORT CSV =====
+function exportCSV() {
+  const rows = [['Moduł ID','Moduł Tytuł','Lekcja ID','Lekcja Tytuł','Czas','Opis','YouTube ID','Zadanie','Liczba PDF','Liczba pytań quizu']]
+  kursData.modules.forEach(mod => {
+    mod.lessons.forEach(les => {
+      rows.push([
+        mod.id, mod.title, les.id, les.title, les.time,
+        (les.desc || '').replace(/"/g,'""').replace(/<[^>]*>/g,''),
+        les.ytId || '',
+        (les.homework || '').replace(/"/g,'""'),
+        (les.pdfs || []).length,
+        (les.quiz || []).length
+      ])
+    })
+  })
+  const csv = rows.map(r => r.map(c => `"${c}"`).join(',')).join('\n')
+  const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8' })
+  downloadBlob(blob, 'kurs-naffy.csv')
+  showToast('Wyeksportowano CSV!', 'success')
+}
+
+// ===== EXPORT HTML =====
+function exportHTML() {
+  let html = `<!DOCTYPE html><html lang="pl"><head><meta charset="UTF-8"><title>Kurs — Naffy.ai</title>
+<style>body{font-family:Arial,sans-serif;max-width:900px;margin:40px auto;padding:0 20px;color:#1a1a2e}
+h1{color:#E24B4A;border-bottom:3px solid #E24B4A;padding-bottom:10px}
+h2{color:#0f1628;margin-top:2rem;background:#f4f4f0;padding:10px 15px;border-radius:8px;border-left:4px solid #1D9E75}
+h3{color:#1D9E75;margin-top:1.5rem}.lesson{border:1px solid #ddd;border-radius:8px;padding:1rem;margin-bottom:1rem}
+.meta{font-size:.85rem;color:#666;margin-bottom:.5rem}.badge{display:inline-block;padding:2px 8px;border-radius:12px;font-size:.78rem;margin-right:.3rem}
+.badge-green{background:#d5f5e3;color:#1e8449}.badge-blue{background:#d6eaf8;color:#1a5276}
+.badge-red{background:#fadbd8;color:#96281b}.badge-yellow{background:#fef9e7;color:#9a7d0a}
+</style></head><body>
+<h1>Kurs: AI które oszczędza Twoje pieniądze</h1>
+<p style="color:#666">Wygenerowano: ${new Date().toLocaleDateString('pl-PL')}</p>`
+
+  kursData.modules.forEach(mod => {
+    html += `<h2>Moduł ${mod.id}: ${mod.title}</h2>`
+    mod.lessons.forEach((les, li) => {
+      html += `<div class="lesson">
+        <h3>${mod.id}.${li+1}. ${les.title}</h3>
+        <div class="meta">⏱ ${les.time}
+          ${les.ytId ? '<span class="badge badge-green">▶ Wideo</span>' : ''}
+          ${les.pdfs&&les.pdfs.length ? `<span class="badge badge-blue">📄 ${les.pdfs.length} PDF</span>` : ''}
+          ${les.homework ? '<span class="badge badge-red">📝 Zadanie</span>' : ''}
+          ${les.quiz&&les.quiz.length ? `<span class="badge badge-yellow">❓ ${les.quiz.length} pytań</span>` : ''}
+        </div>
+        ${les.desc ? `<p>${les.desc}</p>` : ''}
+        ${les.ytId ? `<p><strong>YouTube:</strong> <a href="https://youtube.com/watch?v=${les.ytId}" target="_blank">https://youtube.com/watch?v=${les.ytId}</a></p>` : ''}
+        ${les.pdfs&&les.pdfs.length ? `<p><strong>PDF:</strong> ${les.pdfs.map(p=>`<a href="${p.url}">${p.name}</a>`).join(', ')}</p>` : ''}
+        ${les.homework ? `<p><strong>Zadanie domowe:</strong> ${les.homework}</p>` : ''}
+        ${les.quiz&&les.quiz.length ? `<p><strong>Quiz:</strong> ${les.quiz.length} pytań jednokrotnego wyboru</p>` : ''}
+      </div>`
+    })
+  })
+  html += '</body></html>'
+  const blob = new Blob([html], { type: 'text/html;charset=utf-8' })
+  downloadBlob(blob, 'kurs-naffy.html')
+  showToast('Wyeksportowano HTML!', 'success')
+}
+
+function downloadBlob(blob, filename) {
   const a = document.createElement('a')
   a.href = URL.createObjectURL(blob)
-  a.download = 'kurs-naffy.json'
+  a.download = filename
   a.click()
-  showToast('Wyeksportowano kurs.json', 'success')
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000)
 }
 
-function importKurs(input) {
+// ===== IMPORT JSON =====
+function importJSON(input) {
   const file = input.files[0]
   if (!file) return
   const reader = new FileReader()
   reader.onload = e => {
     try {
-      kursData = JSON.parse(e.target.result)
-      KV.set('kurs_data', kursData)
-      renderKursEditor()
-      renderOverview()
-      showToast('Zaimportowano kurs!', 'success')
-    } catch (err) { showToast('Błąd importu JSON', 'error') }
+      const data = JSON.parse(e.target.result)
+      if (!data.modules || !Array.isArray(data.modules)) throw new Error('Nieprawidłowy format JSON')
+      showConfirm('Importuj JSON?', `Plik zawiera ${data.modules.length} modułów. Zastąpi to obecny kurs. Czy kontynuować?`, '📦', 'Importuj', () => {
+        kursData = data
+        KV.set('kurs_data', kursData)
+        renderKursEditor()
+        renderOverview()
+        showToast('Zaimportowano kurs z JSON!', 'success')
+      })
+    } catch (err) { showToast('Błąd importu: ' + err.message, 'error') }
   }
   reader.readAsText(file)
+  input.value = ''
+}
+
+// ===== IMPORT CSV =====
+function importCSV(input) {
+  const file = input.files[0]
+  if (!file) return
+  const reader = new FileReader()
+  reader.onload = e => {
+    try {
+      const lines = e.target.result.split('\n').slice(1).filter(l => l.trim())
+      const modules = {}
+      lines.forEach(line => {
+        const cols = line.match(/(".*?"|[^,]+)(?=,|$)/g) || []
+        const clean = cols.map(c => c.replace(/^"|"$/g, '').replace(/""/g, '"'))
+        const [modId, modTitle, lesId, lesTitle, lesTime, lesDesc, ytId, homework] = clean
+        if (!modId || !lesTitle) return
+        const key = modId + '_' + modTitle
+        if (!modules[key]) modules[key] = { id: parseInt(modId) || 1, title: modTitle || 'Moduł', lessons: [] }
+        modules[key].lessons.push({
+          id: lesId || (modId + '-' + (modules[key].lessons.length + 1)),
+          title: lesTitle, time: lesTime || '10 min', desc: lesDesc || '',
+          ytId: ytId || '', homework: homework || '', pdfs: [], quiz: []
+        })
+      })
+      const mods = Object.values(modules)
+      if (!mods.length) throw new Error('Brak danych w pliku CSV')
+      showConfirm('Importuj CSV?', `Znaleziono ${mods.length} modułów. Zastąpi to obecny kurs.`, '📊', 'Importuj', () => {
+        kursData = { modules: mods }
+        KV.set('kurs_data', kursData)
+        renderKursEditor()
+        renderOverview()
+        showToast('Zaimportowano kurs z CSV!', 'success')
+      })
+    } catch (err) { showToast('Błąd importu CSV: ' + err.message, 'error') }
+  }
+  reader.readAsText(file, 'UTF-8')
+  input.value = ''
 }
 
 // ===== USERS =====
@@ -535,58 +834,71 @@ async function loadUsers() {
       const lastAct = d.lastActivity ? new Date(d.lastActivity.toDate()).toLocaleDateString('pl-PL') : '—'
       const name = d.name || d.email || doc.id
       return `<tr>
-        <td style="padding:.8rem 1rem">
-          <div style="display:flex;align-items:center;gap:.6rem">
-            <div class="avatar" style="width:28px;height:28px;font-size:.72rem">${name[0].toUpperCase()}</div>
-            <span style="font-size:.87rem">${name}</span>
-          </div>
-        </td>
-        <td style="padding:.8rem 1rem;color:var(--muted);font-size:.84rem">${d.email || '—'}</td>
+        <td style="padding:.8rem 1rem"><div style="display:flex;align-items:center;gap:.6rem"><div class="avatar" style="width:28px;height:28px;font-size:.72rem">${name[0].toUpperCase()}</div><span style="font-size:.87rem">${name}</span></div></td>
+        <td style="padding:.8rem 1rem;color:var(--muted);font-size:.84rem">${d.email||'—'}</td>
         <td style="padding:.8rem 1rem;text-align:center">
-          <div style="font-size:.82rem;font-weight:600;color:${pct>=100?'var(--green)':pct>=50?'var(--yellow)':'var(--muted)'}">${pct}%</div>
+          <div style="font-size:.82rem;font-weight:600;color:${pct>=100?'var(--green)':pct>=50?'#F5A623':'var(--muted)'}">${pct}%</div>
           <div style="font-size:.7rem;color:var(--muted)">${done}/${total}</div>
         </td>
-        <td style="padding:.8rem 1rem;text-align:center">
-          <span style="font-size:.9rem">${d.streak||0} 🔥</span>
-        </td>
+        <td style="padding:.8rem 1rem;text-align:center"><span style="font-size:.9rem">${d.streak||0} 🔥</span></td>
         <td style="padding:.8rem 1rem;color:var(--muted);font-size:.82rem">${lastAct}</td>
       </tr>`
     }).join('')
-  } catch (e) {
-    tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;padding:2rem;color:var(--red)">Błąd ładowania: ${e.message}</td></tr>`
-  }
+  } catch (e) { tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;padding:2rem;color:var(--red)">Błąd: ${e.message}</td></tr>` }
+}
+
+async function exportUsersCSV() {
+  try {
+    const snap = await db.collection('uczniowie').get()
+    const total = kursData.modules.reduce((a, m) => a + m.lessons.length, 0)
+    const rows = [['Imię/Nazwa','E-mail','Ukończone lekcje','Postęp %','Streak dni','Ostatnia aktywność']]
+    snap.forEach(doc => {
+      const d = doc.data()
+      const done = (d.completed||[]).length
+      const pct = total > 0 ? Math.round(done/total*100) : 0
+      const lastAct = d.lastActivity ? new Date(d.lastActivity.toDate()).toLocaleDateString('pl-PL') : '—'
+      rows.push([d.name||'—', d.email||'—', done, pct+'%', d.streak||0, lastAct])
+    })
+    const csv = rows.map(r => r.map(c => `"${c}"`).join(',')).join('\n')
+    downloadBlob(new Blob(['\uFEFF'+csv], {type:'text/csv;charset=utf-8'}), 'uczniowie-naffy.csv')
+    showToast('Wyeksportowano listę uczniów!', 'success')
+  } catch (e) { showToast('Błąd: ' + e.message, 'error') }
 }
 
 // ===== COMMENTS =====
 async function loadComments() {
   const wrap = document.getElementById('comments-admin-list')
+  if (!wrap) return
+  wrap.innerHTML = '<div style="text-align:center;padding:2rem"><div class="spinner" style="color:var(--green)"></div></div>'
   try {
     const allLessons = []
     kursData.modules.forEach(mod => mod.lessons.forEach(les => allLessons.push(les)))
     let allComments = []
     for (const les of allLessons) {
-      const snap = await db.collection('komentarze').doc(les.id).collection('wpisy').orderBy('createdAt','desc').limit(5).get()
-      snap.forEach(doc => allComments.push({ ...doc.data(), docId: doc.id, lesId: les.id, lesTitle: les.title }))
+      try {
+        const snap = await db.collection('komentarze').doc(les.id).collection('wpisy').orderBy('createdAt','desc').limit(5).get()
+        snap.forEach(doc => allComments.push({ ...doc.data(), docId: doc.id, lesId: les.id, lesTitle: les.title }))
+      } catch(e) {}
     }
     if (!allComments.length) { wrap.innerHTML = '<div style="color:var(--muted);font-size:.88rem;padding:2rem 0;text-align:center">Brak pytań od uczniów.</div>'; return }
     wrap.innerHTML = allComments.map(c => {
       const date = c.createdAt ? new Date(c.createdAt.toDate()).toLocaleDateString('pl-PL') : ''
       return `<div class="comment-admin-item">
         <div class="comment-admin-header">
-          <span style="font-weight:600">${c.authorName||'Uczestnik'}</span>
-          <span style="color:var(--muted)">·</span>
-          <span class="badge badge-gray" style="font-size:.64rem">${c.lesTitle}</span>
-          <span style="color:var(--muted);margin-left:auto;font-size:.75rem">${date}</span>
+          <strong>${c.authorName||'Uczestnik'}</strong>
+          <span class="badge badge-gray" style="font-size:.63rem">${c.lesTitle}</span>
+          <span style="color:var(--muted);margin-left:auto;font-size:.73rem">${date}</span>
         </div>
         <div class="comment-admin-text">${c.text}</div>
-        ${c.reply ? `<div style="background:rgba(29,158,117,0.06);border-left:2px solid var(--green);padding:.6rem .9rem;border-radius:0 var(--radius) var(--radius) 0;font-size:.84rem;color:rgba(255,255,255,0.75)"><strong style="color:var(--green)">Twoja odpowiedź:</strong> ${c.reply}</div>` :
-        `<div class="reply-area">
-          <textarea class="input" id="reply-${c.docId}" placeholder="Wpisz odpowiedź..." style="min-height:70px;width:100%;background:var(--surface);color:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:.6rem"></textarea>
-          <button class="btn btn-green btn-sm" style="margin-top:.4rem" onclick="sendReply('${c.lesId}','${c.docId}',this)">Wyślij odpowiedź</button>
-        </div>`}
+        ${c.reply
+          ? `<div style="background:rgba(29,158,117,0.06);border-left:2px solid var(--green);padding:.6rem .9rem;border-radius:0 var(--radius) var(--radius) 0;font-size:.84rem"><strong style="color:var(--green)">Odpowiedź:</strong> ${c.reply}</div>`
+          : `<div class="reply-area">
+              <textarea class="input" id="reply-${c.docId}" placeholder="Wpisz odpowiedź..." style="min-height:70px;width:100%;background:var(--surface);color:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:.6rem"></textarea>
+              <button class="btn btn-green btn-sm" style="margin-top:.4rem" onclick="sendReply('${c.lesId}','${c.docId}',this)">Wyślij odpowiedź</button>
+            </div>`}
       </div>`
     }).join('')
-  } catch (e) { wrap.innerHTML = `<div style="color:var(--red);font-size:.87rem">Błąd: ${e.message}</div>` }
+  } catch (e) { wrap.innerHTML = `<div style="color:var(--red);font-size:.87rem;padding:1rem">Błąd: ${e.message}</div>` }
 }
 
 async function sendReply(lesId, docId, btn) {
@@ -608,7 +920,7 @@ async function sendInvite() {
   const alertEl = document.getElementById('invite-alert')
   alertEl.innerHTML = ''
   if (!email || !email.includes('@')) { alertEl.innerHTML = '<div style="color:var(--red);font-size:.85rem;margin-bottom:.75rem">Podaj prawidłowy e-mail.</div>'; return }
-  if (!pass || pass.length < 6) { alertEl.innerHTML = '<div style="color:var(--red);font-size:.85rem;margin-bottom:.75rem">Hasło musi mieć min. 6 znaków.</div>'; return }
+  if (!pass || pass.length < 6) { alertEl.innerHTML = '<div style="color:var(--red);font-size:.85rem;margin-bottom:.75rem">Hasło min. 6 znaków.</div>'; return }
   const btn = document.querySelector('#section-invite .btn-green')
   btn.disabled = true; btn.innerHTML = '<span class="spinner"></span> Tworzę konto...'
   try {
@@ -617,10 +929,12 @@ async function sendInvite() {
     if (name) await cred.user.updateProfile({ displayName: name })
     await db.collection('uczniowie').doc(cred.user.uid).set({ email, name: name || email, completed: [], streak: 0, createdAt: firebase.firestore.FieldValue.serverTimestamp() })
     await firebase.auth(secondApp).signOut()
-    alertEl.innerHTML = `<div style="color:var(--green);background:rgba(29,158,117,0.08);border:1px solid rgba(29,158,117,0.2);border-radius:var(--radius);padding:.75rem 1rem;font-size:.87rem;margin-bottom:.75rem">✓ Konto utworzone dla: <strong>${email}</strong><br>Hasło: <strong>${pass}</strong><br>Wyślij te dane uczniowi ręcznie.</div>`
+    alertEl.innerHTML = `<div style="color:var(--green);background:rgba(29,158,117,0.08);border:1px solid rgba(29,158,117,0.2);border-radius:var(--radius);padding:.75rem 1rem;font-size:.87rem;margin-bottom:.75rem">
+      ✓ Konto utworzone!<br><strong>E-mail:</strong> ${email}<br><strong>Hasło:</strong> ${pass}<br>
+      <span style="color:var(--muted);font-size:.8rem">Wyślij te dane uczniowi ręcznie.</span></div>`
     document.getElementById('invite-email').value = ''
     document.getElementById('invite-name').value = ''
-    showToast('Konto utworzone!', 'success')
+    showToast('Konto ucznia utworzone!', 'success')
   } catch (e) {
     const msg = e.code === 'auth/email-already-in-use' ? 'Ten e-mail jest już zarejestrowany.' : e.message
     alertEl.innerHTML = `<div style="color:var(--red);font-size:.85rem;margin-bottom:.75rem">Błąd: ${msg}</div>`
