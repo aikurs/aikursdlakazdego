@@ -4,94 +4,242 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Panel ucznia — AI Kurs dla każdego</title>
-<link rel="stylesheet" href="style.css">
 <style>
-.mod-group{margin-bottom:.4rem}.mod-toggle{display:flex;align-items:center;justify-content:space-between;padding:.48rem .75rem;cursor:pointer;border-radius:8px;transition:background .15s}.mod-toggle:hover{background:var(--surface2)}.mod-toggle-left{display:flex;align-items:center;gap:.6rem}.mod-toggle-icon{font-size:.72rem;color:var(--muted);transition:transform .2s}.mod-group.open .mod-toggle-icon{transform:rotate(90deg)}.mod-title-text{font-size:.8rem;font-weight:600;color:rgba(255,255,255,0.8)}.mod-prog-text{font-size:.67rem;color:var(--green)}.mod-lessons{display:none;padding-left:.4rem}.mod-group.open .mod-lessons{display:block}.lesson-btn{display:flex;align-items:center;gap:.6rem;padding:.48rem .75rem;border-radius:7px;cursor:pointer;transition:background .15s;border:none;background:transparent;width:100%;text-align:left;font-family:'DM Sans',sans-serif;font-size:.8rem;color:rgba(255,255,255,0.6);margin-bottom:1px}.lesson-btn:hover{background:var(--surface2);color:var(--white)}.lesson-btn.active{background:rgba(29,158,117,0.12);color:var(--green)}.lesson-btn.done .lesson-check{color:var(--green)}.lesson-btn .lesson-check{margin-left:auto;font-size:.72rem;color:rgba(255,255,255,0.12);flex-shrink:0}.lesson-btn .lesson-num{font-size:.66rem;color:rgba(255,255,255,0.22);flex-shrink:0;width:22px}
-.dash-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:1.5rem}.stat-card{text-align:center;padding:1.2rem}.stat-num{font-family:'Syne',sans-serif;font-weight:800;font-size:1.9rem;color:var(--green)}.stat-label{font-size:.73rem;color:var(--muted);margin-top:.3rem}
-.next-card{background:rgba(29,158,117,0.05);border:1px solid rgba(29,158,117,0.2);border-radius:var(--radius-lg);padding:1.2rem 1.4rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-bottom:1.5rem;cursor:pointer;transition:border-color .2s}.next-card:hover{border-color:rgba(29,158,117,0.45)}.next-tag{font-size:.68rem;color:var(--green);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.3rem}.next-title{font-family:'Syne',sans-serif;font-weight:700;font-size:.93rem}.next-meta{font-size:.76rem;color:var(--muted);margin-top:.25rem}
-.activity-list{display:grid;gap:.55rem}.activity-item{display:flex;align-items:center;gap:.8rem;padding:.7rem 1rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);font-size:.84rem}.activity-check{color:var(--green);flex-shrink:0}.activity-info{flex:1}.activity-title{font-weight:500}.activity-mod{font-size:.73rem;color:var(--muted);margin-top:.12rem}
-.lesson-breadcrumb{font-size:.73rem;color:var(--muted);margin-bottom:.5rem}.lesson-title-h{font-size:1.45rem;margin-bottom:.4rem}.lesson-meta-row{display:flex;align-items:center;gap:.8rem;flex-wrap:wrap}
-.video-container{background:#000;border-radius:var(--radius-lg);overflow:hidden;position:relative;padding-top:56.25%;margin-bottom:1.5rem}.video-container iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:none}.video-placeholder{position:absolute;top:0;left:0;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1rem;background:rgba(255,255,255,0.02);cursor:pointer;border:1px solid var(--border);border-radius:var(--radius-lg)}.play-circle{width:72px;height:72px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;font-size:2rem;transition:transform .2s;color:#fff}.video-placeholder:hover .play-circle{transform:scale(1.08)}.video-placeholder p{font-size:.84rem;color:var(--muted)}.no-video{background:rgba(255,255,255,0.02);border:1px dashed var(--border);border-radius:var(--radius-lg);padding:3rem;text-align:center;margin-bottom:1.5rem}.no-video p{color:var(--muted);font-size:.87rem;margin-top:.5rem}
-.tabs-bar{display:flex;gap:.3rem;border-bottom:1px solid var(--border);margin-bottom:1.5rem;overflow-x:auto}.tab-btn{background:transparent;border:none;color:var(--muted);font-family:'DM Sans',sans-serif;font-size:.86rem;padding:.58rem 1rem;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .2s;white-space:nowrap}.tab-btn:hover{color:var(--white)}.tab-btn.active{color:var(--green);border-bottom-color:var(--green)}.tab-pane{display:none}.tab-pane.active{display:block}
-.pdf-list{display:grid;gap:.7rem}.pdf-item{display:flex;align-items:center;gap:1rem;padding:.85rem 1.1rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);text-decoration:none;color:var(--white);transition:border-color .2s}.pdf-item:hover{border-color:rgba(29,158,117,0.35)}.pdf-icon{font-size:1.4rem;flex-shrink:0}.pdf-name{font-size:.88rem;font-weight:500}.pdf-meta{font-size:.73rem;color:var(--muted);margin-top:.12rem}.pdf-dl{margin-left:auto;color:var(--green);font-size:.78rem;flex-shrink:0}.no-pdfs{color:var(--muted);font-size:.87rem;text-align:center;padding:2rem}
-.homework-box{background:rgba(55,138,221,0.05);border:1px solid rgba(55,138,221,0.2);border-radius:var(--radius);padding:1.25rem;margin-bottom:1rem}.homework-label{font-size:.7rem;color:var(--blue);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.5rem}.homework-text{font-size:.9rem;line-height:1.6;color:rgba(255,255,255,0.8)}
-.lesson-nav{display:flex;justify-content:space-between;align-items:center;margin-top:2rem;padding-top:1.5rem;border-top:1px solid var(--border);gap:1rem}.btn-complete-done{background:rgba(29,158,117,0.12)!important;color:var(--green)!important;border:1px solid rgba(29,158,117,0.25)!important}
+/* ===== RESET & BASE ===== */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --green:#1d9e75;--red:#e24b4a;--blue:#378add;--yellow:#f5c842;
+  --bg:#07111f;--surface:#0d1d30;--surface2:#112035;
+  --border:rgba(255,255,255,0.07);--white:#fff;--muted:rgba(255,255,255,0.38);
+  --radius:10px;--radius-lg:16px;
+}
+body{background:var(--bg);color:var(--white);font-family:'DM Sans',system-ui,sans-serif;min-height:100vh}
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;600&display=swap');
 
-/* ===== CERTYFIKAT — nowy wygląd ===== */
+/* ===== LAYOUT ===== */
+.app-layout{display:grid;grid-template-columns:280px 1fr;min-height:100vh}
+.sidebar{background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow-y:auto}
+.sidebar-header{display:flex;align-items:center;justify-content:space-between;padding:1.25rem 1rem;border-bottom:1px solid var(--border)}
+.logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1rem;color:var(--white);text-decoration:none}
+.logo span{color:var(--green)}
+.sidebar-body{flex:1;overflow-y:auto;padding:.75rem .5rem}
+.sidebar-footer{padding:.75rem 1rem;border-top:1px solid var(--border)}
+.main-content{overflow-y:auto;height:100vh}
+.main-inner{max-width:820px;margin:0 auto;padding:2rem 1.5rem}
+
+/* ===== COMPONENTS ===== */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.25rem}
+.btn{display:inline-flex;align-items:center;gap:.5rem;padding:.6rem 1.2rem;border-radius:8px;border:1px solid var(--border);background:var(--surface2);color:var(--white);font-family:'DM Sans',sans-serif;font-size:.86rem;font-weight:500;cursor:pointer;transition:all .18s;text-decoration:none}
+.btn:hover{border-color:rgba(255,255,255,0.18)}
+.btn-green{background:var(--green);border-color:var(--green);color:#fff}.btn-green:hover{background:#17866200;border-color:var(--green);color:var(--green)}
+.btn-danger{background:rgba(226,75,74,0.12);border-color:rgba(226,75,74,0.25);color:var(--red)}
+.btn-outline{background:transparent;border-color:var(--border)}
+.btn-sm{padding:.4rem .85rem;font-size:.8rem}
+.btn-lg{padding:.85rem 1.6rem;font-size:.95rem}
+.btn-block{width:100%;justify-content:center}
+.badge{display:inline-flex;align-items:center;padding:.2rem .65rem;border-radius:50px;font-size:.73rem;font-weight:500}
+.badge-gray{background:rgba(255,255,255,0.06);color:var(--muted)}
+.badge-green{background:rgba(29,158,117,0.15);color:var(--green)}
+.badge-yellow{background:rgba(245,200,66,0.15);color:var(--yellow)}
+.input{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);padding:.65rem .9rem;color:var(--white);font-family:'DM Sans',sans-serif;font-size:.88rem;outline:none;transition:border .18s}
+.input:focus{border-color:var(--green)}
+.progress-track{background:rgba(255,255,255,0.07);border-radius:50px;height:6px;overflow:hidden}
+.progress-fill{background:var(--green);height:100%;border-radius:50px;transition:width .5s}
+.progress-meta{display:flex;justify-content:space-between;font-size:.78rem;margin-bottom:.4rem;color:var(--muted)}
+.divider{border:none;border-top:1px solid var(--border);margin:.75rem 0}
+.page-header{margin-bottom:1.75rem}
+.page-header h1{font-family:'Syne',sans-serif;font-weight:800;font-size:1.6rem;margin-bottom:.3rem}
+.page-header p{color:var(--muted);font-size:.9rem}
+.spinner{display:inline-block;width:18px;height:18px;border:2px solid rgba(255,255,255,0.15);border-top-color:currentColor;border-radius:50%;animation:spin .7s linear infinite}
+.spinner-lg{width:40px;height:40px;border-width:3px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-overlay{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1rem;background:var(--bg);z-index:1000}
+.toast{position:fixed;bottom:1.5rem;right:1.5rem;padding:.75rem 1.2rem;border-radius:10px;font-size:.86rem;font-weight:500;z-index:2000;animation:slideUp .25s ease;pointer-events:none}
+.toast-success{background:#0f3d2c;border:1px solid var(--green);color:var(--green)}
+.toast-error{background:#3d0f0f;border:1px solid var(--red);color:var(--red)}
+.toast-info{background:var(--surface2);border:1px solid var(--border);color:var(--white)}
+@keyframes slideUp{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
+.pulse-dot{display:inline-block;width:7px;height:7px;background:var(--green);border-radius:50%;animation:pulse 1.5s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.notes-saved{font-size:.78rem;color:var(--green);margin-left:.75rem;opacity:0;transition:opacity .3s}
+.notes-saved.show{opacity:1}
+.achievement-popup{position:fixed;top:1.5rem;right:1.5rem;background:var(--surface);border:1px solid var(--yellow);border-radius:var(--radius-lg);padding:1rem 1.25rem;display:flex;align-items:center;gap:.8rem;z-index:2001;transform:translateY(-120%);transition:transform .4s cubic-bezier(.34,1.56,.64,1)}
+.achievement-popup.show{transform:translateY(0)}
+.ach-icon{font-size:2rem}
+.ach-title{font-weight:600;font-size:.9rem;color:var(--yellow)}
+.ach-desc{font-size:.78rem;color:var(--muted);margin-top:.15rem}
+.achievements-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem}
+.ach-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.25rem;text-align:center;transition:border-color .2s}
+.ach-card.unlocked{border-color:rgba(245,200,66,0.3)}
+.ach-card.locked{opacity:.45}
+.ach-card-icon{font-size:2.5rem;margin-bottom:.6rem}
+.ach-card-title{font-weight:600;font-size:.88rem;margin-bottom:.3rem}
+.ach-card-desc{font-size:.75rem;color:var(--muted)}
+.streak-box{display:flex;align-items:center;gap:.6rem;background:rgba(29,158,117,0.07);border:1px solid rgba(29,158,117,0.15);border-radius:var(--radius);padding:.7rem .9rem;margin-bottom:.75rem}
+.streak-num{font-family:'Syne',sans-serif;font-weight:800;font-size:1.4rem;color:var(--green)}
+.streak-label{font-size:.7rem;color:var(--muted)}
+.nav-section{margin-bottom:.5rem}
+.nav-label{font-size:.67rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);padding:.4rem .75rem;font-weight:600}
+.nav-item{display:flex;align-items:center;gap:.6rem;width:100%;padding:.52rem .75rem;border-radius:8px;border:none;background:transparent;color:rgba(255,255,255,0.6);font-family:'DM Sans',sans-serif;font-size:.85rem;cursor:pointer;transition:all .15s;text-align:left}
+.nav-item:hover{background:var(--surface2);color:var(--white)}
+.nav-item.active{background:rgba(29,158,117,0.12);color:var(--green)}
+.nav-icon{font-size:1rem}
+.user-box{display:flex;align-items:center;gap:.75rem}
+.avatar{width:36px;height:36px;background:var(--green);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.95rem;flex-shrink:0}
+.user-name{font-size:.85rem;font-weight:600}
+.user-role{font-size:.73rem;color:var(--muted)}
+.search-wrap{position:relative;margin-bottom:.75rem}
+.search-input{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);padding:.52rem .75rem .52rem 2.1rem;color:var(--white);font-family:'DM Sans',sans-serif;font-size:.82rem;outline:none}
+.search-icon{position:absolute;left:.7rem;top:50%;transform:translateY(-50%);font-size:.8rem;pointer-events:none}
+.search-results{position:absolute;top:calc(100% + 4px);left:0;right:0;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);z-index:100;max-height:240px;overflow-y:auto;display:none}
+.search-results.show{display:block}
+.search-result-item{padding:.6rem .85rem;cursor:pointer;font-size:.83rem;transition:background .15s}
+.search-result-item:hover{background:var(--surface)}
+.search-result-mod{font-size:.7rem;color:var(--muted);margin-top:.15rem}
+.theme-toggle{background:transparent;border:1px solid var(--border);border-radius:8px;padding:.35rem .6rem;cursor:pointer;font-size:.9rem;transition:border-color .2s}
+.theme-toggle:hover{border-color:rgba(255,255,255,0.25)}
+body.light{--bg:#f3f4f6;--surface:#fff;--surface2:#f9fafb;--border:rgba(0,0,0,0.09);--white:#111;--muted:rgba(0,0,0,0.45)}
+
+/* ===== SIDEBAR MODULES ===== */
+.mod-group{margin-bottom:.4rem}
+.mod-toggle{display:flex;align-items:center;justify-content:space-between;padding:.48rem .75rem;cursor:pointer;border-radius:8px;transition:background .15s}
+.mod-toggle:hover{background:var(--surface2)}
+.mod-toggle-left{display:flex;align-items:center;gap:.6rem}
+.mod-toggle-icon{font-size:.72rem;color:var(--muted);transition:transform .2s}
+.mod-group.open .mod-toggle-icon{transform:rotate(90deg)}
+.mod-title-text{font-size:.8rem;font-weight:600;color:rgba(255,255,255,0.8)}
+.mod-prog-text{font-size:.67rem;color:var(--green)}
+.mod-lessons{display:none;padding-left:.4rem}
+.mod-group.open .mod-lessons{display:block}
+.lesson-btn{display:flex;align-items:center;gap:.6rem;padding:.48rem .75rem;border-radius:7px;cursor:pointer;transition:background .15s;border:none;background:transparent;width:100%;text-align:left;font-family:'DM Sans',sans-serif;font-size:.8rem;color:rgba(255,255,255,0.6);margin-bottom:1px}
+.lesson-btn:hover{background:var(--surface2);color:var(--white)}
+.lesson-btn.active{background:rgba(29,158,117,0.12);color:var(--green)}
+.lesson-btn.done .lesson-check{color:var(--green)}
+.lesson-btn .lesson-check{margin-left:auto;font-size:.72rem;color:rgba(255,255,255,0.12);flex-shrink:0}
+.lesson-btn .lesson-num{font-size:.66rem;color:rgba(255,255,255,0.22);flex-shrink:0;width:22px}
+
+/* ===== DASHBOARD ===== */
+.dash-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:1.5rem}
+.stat-card{text-align:center;padding:1.2rem}
+.stat-num{font-family:'Syne',sans-serif;font-weight:800;font-size:1.9rem;color:var(--green)}
+.stat-label{font-size:.73rem;color:var(--muted);margin-top:.3rem}
+.next-card{background:rgba(29,158,117,0.05);border:1px solid rgba(29,158,117,0.2);border-radius:var(--radius-lg);padding:1.2rem 1.4rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-bottom:1.5rem;cursor:pointer;transition:border-color .2s}
+.next-card:hover{border-color:rgba(29,158,117,0.45)}
+.next-tag{font-size:.68rem;color:var(--green);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.3rem}
+.next-title{font-family:'Syne',sans-serif;font-weight:700;font-size:.93rem}
+.next-meta{font-size:.76rem;color:var(--muted);margin-top:.25rem}
+.activity-list{display:grid;gap:.55rem}
+.activity-item{display:flex;align-items:center;gap:.8rem;padding:.7rem 1rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);font-size:.84rem}
+.activity-check{color:var(--green);flex-shrink:0}
+.activity-info{flex:1}
+.activity-title{font-weight:500}
+.activity-mod{font-size:.73rem;color:var(--muted);margin-top:.12rem}
+
+/* ===== LESSON ===== */
+.lesson-breadcrumb{font-size:.73rem;color:var(--muted);margin-bottom:.5rem}
+.lesson-title-h{font-size:1.45rem;margin-bottom:.4rem}
+.lesson-meta-row{display:flex;align-items:center;gap:.8rem;flex-wrap:wrap}
+.video-container{background:#000;border-radius:var(--radius-lg);overflow:hidden;position:relative;padding-top:56.25%;margin-bottom:1.5rem}
+.video-container iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:none}
+.video-placeholder{position:absolute;top:0;left:0;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1rem;background:rgba(255,255,255,0.02);cursor:pointer;border:1px solid var(--border);border-radius:var(--radius-lg)}
+.play-circle{width:72px;height:72px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;font-size:2rem;transition:transform .2s;color:#fff}
+.video-placeholder:hover .play-circle{transform:scale(1.08)}
+.video-placeholder p{font-size:.84rem;color:var(--muted)}
+.no-video{background:rgba(255,255,255,0.02);border:1px dashed var(--border);border-radius:var(--radius-lg);padding:3rem;text-align:center;margin-bottom:1.5rem}
+.no-video p{color:var(--muted);font-size:.87rem;margin-top:.5rem}
+.tabs-bar{display:flex;gap:.3rem;border-bottom:1px solid var(--border);margin-bottom:1.5rem;overflow-x:auto}
+.tab-btn{background:transparent;border:none;color:var(--muted);font-family:'DM Sans',sans-serif;font-size:.86rem;padding:.58rem 1rem;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .2s;white-space:nowrap}
+.tab-btn:hover{color:var(--white)}
+.tab-btn.active{color:var(--green);border-bottom-color:var(--green)}
+.tab-pane{display:none}.tab-pane.active{display:block}
+.pdf-list{display:grid;gap:.7rem}
+.pdf-item{display:flex;align-items:center;gap:1rem;padding:.85rem 1.1rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);text-decoration:none;color:var(--white);transition:border-color .2s}
+.pdf-item:hover{border-color:rgba(29,158,117,0.35)}
+.pdf-icon{font-size:1.4rem;flex-shrink:0}
+.pdf-name{font-size:.88rem;font-weight:500}
+.pdf-meta{font-size:.73rem;color:var(--muted);margin-top:.12rem}
+.pdf-dl{margin-left:auto;color:var(--green);font-size:.78rem;flex-shrink:0}
+.no-pdfs{color:var(--muted);font-size:.87rem;text-align:center;padding:2rem}
+.homework-box{background:rgba(55,138,221,0.05);border:1px solid rgba(55,138,221,0.2);border-radius:var(--radius);padding:1.25rem;margin-bottom:1rem}
+.homework-label{font-size:.7rem;color:var(--blue);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.5rem}
+.homework-text{font-size:.9rem;line-height:1.6;color:rgba(255,255,255,0.8)}
+.lesson-nav{display:flex;justify-content:space-between;align-items:center;margin-top:2rem;padding-top:1.5rem;border-top:1px solid var(--border);gap:1rem}
+.btn-complete-done{background:rgba(29,158,117,0.12)!important;color:var(--green)!important;border:1px solid rgba(29,158,117,0.25)!important}
+.quiz-wrap{display:grid;gap:1rem}
+.quiz-title{font-weight:600;font-size:.95rem;color:var(--white)}
+.quiz-question{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1rem}
+.quiz-q-text{font-size:.88rem;margin-bottom:.75rem;line-height:1.5}
+.quiz-options{display:grid;gap:.45rem}
+.quiz-option{display:flex;align-items:center;gap:.6rem;padding:.55rem .8rem;border-radius:7px;background:var(--surface2);font-size:.84rem;cursor:pointer;transition:background .15s}
+.quiz-option:hover{background:rgba(29,158,117,0.08)}
+.quiz-option.correct{background:rgba(29,158,117,0.15);border:1px solid rgba(29,158,117,0.3);color:var(--green)}
+.quiz-option.wrong{background:rgba(226,75,74,0.12);border:1px solid rgba(226,75,74,0.25);color:var(--red)}
+.quiz-result{text-align:center;padding:1.5rem}
+.quiz-score{font-family:'Syne',sans-serif;font-size:3rem;font-weight:800}
+.quiz-score.pass{color:var(--green)}.quiz-score.fail{color:var(--red)}
+.comment-item{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1rem;margin-bottom:.6rem}
+.comment-header{display:flex;align-items:center;gap:.5rem;margin-bottom:.5rem}
+.comment-avatar{width:28px;height:28px;background:rgba(29,158,117,0.2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;color:var(--green)}
+.comment-author{font-size:.8rem;font-weight:600}
+.comment-date{font-size:.72rem;color:var(--muted);margin-left:auto}
+.comment-text{font-size:.85rem;line-height:1.6;color:rgba(255,255,255,0.75)}
+.comment-reply{margin-top:.75rem;padding-top:.75rem;border-top:1px solid var(--border)}
+
+/* ===== CERTYFIKAT ===== */
 .cert-center{max-width:680px;margin:0 auto;text-align:center}
-.cert-icon-big{font-size:5rem;margin-bottom:1.5rem}
-
-.cert-preview{
-  position:relative;
-  border-radius:20px;
-  padding:3px;
-  background:linear-gradient(135deg,#1d9e75 0%,#0f6e56 25%,#c9a84c 50%,#1d9e75 75%,#0f6e56 100%);
-  margin:1.5rem 0;
-  box-shadow:0 0 60px rgba(29,158,117,0.18);
-}
-.cert-inner{
-  background:linear-gradient(160deg,#07111f 0%,#0b1a2e 40%,#071620 100%);
-  border-radius:18px;
-  padding:3rem 2.8rem 2.6rem;
-  position:relative;
-  overflow:hidden;
-}
-.cert-inner::before{
-  content:'';
-  position:absolute;
-  inset:0;
-  background:
-    radial-gradient(ellipse 60% 40% at 15% 10%,rgba(29,158,117,0.07) 0%,transparent 60%),
-    radial-gradient(ellipse 50% 35% at 85% 85%,rgba(201,168,76,0.06) 0%,transparent 60%);
-  pointer-events:none;
-}
+.cert-preview{position:relative;border-radius:20px;padding:3px;background:linear-gradient(135deg,#1d9e75 0%,#0f6e56 25%,#c9a84c 50%,#1d9e75 75%,#0f6e56 100%);margin:1.5rem 0;box-shadow:0 0 60px rgba(29,158,117,0.18)}
+.cert-inner{background:linear-gradient(160deg,#07111f 0%,#0b1a2e 40%,#071620 100%);border-radius:18px;padding:3rem 2.8rem 2.6rem;position:relative;overflow:hidden}
+.cert-inner::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 40% at 15% 10%,rgba(29,158,117,0.07) 0%,transparent 60%),radial-gradient(ellipse 50% 35% at 85% 85%,rgba(201,168,76,0.06) 0%,transparent 60%);pointer-events:none}
 .cert-corner{position:absolute;width:56px;height:56px;opacity:.45}
 .cert-corner.tl{top:18px;left:18px;border-top:2px solid #c9a84c;border-left:2px solid #c9a84c;border-radius:4px 0 0 0}
 .cert-corner.tr{top:18px;right:18px;border-top:2px solid #c9a84c;border-right:2px solid #c9a84c;border-radius:0 4px 0 0}
 .cert-corner.bl{bottom:18px;left:18px;border-bottom:2px solid #c9a84c;border-left:2px solid #c9a84c;border-radius:0 0 0 4px}
 .cert-corner.br{bottom:18px;right:18px;border-bottom:2px solid #c9a84c;border-right:2px solid #c9a84c;border-radius:0 0 4px 0}
-
 .cert-brand{display:flex;align-items:center;justify-content:center;gap:.6rem;margin-bottom:1.6rem}
 .cert-brand-icon{width:38px;height:38px;background:linear-gradient(135deg,#1d9e75,#0f6e56);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.2rem}
 .cert-brand-name{font-family:'Syne',sans-serif;font-size:1.15rem;font-weight:800;color:#fff;letter-spacing:-.01em}
 .cert-brand-name span{color:rgba(255,255,255,0.35)}
-
 .cert-ornament{display:flex;align-items:center;gap:.8rem;margin-bottom:1.4rem}
 .cert-ornament-line{flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(201,168,76,0.4),transparent)}
 .cert-ornament-diamond{width:6px;height:6px;background:#c9a84c;transform:rotate(45deg);opacity:.7}
-
-.cert-headline-text{font-size:.62rem;text-transform:uppercase;letter-spacing:.28em;color:rgba(201,168,76,0.7);margin-bottom:1.2rem;font-weight:600}
 .cert-intro{font-size:.8rem;color:rgba(255,255,255,0.4);margin-bottom:.6rem;letter-spacing:.02em}
 .cert-recipient{font-family:'Syne',sans-serif;font-size:2.1rem;font-weight:800;color:#fff;line-height:1.15;margin-bottom:1.2rem;text-shadow:0 0 30px rgba(29,158,117,0.3)}
-
 .cert-course-wrap{background:rgba(29,158,117,0.08);border:1px solid rgba(29,158,117,0.2);border-radius:12px;padding:.9rem 1.4rem;display:inline-block;margin-bottom:1.4rem}
 .cert-course-label{font-size:.67rem;text-transform:uppercase;letter-spacing:.14em;color:rgba(255,255,255,0.35);margin-bottom:.3rem}
 .cert-course-name{font-family:'Syne',sans-serif;font-size:1.05rem;font-weight:700;color:#fff}
-
 .cert-meta-row{display:flex;justify-content:center;gap:2.5rem;margin-bottom:1.4rem}
 .cert-meta-item{text-align:center}
 .cert-meta-num{font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;color:#1d9e75}
 .cert-meta-label{font-size:.63rem;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:.1em;margin-top:.15rem}
-
 .cert-seal{width:68px;height:68px;border-radius:50%;border:2px solid rgba(201,168,76,0.5);display:flex;align-items:center;justify-content:center;font-size:2rem;margin:0 auto 1rem;background:rgba(201,168,76,0.06)}
-
 .cert-date-text{font-size:.75rem;color:rgba(255,255,255,0.3);letter-spacing:.05em}
 .cert-sig-row{display:flex;justify-content:space-between;align-items:flex-end;margin-top:1.8rem;padding-top:1.2rem;border-top:1px solid rgba(255,255,255,0.07)}
 .cert-sig{text-align:center}
 .cert-sig-line{width:100px;height:1px;background:rgba(255,255,255,0.2);margin:0 auto .4rem}
 .cert-sig-name{font-size:.7rem;color:rgba(255,255,255,0.3);letter-spacing:.05em}
-
 .cert-id-text{font-size:.6rem;color:rgba(255,255,255,0.15);margin-top:.6rem;letter-spacing:.04em}
-
-/* ===== Progress + button ===== */
 .cert-progress-card{background:rgba(29,158,117,0.05);border:1px solid rgba(29,158,117,0.15);border-radius:16px;padding:1.5rem;margin-bottom:1rem}
 
-@media(max-width:768px){.dash-stats{grid-template-columns:repeat(2,1fr)}.next-card{flex-direction:column;align-items:flex-start}.cert-meta-row{gap:1.2rem}.cert-recipient{font-size:1.5rem}.cert-sig-row{flex-direction:column;gap:1rem;align-items:center}}
+@media(max-width:900px){
+  .app-layout{grid-template-columns:1fr}
+  .sidebar{position:static;height:auto}
+  .main-content{height:auto}
+  .dash-stats{grid-template-columns:repeat(2,1fr)}
+  .cert-meta-row{gap:1.2rem}
+  .cert-recipient{font-size:1.5rem}
+  .cert-sig-row{flex-direction:column;gap:1rem;align-items:center}
+}
 </style>
 </head>
 <body>
 <div id="toast"></div>
-<div id="achievement-popup" class="achievement-popup"><div class="ach-icon" id="ach-popup-icon">🏆</div><div><div class="ach-title" id="ach-popup-title"></div><div class="ach-desc" id="ach-popup-desc"></div></div></div>
+<div id="achievement-popup" class="achievement-popup">
+  <div class="ach-icon" id="ach-popup-icon">🏆</div>
+  <div>
+    <div class="ach-title" id="ach-popup-title"></div>
+    <div class="ach-desc" id="ach-popup-desc"></div>
+  </div>
+</div>
 
 <div class="loading-overlay" id="loading">
   <div class="spinner spinner-lg" style="color:var(--green)"></div>
@@ -101,11 +249,10 @@
 <div class="app-layout" id="app" style="display:none">
   <div class="sidebar" id="sidebar">
     <div class="sidebar-header">
-      <a href="index.html" class="logo" style="font-size:.95rem;line-height:1.2">AI Kurs<span> dla każdego</span></a>
-      <button class="theme-toggle" onclick="toggleTheme()" title="Zmień motyw" id="theme-btn">🌙</button>
+      <a href="index.html" class="logo">AI Kurs<span> dla każdego</span></a>
+      <button class="theme-toggle" onclick="toggleTheme()" id="theme-btn">🌙</button>
     </div>
     <div class="sidebar-body">
-      <!-- Streak -->
       <div class="streak-box" id="streak-box">
         <div class="streak-icon">🔥</div>
         <div>
@@ -118,7 +265,6 @@
         </div>
       </div>
 
-      <!-- Postęp -->
       <div class="card" style="margin-bottom:1rem;padding:1rem">
         <div class="progress-meta">
           <span>Twój postęp</span>
@@ -131,18 +277,18 @@
         </div>
       </div>
 
-      <!-- Wyszukiwarka -->
       <div class="search-wrap">
         <span class="search-icon">🔍</span>
         <input class="search-input" type="text" id="search-input" placeholder="Szukaj lekcji..." oninput="doSearch(this.value)">
         <div class="search-results" id="search-results"></div>
       </div>
 
-      <!-- Menu -->
       <div class="nav-section">
         <div class="nav-label">Menu</div>
-        <button class="nav-item active" id="nav-dash" onclick="showView('dashboard')"><span class="nav-icon">🏠</span>Dashboard</button>
-        <button class="nav-item" id="nav-achievements" onclick="showView('achievements')"><span class="nav-icon">🏅</span>Osiągnięcia<span id="ach-count-badge" style="margin-left:auto;background:var(--yellow);color:#000;font-size:.65rem;padding:.1rem .45rem;border-radius:50px;font-weight:700;display:none">0</span></button>
+        <button class="nav-item active" id="nav-dashboard" onclick="showView('dashboard')"><span class="nav-icon">🏠</span>Dashboard</button>
+        <button class="nav-item" id="nav-achievements" onclick="showView('achievements')"><span class="nav-icon">🏅</span>Osiągnięcia
+          <span id="ach-count-badge" style="margin-left:auto;background:var(--yellow);color:#000;font-size:.65rem;padding:.1rem .45rem;border-radius:50px;font-weight:700;display:none">0</span>
+        </button>
         <button class="nav-item" id="nav-cert" onclick="showView('cert')"><span class="nav-icon">🏆</span>Certyfikat</button>
       </div>
       <hr class="divider">
@@ -213,7 +359,7 @@
         <div class="tab-pane" id="tab-quiz"><div id="quiz-area"></div></div>
         <div class="tab-pane" id="tab-komentarze"><div id="comments-area"></div></div>
         <div class="tab-pane" id="tab-notatki">
-          <textarea class="input" id="notes-ta" placeholder="Twoje notatki do tej lekcji..." style="min-height:220px;width:100%;background:var(--surface);color:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:.75rem"></textarea>
+          <textarea class="input" id="notes-ta" placeholder="Twoje notatki do tej lekcji..." style="min-height:220px;resize:vertical"></textarea>
           <div style="display:flex;align-items:center;margin-top:.75rem">
             <button class="btn btn-green btn-sm" onclick="saveNotes()">Zapisz notatki</button>
             <span class="notes-saved" id="notes-saved">✓ Zapisano!</span>
@@ -221,7 +367,7 @@
         </div>
         <div class="lesson-nav">
           <button class="btn btn-outline btn-sm" onclick="goPrev()" id="btn-prev">← Poprzednia</button>
-          <button class="btn btn-sm" id="btn-complete" onclick="toggleComplete()">Oznacz jako ukończoną ✓</button>
+          <button class="btn btn-green btn-sm" id="btn-complete" onclick="toggleComplete()">Oznacz jako ukończoną ✓</button>
           <button class="btn btn-outline btn-sm" onclick="goNext2()" id="btn-next">Następna →</button>
         </div>
       </div>
@@ -240,19 +386,16 @@
             <p id="cert-header-sub">Ukończ wszystkie lekcje żeby odblokować certyfikat.</p>
           </div>
 
-          <!-- Podgląd certyfikatu -->
           <div class="cert-preview">
             <div class="cert-inner">
               <div class="cert-corner tl"></div>
               <div class="cert-corner tr"></div>
               <div class="cert-corner bl"></div>
               <div class="cert-corner br"></div>
-
               <div class="cert-brand">
                 <div class="cert-brand-icon">🎓</div>
                 <div class="cert-brand-name">AI Kurs<span> dla każdego</span></div>
               </div>
-
               <div class="cert-ornament">
                 <div class="cert-ornament-line"></div>
                 <div class="cert-ornament-diamond"></div>
@@ -260,17 +403,14 @@
                 <div class="cert-ornament-diamond"></div>
                 <div class="cert-ornament-line"></div>
               </div>
-
               <div class="cert-intro">Niniejszym zaświadcza się, że</div>
               <div class="cert-recipient" id="cert-name-preview">—</div>
-
               <div class="cert-intro" style="margin-bottom:.8rem">ukończył/a kurs</div>
               <div class="cert-course-wrap">
                 <div class="cert-course-label">Nazwa kursu</div>
                 <div class="cert-course-name">AI które oszczędza Twoje pieniądze</div>
               </div>
-
-              <div class="cert-meta-row" id="cert-meta-row">
+              <div class="cert-meta-row">
                 <div class="cert-meta-item">
                   <div class="cert-meta-num" id="cert-meta-lessons">—</div>
                   <div class="cert-meta-label">Lekcji</div>
@@ -284,16 +424,13 @@
                   <div class="cert-meta-label">Ukończono</div>
                 </div>
               </div>
-
               <div class="cert-ornament" style="margin-bottom:1rem">
                 <div class="cert-ornament-line"></div>
                 <div class="cert-ornament-diamond"></div>
                 <div class="cert-ornament-line"></div>
               </div>
-
               <div class="cert-seal">🏆</div>
               <div class="cert-date-text" id="cert-date-preview">—</div>
-
               <div class="cert-sig-row">
                 <div class="cert-sig">
                   <div class="cert-sig-line"></div>
@@ -308,7 +445,6 @@
             </div>
           </div>
 
-          <!-- Pasek postępu -->
           <div class="cert-progress-card">
             <div class="progress-meta" style="margin-bottom:.5rem">
               <span id="cert-done-text">0 / 0 lekcji</span>
@@ -329,12 +465,43 @@
   </div>
 </div>
 
+<!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<!-- jsPDF -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<!-- app.js (Twój plik z konfiguracją, ACHIEVEMENTS, KV, getKursData, getUserDisplayName, showToast) -->
 <script src="app.js"></script>
+
 <script>
+// ─────────────────────────────────────────────
+//  FALLBACKI — zabezpieczenie gdy app.js nie dostarczy zmiennych
+// ─────────────────────────────────────────────
+if (typeof ACHIEVEMENTS === 'undefined') window.ACHIEVEMENTS = []
+if (typeof KV === 'undefined') window.KV = {
+  get: function(k){ try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : null } catch(e){ return null } },
+  set: function(k,v){ try { localStorage.setItem(k, JSON.stringify(v)) } catch(e){} }
+}
+if (typeof getUserDisplayName === 'undefined') window.getUserDisplayName = function(u){
+  if (!u) return 'Kursant'
+  return u.displayName || (u.email ? u.email.split('@')[0] : 'Kursant')
+}
+if (typeof getKursData === 'undefined') window.getKursData = function(){ return { modules: [] } }
+if (typeof showToast === 'undefined') window.showToast = function(msg, type){
+  const t = document.createElement('div')
+  t.className = 'toast toast-' + (type || 'info')
+  t.textContent = msg
+  t.style.cssText = 'position:fixed;bottom:1.5rem;right:1.5rem;padding:.75rem 1.2rem;border-radius:10px;font-size:.86rem;font-weight:500;z-index:2000;background:#0d1d30;border:1px solid rgba(255,255,255,0.15);color:#fff'
+  if (type === 'success') { t.style.background = '#0f3d2c'; t.style.borderColor = '#1d9e75'; t.style.color = '#1d9e75' }
+  if (type === 'error') { t.style.background = '#3d0f0f'; t.style.borderColor = '#e24b4a'; t.style.color = '#e24b4a' }
+  document.body.appendChild(t)
+  setTimeout(() => t.remove(), 3500)
+}
+
+// ─────────────────────────────────────────────
+//  INICJALIZACJA
+// ─────────────────────────────────────────────
 if (!firebase.apps.length) firebase.initializeApp(FIREBASE_CONFIG)
 const db = firebase.firestore()
 const ADMIN_EMAIL = 'psp45rostyslav@gmail.com'
@@ -345,7 +512,6 @@ let completed = new Set()
 let notesCache = {}
 let hwCache = {}
 let quizResults = {}
-let commentsCache = {}
 let unlockedAch = new Set()
 let currentMod = 0, currentLes = 0, nextMod = 0, nextLes = 0
 let streak = 0, notesCount = 0
@@ -355,7 +521,9 @@ firebase.auth().onAuthStateChanged(async user => {
   currentUser = user
   try {
     const kursDoc = await db.collection('konfiguracja').doc('kurs').get()
-    kursData = kursDoc.exists ? kursDoc.data() : getKursData()
+    kursData = (kursDoc.exists && kursDoc.data() && Array.isArray(kursDoc.data().modules))
+      ? kursDoc.data()
+      : getKursData()
     const userDoc = await db.collection('uczniowie').doc(user.uid).get()
     if (userDoc.exists) {
       const d = userDoc.data()
@@ -372,45 +540,59 @@ firebase.auth().onAuthStateChanged(async user => {
     quizSnap.forEach(doc => { quizResults[doc.id] = doc.data() })
     updateStreak()
   } catch (e) {
+    console.warn('Firebase error, falling back to local storage:', e)
     kursData = getKursData()
     const s = KV.get('completed_' + user.uid)
     completed = new Set(s || [])
     streak = KV.get('streak_' + user.uid) || 0
+  }
+  // Upewnij się że kursData.modules zawsze jest tablicą
+  if (!kursData || !Array.isArray(kursData.modules)) {
+    kursData = { modules: [] }
   }
   document.getElementById('loading').style.display = 'none'
   document.getElementById('app').style.display = 'grid'
   initUI()
 })
 
-function doLogout() { firebase.auth().signOut().then(() => { window.location.href = 'index.html' }) }
+function doLogout() {
+  firebase.auth().signOut().then(() => { window.location.href = 'index.html' })
+}
 
 async function updateStreak() {
   const today = new Date().toDateString()
-  const lastDay = KV.get('last_study_' + (currentUser ? currentUser.uid : ''))
+  const uid = currentUser ? currentUser.uid : ''
+  const lastDay = KV.get('last_study_' + uid)
   const yesterday = new Date(Date.now() - 86400000).toDateString()
   if (lastDay === today) return
   if (lastDay === yesterday) streak++
-  else if (lastDay !== today) streak = 1
-  KV.set('last_study_' + currentUser.uid, today)
-  KV.set('streak_' + currentUser.uid, streak)
+  else streak = 1
+  KV.set('last_study_' + uid, today)
+  KV.set('streak_' + uid, streak)
   try { await db.collection('uczniowie').doc(currentUser.uid).set({ streak }, { merge: true }) } catch (e) {}
-  document.getElementById('streak-num').textContent = streak
+  const el = document.getElementById('streak-num')
+  if (el) el.textContent = streak
+}
+
+function safeModules() {
+  return (kursData && Array.isArray(kursData.modules)) ? kursData.modules : []
 }
 
 function initUI() {
   const name = getUserDisplayName(currentUser)
-  document.getElementById('sb-avatar').textContent = name[0].toUpperCase()
+  document.getElementById('sb-avatar').textContent = (name[0] || '?').toUpperCase()
   document.getElementById('sb-name').textContent = name
   document.getElementById('sb-email').textContent = currentUser.email
   if (currentUser.email === ADMIN_EMAIL) document.getElementById('admin-link').style.display = 'block'
-  document.getElementById('dash-greeting').textContent = 'Cześć, ' + name.split(' ')[0] + '! 👋'
+  document.getElementById('dash-greeting').textContent = 'Cześć, ' + (name.split(' ')[0] || name) + '! 👋'
   document.getElementById('streak-num').textContent = streak
   document.getElementById('cert-name-preview').textContent = name
   document.getElementById('cert-sig-student').textContent = name
-  document.getElementById('cert-date-preview').textContent = new Date().toLocaleDateString('pl-PL', { year: 'numeric', month: 'long', day: 'numeric' })
-  const total = (kursData.modules || []).reduce((a, m) => a + m.lessons.length, 0)
+  document.getElementById('cert-date-preview').textContent = new Date().toLocaleDateString('pl-PL', { year:'numeric', month:'long', day:'numeric' })
+  const mods = safeModules()
+  const total = mods.reduce((a, m) => a + (Array.isArray(m.lessons) ? m.lessons.length : 0), 0)
   document.getElementById('cert-meta-lessons').textContent = total || '—'
-  document.getElementById('cert-meta-modules').textContent = (kursData.modules || []).length || '—'
+  document.getElementById('cert-meta-modules').textContent = mods.length || '—'
   calcTimeLeft()
   buildSidebar()
   updateProgress()
@@ -422,23 +604,28 @@ function initUI() {
 
 function calcTimeLeft() {
   let mins = 0
-  kursData.modules.forEach(mod => mod.lessons.forEach(les => {
-    if (!completed.has(les.id)) {
-      const m = parseInt((les.time || '0').match(/\d+/)?.[0] || 0)
-      mins += m
-    }
-  }))
+  safeModules().forEach(mod => {
+    (Array.isArray(mod.lessons) ? mod.lessons : []).forEach(les => {
+      if (!completed.has(les.id)) {
+        const m = parseInt((les.time || '0').match(/\d+/)?.[0] || 0)
+        mins += m
+      }
+    })
+  })
   const h = Math.floor(mins / 60), m = mins % 60
-  document.getElementById('time-left').textContent = mins > 0 ? (h > 0 ? h + 'h ' : '') + m + ' min' : 'Kurs ukończony!'
+  const el = document.getElementById('time-left')
+  if (el) el.textContent = mins > 0 ? (h > 0 ? h + 'h ' : '') + m + ' min' : 'Kurs ukończony!'
 }
 
 function buildSidebar() {
-  const total = kursData.modules.reduce((a, m) => a + m.lessons.length, 0)
+  const mods = safeModules()
+  const total = mods.reduce((a, m) => a + (Array.isArray(m.lessons) ? m.lessons.length : 0), 0)
   document.getElementById('sb-total').textContent = total
   const wrap = document.getElementById('sb-modules')
   wrap.innerHTML = ''
-  kursData.modules.forEach((mod, mi) => {
-    const doneLes = mod.lessons.filter(l => completed.has(l.id)).length
+  mods.forEach((mod, mi) => {
+    const lessons = Array.isArray(mod.lessons) ? mod.lessons : []
+    const doneLes = lessons.filter(l => completed.has(l.id)).length
     const isOpen = mi === currentMod && document.getElementById('view-lesson').style.display !== 'none'
     const group = document.createElement('div')
     group.className = 'mod-group' + (isOpen ? ' open' : '')
@@ -446,10 +633,10 @@ function buildSidebar() {
     group.innerHTML = `
       <div class="mod-toggle" onclick="toggleMod(${mi})">
         <div class="mod-toggle-left"><span class="mod-toggle-icon">▶</span><span class="mod-title-text">M${mod.id}: ${mod.title}</span></div>
-        <span class="mod-prog-text">${doneLes}/${mod.lessons.length}</span>
+        <span class="mod-prog-text">${doneLes}/${lessons.length}</span>
       </div>
       <div class="mod-lessons" id="mod-lessons-${mi}">
-        ${mod.lessons.map((les, li) => `
+        ${lessons.map((les, li) => `
           <button class="lesson-btn ${completed.has(les.id) ? 'done' : ''} ${(mi === currentMod && li === currentLes && document.getElementById('view-lesson').style.display !== 'none') ? 'active' : ''}"
             onclick="openLesson(${mi},${li})">
             <span class="lesson-num">${mod.id}.${li + 1}</span>
@@ -461,16 +648,24 @@ function buildSidebar() {
   })
 }
 
-function toggleMod(mi) { document.getElementById('mod-group-' + mi).classList.toggle('open') }
+function toggleMod(mi) {
+  document.getElementById('mod-group-' + mi).classList.toggle('open')
+}
 
 function doSearch(q) {
   const res = document.getElementById('search-results')
   if (!q.trim()) { res.classList.remove('show'); return }
   const hits = []
-  kursData.modules.forEach((mod, mi) => mod.lessons.forEach((les, li) => {
-    if (les.title.toLowerCase().includes(q.toLowerCase())) hits.push({ mod, mi, les, li })
-  }))
-  if (!hits.length) { res.innerHTML = '<div class="search-result-item" style="color:var(--muted)">Brak wyników</div>'; res.classList.add('show'); return }
+  safeModules().forEach((mod, mi) => {
+    (Array.isArray(mod.lessons) ? mod.lessons : []).forEach((les, li) => {
+      if (les.title.toLowerCase().includes(q.toLowerCase())) hits.push({ mod, mi, les, li })
+    })
+  })
+  if (!hits.length) {
+    res.innerHTML = '<div class="search-result-item" style="color:var(--muted)">Brak wyników</div>'
+    res.classList.add('show')
+    return
+  }
   res.innerHTML = hits.slice(0, 6).map(h => `
     <div class="search-result-item" onclick="openLesson(${h.mi},${h.li});document.getElementById('search-input').value='';document.getElementById('search-results').classList.remove('show')">
       ${h.les.title}
@@ -484,7 +679,8 @@ document.addEventListener('click', e => {
 })
 
 function updateProgress() {
-  const total = kursData.modules.reduce((a, m) => a + m.lessons.length, 0)
+  const mods = safeModules()
+  const total = mods.reduce((a, m) => a + (Array.isArray(m.lessons) ? m.lessons.length : 0), 0)
   const done = completed.size
   const pct = total > 0 ? Math.round(done / total * 100) : 0
   document.getElementById('sb-pct').textContent = pct + '%'
@@ -501,40 +697,48 @@ function updateProgress() {
   if (done === total && total > 0) {
     certBtn.disabled = false
     document.getElementById('cert-header-sub').textContent = 'Kurs ukończony! Twój certyfikat czeka.'
-  } else { certBtn.disabled = true }
+  } else {
+    certBtn.disabled = true
+  }
   calcTimeLeft()
 }
 
 function updateDashboard() {
-  const total = kursData.modules.reduce((a, m) => a + m.lessons.length, 0)
+  const mods = safeModules()
+  const total = mods.reduce((a, m) => a + (Array.isArray(m.lessons) ? m.lessons.length : 0), 0)
   const done = completed.size
   const pct = total > 0 ? Math.round(done / total * 100) : 0
-  const modsDone = kursData.modules.filter(m => m.lessons.every(l => completed.has(l.id))).length
+  const modsDone = mods.filter(m => Array.isArray(m.lessons) && m.lessons.every(l => completed.has(l.id))).length
   document.getElementById('ds-done').textContent = done
   document.getElementById('ds-pct').textContent = pct + '%'
-  document.getElementById('ds-mod').textContent = modsDone + '/' + kursData.modules.length
+  document.getElementById('ds-mod').textContent = modsDone + '/' + mods.length
   let foundNext = false
-  kursData.modules.forEach((mod, mi) => mod.lessons.forEach((les, li) => {
-    if (!foundNext && !completed.has(les.id)) {
-      foundNext = true; nextMod = mi; nextLes = li
-      document.getElementById('next-title').textContent = les.title
-      document.getElementById('next-meta').textContent = `Moduł ${mod.id}: ${mod.title} · ${les.time}`
-    }
-  }))
-  if (!foundNext) { document.getElementById('next-title').textContent = 'Ukończyłeś cały kurs! 🎉'; document.getElementById('next-meta').textContent = 'Czas odebrać certyfikat' }
+  mods.forEach((mod, mi) => {
+    (Array.isArray(mod.lessons) ? mod.lessons : []).forEach((les, li) => {
+      if (!foundNext && !completed.has(les.id)) {
+        foundNext = true; nextMod = mi; nextLes = li
+        document.getElementById('next-title').textContent = les.title
+        document.getElementById('next-meta').textContent = `Moduł ${mod.id}: ${mod.title} · ${les.time}`
+      }
+    })
+  })
+  if (!foundNext) {
+    document.getElementById('next-title').textContent = 'Ukończyłeś cały kurs! 🎉'
+    document.getElementById('next-meta').textContent = 'Czas odebrać certyfikat'
+  }
   const al = document.getElementById('activity-list')
   const recent = [...completed].slice(-4).reverse()
   if (!recent.length) { al.innerHTML = '<p style="color:var(--muted);font-size:.84rem">Jeszcze nie ukończyłeś żadnej lekcji. Zacznij teraz!</p>'; return }
   al.innerHTML = recent.map(id => {
     let found = null
-    kursData.modules.forEach(m => m.lessons.forEach(l => { if (l.id === id) found = { l, m } }))
+    mods.forEach(m => (Array.isArray(m.lessons) ? m.lessons : []).forEach(l => { if (l.id === id) found = { l, m } }))
     if (!found) return ''
     return `<div class="activity-item"><span class="activity-check">✓</span><div class="activity-info"><div class="activity-title">${found.l.title}</div><div class="activity-mod">Moduł ${found.m.id}: ${found.m.title}</div></div></div>`
   }).join('')
 }
 
 function showView(name) {
-  ['dashboard', 'lesson', 'achievements', 'cert'].forEach(v => {
+  ['dashboard','lesson','achievements','cert'].forEach(v => {
     document.getElementById('view-' + v).style.display = v === name ? 'block' : 'none'
   })
   document.querySelectorAll('[id^="nav-"]').forEach(b => b.classList.remove('active'))
@@ -548,11 +752,16 @@ function goNext() {
 }
 
 function openLesson(mi, li) {
+  const mods = safeModules()
+  if (mi < 0 || mi >= mods.length) return
+  const mod = mods[mi]
+  const lessons = Array.isArray(mod.lessons) ? mod.lessons : []
+  if (li < 0 || li >= lessons.length) return
+  const les = lessons[li]
   currentMod = mi; currentLes = li
-  const mod = kursData.modules[mi], les = mod.lessons[li]
   document.getElementById('l-breadcrumb').textContent = `Moduł ${mod.id}: ${mod.title} › Lekcja ${mod.id}.${li + 1}`
   document.getElementById('l-title').textContent = les.title
-  document.getElementById('l-time').textContent = '⏱ ' + les.time
+  document.getElementById('l-time').textContent = '⏱ ' + (les.time || '')
   document.getElementById('l-desc').innerHTML = les.desc || ''
   const done = completed.has(les.id)
   const sEl = document.getElementById('l-status')
@@ -573,7 +782,7 @@ function openLesson(mi, li) {
     const savedHw = hwCache[les.id] || ''
     hwa.innerHTML = `<div class="homework-box"><div class="homework-label">📋 Zadanie domowe</div><div class="homework-text">${les.homework}</div></div>
       <div style="margin-top:1rem">
-        <textarea class="input" id="hw-ta" placeholder="Twoja odpowiedź..." style="min-height:150px;width:100%;background:var(--surface);color:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:.75rem">${savedHw}</textarea>
+        <textarea class="input" id="hw-ta" placeholder="Twoja odpowiedź..." style="min-height:150px;resize:vertical">${savedHw}</textarea>
         <div style="margin-top:.75rem"><button class="btn btn-green btn-sm" onclick="saveHomework('${les.id}')">Zapisz odpowiedź</button><span class="notes-saved" id="hw-saved">✓ Zapisano!</span></div>
       </div>`
   } else { hwa.innerHTML = '<div class="no-pdfs">Brak zadania domowego do tej lekcji.</div>' }
@@ -585,9 +794,9 @@ function openLesson(mi, li) {
   if (done) { cb.textContent = '✓ Ukończona'; cb.className = 'btn btn-sm btn-complete-done' }
   else { cb.textContent = 'Oznacz jako ukończoną ✓'; cb.className = 'btn btn-green btn-sm' }
   document.getElementById('btn-prev').disabled = (mi === 0 && li === 0)
-  document.getElementById('btn-next').disabled = (mi === kursData.modules.length - 1 && li === mod.lessons.length - 1)
-  document.querySelectorAll('.tab-btn').forEach((b, i) => { b.classList.toggle('active', i === 0) })
-  document.querySelectorAll('.tab-pane').forEach((p, i) => { p.classList.toggle('active', i === 0) })
+  document.getElementById('btn-next').disabled = (mi === mods.length - 1 && li === lessons.length - 1)
+  document.querySelectorAll('.tab-btn').forEach((b, i) => b.classList.toggle('active', i === 0))
+  document.querySelectorAll('.tab-pane').forEach((p, i) => p.classList.toggle('active', i === 0))
   buildSidebar()
   showView('lesson')
   document.getElementById('main-content').scrollTop = 0
@@ -596,6 +805,7 @@ function openLesson(mi, li) {
 function loadVideo(ytId, container) {
   container.innerHTML = `<iframe src="https://www.youtube.com/embed/${ytId}?autoplay=1" allowfullscreen></iframe>`
 }
+
 function switchTab(name, btn) {
   document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'))
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'))
@@ -624,8 +834,11 @@ function renderQuiz(les) {
 }
 
 async function submitQuiz(lesId) {
-  const les = kursData.modules[currentMod].lessons[currentLes]
-  if (!les.quiz) return
+  const mods = safeModules()
+  if (!mods[currentMod]) return
+  const lessons = Array.isArray(mods[currentMod].lessons) ? mods[currentMod].lessons : []
+  const les = lessons[currentLes]
+  if (!les || !les.quiz) return
   let correct = 0
   les.quiz.forEach((q, qi) => {
     const sel = document.querySelector(`input[name="q${qi}"]:checked`)
@@ -648,18 +861,26 @@ async function submitQuiz(lesId) {
   }, 600)
 }
 
-function resetQuiz(lesId) { delete quizResults[lesId]; renderQuiz(kursData.modules[currentMod].lessons[currentLes]) }
+function resetQuiz(lesId) {
+  delete quizResults[lesId]
+  const mods = safeModules()
+  if (mods[currentMod]) {
+    const lessons = Array.isArray(mods[currentMod].lessons) ? mods[currentMod].lessons : []
+    if (lessons[currentLes]) renderQuiz(lessons[currentLes])
+  }
+}
 
 async function renderComments(lesId) {
   const area = document.getElementById('comments-area')
   area.innerHTML = `<div style="margin-bottom:1rem">
-    <textarea class="input" id="new-comment" placeholder="Zadaj pytanie do tej lekcji..." style="min-height:90px;width:100%;background:var(--surface);color:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:.75rem"></textarea>
+    <textarea class="input" id="new-comment" placeholder="Zadaj pytanie do tej lekcji..." style="min-height:90px;resize:vertical"></textarea>
     <button class="btn btn-green btn-sm" style="margin-top:.5rem" onclick="addComment('${lesId}')">Wyślij pytanie →</button>
   </div>
   <div id="comments-list"><div style="color:var(--muted);font-size:.85rem;padding:1rem 0">Ładowanie pytań...</div></div>`
   try {
-    const snap = await db.collection('komentarze').doc(lesId).collection('wpisy').orderBy('createdAt', 'desc').limit(20).get()
+    const snap = await db.collection('komentarze').doc(lesId).collection('wpisy').orderBy('createdAt','desc').limit(20).get()
     const list = document.getElementById('comments-list')
+    if (!list) return
     if (snap.empty) { list.innerHTML = '<div style="color:var(--muted);font-size:.84rem;padding:.5rem 0">Brak pytań do tej lekcji. Bądź pierwszy!</div>'; return }
     list.innerHTML = snap.docs.map(doc => {
       const d = doc.data()
@@ -670,7 +891,10 @@ async function renderComments(lesId) {
         ${d.reply ? `<div class="comment-reply"><div class="comment-header"><div class="comment-avatar" style="background:rgba(29,158,117,0.2);color:var(--green)">A</div><span class="comment-author">AI Kurs dla każdego</span></div><div class="comment-text">${d.reply}</div></div>` : ''}
       </div>`
     }).join('')
-  } catch (e) { document.getElementById('comments-list').innerHTML = '<div style="color:var(--muted);font-size:.84rem">Nie można załadować pytań.</div>' }
+  } catch (e) {
+    const list = document.getElementById('comments-list')
+    if (list) list.innerHTML = '<div style="color:var(--muted);font-size:.84rem">Nie można załadować pytań.</div>'
+  }
 }
 
 async function addComment(lesId) {
@@ -688,7 +912,11 @@ async function addComment(lesId) {
 }
 
 async function toggleComplete() {
-  const les = kursData.modules[currentMod].lessons[currentLes]
+  const mods = safeModules()
+  if (!mods[currentMod]) return
+  const lessons = Array.isArray(mods[currentMod].lessons) ? mods[currentMod].lessons : []
+  const les = lessons[currentLes]
+  if (!les) return
   const btn = document.getElementById('btn-complete')
   btn.disabled = true
   if (completed.has(les.id)) { completed.delete(les.id); showToast('Oznaczono jako nieukończona', 'info') }
@@ -706,23 +934,37 @@ async function toggleComplete() {
 
 function goPrev() {
   let mi = currentMod, li = currentLes - 1
-  if (li < 0) { mi--; if (mi < 0) return; li = kursData.modules[mi].lessons.length - 1 }
+  if (li < 0) {
+    mi--
+    if (mi < 0) return
+    const prevLessons = Array.isArray(safeModules()[mi]?.lessons) ? safeModules()[mi].lessons : []
+    li = prevLessons.length - 1
+  }
   openLesson(mi, li)
 }
+
 function goNext2() {
-  const mod = kursData.modules[currentMod]
+  const mods = safeModules()
+  const mod = mods[currentMod]
+  const lessons = mod && Array.isArray(mod.lessons) ? mod.lessons : []
   let mi = currentMod, li = currentLes + 1
-  if (li >= mod.lessons.length) { mi++; li = 0 }
-  if (mi >= kursData.modules.length) return
+  if (li >= lessons.length) { mi++; li = 0 }
+  if (mi >= mods.length) return
   openLesson(mi, li)
 }
 
 async function saveNotes() {
-  const les = kursData.modules[currentMod].lessons[currentLes]
+  const mods = safeModules()
+  if (!mods[currentMod]) return
+  const lessons = Array.isArray(mods[currentMod].lessons) ? mods[currentMod].lessons : []
+  const les = lessons[currentLes]
+  if (!les) return
   const text = document.getElementById('notes-ta').value
   notesCache[les.id] = text
   try {
-    await db.collection('uczniowie').doc(currentUser.uid).collection('notatki').doc(les.id).set({ content: text, updatedAt: firebase.firestore.FieldValue.serverTimestamp() })
+    await db.collection('uczniowie').doc(currentUser.uid).collection('notatki').doc(les.id).set({
+      content: text, updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+    })
     notesCount = Object.keys(notesCache).filter(k => notesCache[k].trim()).length
     const el = document.getElementById('notes-saved')
     el.classList.add('show'); setTimeout(() => el.classList.remove('show'), 2500)
@@ -734,19 +976,24 @@ async function saveHomework(lesId) {
   const text = document.getElementById('hw-ta').value
   hwCache[lesId] = text
   try {
-    await db.collection('uczniowie').doc(currentUser.uid).collection('zadania').doc(lesId).set({ content: text, updatedAt: firebase.firestore.FieldValue.serverTimestamp() })
+    await db.collection('uczniowie').doc(currentUser.uid).collection('zadania').doc(lesId).set({
+      content: text, updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+    })
     const el = document.getElementById('hw-saved')
     el.classList.add('show'); setTimeout(() => el.classList.remove('show'), 2500)
     showToast('Zadanie zapisane!', 'success')
   } catch (e) { KV.set('hw_' + currentUser.uid + '_' + lesId, text) }
 }
 
+
 function checkAchievements() {
-  const total = kursData.modules.reduce((a, m) => a + m.lessons.length, 0)
+  const mods = safeModules()
+  const total = mods.reduce((a, m) => a + (Array.isArray(m.lessons) ? m.lessons.length : 0), 0)
   const done = completed.size
-  const modsDone = kursData.modules.filter(m => m.lessons.every(l => completed.has(l.id))).length
-  ACHIEVEMENTS.forEach(ach => {
-    if (!unlockedAch.has(ach.id) && ach.condition(done, total, streak, modsDone, notesCount)) {
+  const modsDone = mods.filter(m => Array.isArray(m.lessons) && m.lessons.every(l => completed.has(l.id))).length
+  const achList = (typeof ACHIEVEMENTS !== 'undefined' && Array.isArray(ACHIEVEMENTS)) ? ACHIEVEMENTS : []
+  achList.forEach(ach => {
+    if (!unlockedAch.has(ach.id) && typeof ach.condition === 'function' && ach.condition(done, total, streak, modsDone, notesCount)) {
       unlockedAch.add(ach.id)
       saveAchievement(ach.id)
       showAchievementPopup(ach)
@@ -755,7 +1002,7 @@ function checkAchievements() {
   renderAchievements()
   const count = unlockedAch.size
   const badge = document.getElementById('ach-count-badge')
-  badge.textContent = count; badge.style.display = count > 0 ? 'inline' : 'none'
+  if (badge) { badge.textContent = count; badge.style.display = count > 0 ? 'inline' : 'none' }
 }
 
 async function saveAchievement(id) {
@@ -764,6 +1011,7 @@ async function saveAchievement(id) {
 
 function showAchievementPopup(ach) {
   const popup = document.getElementById('achievement-popup')
+  if (!popup) return
   document.getElementById('ach-popup-icon').textContent = ach.icon
   document.getElementById('ach-popup-title').textContent = '🏅 ' + ach.title
   document.getElementById('ach-popup-desc').textContent = ach.desc
@@ -774,7 +1022,8 @@ function showAchievementPopup(ach) {
 function renderAchievements() {
   const grid = document.getElementById('achievements-grid')
   if (!grid) return
-  grid.innerHTML = ACHIEVEMENTS.map(ach => {
+  const achList = (typeof ACHIEVEMENTS !== 'undefined' && Array.isArray(ACHIEVEMENTS)) ? ACHIEVEMENTS : []
+  grid.innerHTML = achList.map(ach => {
     const unlocked = unlockedAch.has(ach.id)
     return `<div class="ach-card ${unlocked ? 'unlocked' : 'locked'}">
       <div class="ach-card-icon">${ach.icon}</div>
@@ -785,9 +1034,11 @@ function renderAchievements() {
   }).join('')
 }
 
-// ===== CERTYFIKAT PDF =====
-// Zamiana polskich znaków na bezpieczne odpowiedniki dla jsPDF (Helvetica nie obsługuje UTF-8)
+// ─────────────────────────────────────────────
+//  CERTYFIKAT PDF — NAPRAWIONA WERSJA
+// ─────────────────────────────────────────────
 function plToAscii(str) {
+  if (!str) return ''
   return str
     .replace(/ą/g,'a').replace(/Ą/g,'A')
     .replace(/ć/g,'c').replace(/Ć/g,'C')
@@ -798,11 +1049,9 @@ function plToAscii(str) {
     .replace(/ś/g,'s').replace(/Ś/g,'S')
     .replace(/ź/g,'z').replace(/Ź/g,'Z')
     .replace(/ż/g,'z').replace(/Ż/g,'Z')
-    .replace(/✦/g,'*').replace(/★/g,'*')
     .replace(/[^\x00-\x7F]/g,'?')
 }
-
-function pt(s) { return plToAscii(s) }
+function pt(s) { return plToAscii(String(s || '')) }
 
 function downloadCert() {
   const btn = document.getElementById('cert-btn')
@@ -810,16 +1059,17 @@ function downloadCert() {
   btn.innerHTML = '<span class="spinner"></span> Generuje PDF...'
 
   try {
+    // Sprawdź czy biblioteka jsPDF jest załadowana
     if (!window.jspdf || !window.jspdf.jsPDF) {
-      showToast("Biblioteka PDF jeszcze sie laduje, sprobuj za chwile.", "error")
+      showToast('Biblioteka PDF jeszcze sie laduje, sprobuj za chwile.', 'error')
       btn.disabled = false
-      btn.innerHTML = "🏆 Pobierz certyfikat PDF"
+      btn.innerHTML = '🏆 Pobierz certyfikat PDF'
       return
     }
+
     const { jsPDF } = window.jspdf
-    const doc = new jsPDF({ orientation: "landscape", unit: "mm", format: "a4" })
-    const W = 297, H = 210
-    const CX = W / 2  // centrum X = 148.5
+    const doc = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' })
+    const W = 297, H = 210, CX = W / 2
 
     // === TŁO ===
     doc.setFillColor(7, 17, 31)
@@ -835,28 +1085,27 @@ function downloadCert() {
     doc.setLineWidth(0.5)
     doc.roundedRect(13, 13, W - 26, H - 26, 3, 3)
 
-    // === NAROŻNIKI OZDOBNE ===
+    // === NAROŻNIKI ===
     doc.setDrawColor(201, 168, 76)
     doc.setLineWidth(1.2)
     const cs = 15
     [[22,22],[W-22,22],[22,H-22],[W-22,H-22]].forEach(([cx,cy]) => {
-      const sx = cx < CX ? 1 : -1, sy = cy < H/2 ? 1 : -1
-      doc.line(cx, cy, cx + sx*cs, cy)
-      doc.line(cx, cy, cx, cy + sy*cs)
+      const sx = cx < CX ? 1 : -1, sy = cy < H / 2 ? 1 : -1
+      doc.line(cx, cy, cx + sx * cs, cy)
+      doc.line(cx, cy, cx, cy + sy * cs)
     })
 
-    // === LINIE POZIOME ===
+    // === LINIE DEKORACYJNE ===
     doc.setDrawColor(29, 158, 117)
     doc.setLineWidth(0.4)
     doc.line(35, 50, W - 35, 50)
     doc.line(35, H - 50, W - 35, H - 50)
-    // romby
     doc.setFillColor(201, 168, 76)
     ;[[CX-5,50],[CX+5,50],[CX-5,H-50],[CX+5,H-50]].forEach(([rx,ry]) => {
-      doc.rect(rx-2.5, ry-2.5, 5, 5, 'F')
+      doc.rect(rx - 2.5, ry - 2.5, 5, 5, 'F')
     })
 
-    // === IKONA AI ===
+    // === LOGO AI ===
     doc.setFillColor(29, 158, 117)
     doc.roundedRect(CX - 8, 16, 16, 16, 3, 3, 'F')
     doc.setFont('helvetica', 'bold')
@@ -870,38 +1119,35 @@ function downloadCert() {
     doc.setTextColor(255, 255, 255)
     doc.text('AI Kurs dla kazdego', CX, 42, { align: 'center' })
 
-    // === NAGŁÓWEK CERTYFIKATU ===
+    // === NAGŁÓWEK ===
     doc.setFont('helvetica', 'normal')
     doc.setFontSize(7.5)
     doc.setTextColor(201, 168, 76)
     doc.text('*  C E R T Y F I K A T   U K O N C Z E N I A  *', CX, 59, { align: 'center' })
 
     // === INTRO ===
-    doc.setFont('helvetica', 'normal')
     doc.setFontSize(10)
     doc.setTextColor(160, 160, 180)
     doc.text('Niniejszym zaswiadcza sie, ze', CX, 72, { align: 'center' })
 
-    // === IMIĘ KURSANTA ===
-    const name = getUserDisplayName(currentUser)
+    // === IMIĘ ===
+    const name = getUserDisplayName(currentUser) || 'Kursant'
     doc.setFont('helvetica', 'bold')
     doc.setFontSize(32)
     doc.setTextColor(255, 255, 255)
     doc.text(pt(name), CX, 93, { align: 'center' })
-
-    // linia pod imieniem
     const nw = Math.min(doc.getTextWidth(pt(name)) + 16, W - 70)
     doc.setDrawColor(29, 158, 117)
     doc.setLineWidth(0.7)
-    doc.line(CX - nw/2, 97, CX + nw/2, 97)
+    doc.line(CX - nw / 2, 97, CX + nw / 2, 97)
 
-    // === TEKST PO IMIENIU ===
+    // === TEKST ===
     doc.setFont('helvetica', 'normal')
     doc.setFontSize(10)
     doc.setTextColor(160, 160, 180)
     doc.text('ukonczyl/a z wynikiem pozytywnym kurs', CX, 108, { align: 'center' })
 
-    // === RAMKA KURSU ===
+    // === KURS ===
     const courseLabel = 'AI ktore oszczedza Twoje pieniadze'
     doc.setFontSize(11)
     doc.setFont('helvetica', 'bold')
@@ -909,20 +1155,35 @@ function downloadCert() {
     doc.setFillColor(15, 30, 52)
     doc.setDrawColor(29, 158, 117)
     doc.setLineWidth(0.6)
-    doc.roundedRect(CX - courseW/2, 112, courseW, 14, 3, 3, 'FD')
+    doc.roundedRect(CX - courseW / 2, 112, courseW, 14, 3, 3, 'FD')
     doc.setTextColor(29, 158, 117)
     doc.text(courseLabel, CX, 121, { align: 'center' })
 
-    // === STATYSTYKI ===
-    const modules = (kursData && kursData.modules) ? kursData.modules : []
-    const total = modules.reduce((a, m) => a + ((m.lessons || []).length), 0)
-    const modCount = modules.length
-    const gap = 52
+    // === STATYSTYKI — odczyt z DOM (zawsze działa, niezależnie od kursData) ===
+    const domLessons = document.getElementById('cert-meta-lessons')
+    const domModules = document.getElementById('cert-meta-modules')
+    const totalLessonsVal = (domLessons && domLessons.textContent && domLessons.textContent !== '—')
+      ? domLessons.textContent.trim()
+      : String((function(){
+          try {
+            const m = (kursData && Array.isArray(kursData.modules)) ? kursData.modules : []
+            return m.reduce((a,mod) => a + (Array.isArray(mod.lessons) ? mod.lessons.length : 0), 0)
+          } catch(e){ return 0 }
+        })())
+    const totalModulesVal = (domModules && domModules.textContent && domModules.textContent !== '—')
+      ? domModules.textContent.trim()
+      : String((function(){
+          try {
+            return (kursData && Array.isArray(kursData.modules)) ? kursData.modules.length : 0
+          } catch(e){ return 0 }
+        })())
+
     const stats = [
-      { val: String(total),    label: 'LEKCJI'    },
-      { val: String(modCount), label: 'MODULOW'   },
-      { val: '100%',           label: 'UKONCZONO' },
+      { val: totalLessonsVal, label: 'LEKCJI'    },
+      { val: totalModulesVal, label: 'MODULOW'   },
+      { val: '100%',          label: 'UKONCZONO' },
     ]
+    const gap = 52
     stats.forEach((s, i) => {
       const x = CX + (i - 1) * gap
       doc.setFont('helvetica', 'bold')
@@ -948,7 +1209,6 @@ function downloadCert() {
     doc.setDrawColor(201, 168, 76)
     doc.setLineWidth(1)
     doc.circle(CX, 170, 9)
-    doc.setDrawColor(201, 168, 76)
     doc.setLineWidth(0.4)
     doc.circle(CX, 170, 7)
     doc.setFont('helvetica', 'bold')
@@ -960,14 +1220,12 @@ function downloadCert() {
     const sigY = H - 24
     doc.setDrawColor(80, 80, 100)
     doc.setLineWidth(0.3)
-    // lewy podpis
     const lx = 75
     doc.line(lx - 32, sigY, lx + 32, sigY)
     doc.setFont('helvetica', 'normal')
     doc.setFontSize(7.5)
     doc.setTextColor(110, 110, 130)
     doc.text('AI Kurs dla kazdego', lx, sigY + 5, { align: 'center' })
-    // prawy podpis
     const rx2 = W - 75
     doc.line(rx2 - 32, sigY, rx2 + 32, sigY)
     doc.text(pt(name), rx2, sigY + 5, { align: 'center' })
@@ -980,7 +1238,9 @@ function downloadCert() {
 
     doc.save('certyfikat-ai-kurs-' + pt(name).replace(/\s+/g, '-').toLowerCase() + '.pdf')
     showToast('Certyfikat pobrany! 🏆', 'success')
-    document.getElementById('cert-id-preview').textContent = 'Nr: ' + certId
+
+    const idEl = document.getElementById('cert-id-preview')
+    if (idEl) idEl.textContent = 'Nr: ' + certId
 
     db.collection('uczniowie').doc(currentUser.uid).set({
       certDownloaded: true,
@@ -990,13 +1250,16 @@ function downloadCert() {
 
   } catch (e) {
     showToast('Blad generowania PDF: ' + e.message, 'error')
-    console.error(e)
+    console.error('downloadCert error:', e)
   }
 
   btn.disabled = false
   btn.innerHTML = '🏆 Pobierz certyfikat PDF'
 }
 
+// ─────────────────────────────────────────────
+//  MOTYW
+// ─────────────────────────────────────────────
 function toggleTheme() {
   const isLight = document.body.classList.toggle('light')
   KV.set('theme', isLight ? 'light' : 'dark')
@@ -1006,6 +1269,8 @@ function loadTheme() {
   const t = KV.get('theme')
   if (t === 'light') { document.body.classList.add('light'); document.getElementById('theme-btn').textContent = '☀️' }
 }
+
+
 </script>
 </body>
 </html>
