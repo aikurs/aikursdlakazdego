@@ -785,168 +785,194 @@ function renderAchievements() {
   }).join('')
 }
 
-// ===== CERTYFIKAT PDF — zaktualizowany =====
+// ===== CERTYFIKAT PDF =====
+// Zamiana polskich znaków na bezpieczne odpowiedniki dla jsPDF (Helvetica nie obsługuje UTF-8)
+function plToAscii(str) {
+  return str
+    .replace(/ą/g,'a').replace(/Ą/g,'A')
+    .replace(/ć/g,'c').replace(/Ć/g,'C')
+    .replace(/ę/g,'e').replace(/Ę/g,'E')
+    .replace(/ł/g,'l').replace(/Ł/g,'L')
+    .replace(/ń/g,'n').replace(/Ń/g,'N')
+    .replace(/ó/g,'o').replace(/Ó/g,'O')
+    .replace(/ś/g,'s').replace(/Ś/g,'S')
+    .replace(/ź/g,'z').replace(/Ź/g,'Z')
+    .replace(/ż/g,'z').replace(/Ż/g,'Z')
+    .replace(/✦/g,'*').replace(/★/g,'*')
+    .replace(/[^\x00-\x7F]/g,'?')
+}
+
+function pt(s) { return plToAscii(s) }
+
 function downloadCert() {
   const btn = document.getElementById('cert-btn')
   btn.disabled = true
-  btn.innerHTML = '<span class="spinner"></span> Generuję PDF...'
+  btn.innerHTML = '<span class="spinner"></span> Generuje PDF...'
 
   try {
     const { jsPDF } = window.jspdf
     const doc = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' })
     const W = 297, H = 210
+    const CX = W / 2  // centrum X = 148.5
 
-    // Tło granatowe
+    // === TŁO ===
     doc.setFillColor(7, 17, 31)
     doc.rect(0, 0, W, H, 'F')
-
-    // Subtelny gradient środkowy — imitacja
     doc.setFillColor(11, 26, 46)
-    doc.rect(40, 30, W - 80, H - 60, 'F')
+    doc.rect(35, 25, W - 70, H - 50, 'F')
 
-    // Zewnętrzna ramka złoto-zielona (gradient imitowany przez dwie linie)
+    // === RAMKI ===
     doc.setDrawColor(29, 158, 117)
     doc.setLineWidth(1.5)
     doc.roundedRect(8, 8, W - 16, H - 16, 4, 4)
-
     doc.setDrawColor(201, 168, 76)
     doc.setLineWidth(0.5)
-    doc.roundedRect(12, 12, W - 24, H - 24, 3, 3)
+    doc.roundedRect(13, 13, W - 26, H - 26, 3, 3)
 
-    // Narożniki ozdobne
-    const corners = [[20,20],[W-20,20],[20,H-20],[W-20,H-20]]
+    // === NAROŻNIKI OZDOBNE ===
     doc.setDrawColor(201, 168, 76)
-    doc.setLineWidth(1)
-    const cs = 14
-    corners.forEach(([cx,cy]) => {
-      const sx = cx < W/2 ? 1 : -1
-      const sy = cy < H/2 ? 1 : -1
+    doc.setLineWidth(1.2)
+    const cs = 15
+    [[22,22],[W-22,22],[22,H-22],[W-22,H-22]].forEach(([cx,cy]) => {
+      const sx = cx < CX ? 1 : -1, sy = cy < H/2 ? 1 : -1
       doc.line(cx, cy, cx + sx*cs, cy)
       doc.line(cx, cy, cx, cy + sy*cs)
     })
 
-    // Linie ozdobne poziome
+    // === LINIE POZIOME ===
     doc.setDrawColor(29, 158, 117)
     doc.setLineWidth(0.4)
-    doc.line(30, 52, W - 30, 52)
-    doc.line(30, H - 52, W - 30, H - 52)
-
-    // Romby na linii
-    ;[[W/2-6, 52],[W/2+6, 52],[W/2-6, H-52],[W/2+6, H-52]].forEach(([rx,ry]) => {
-      doc.setFillColor(201, 168, 76)
-      doc.rect(rx-2, ry-2, 4, 4, 'F')
+    doc.line(35, 50, W - 35, 50)
+    doc.line(35, H - 50, W - 35, H - 50)
+    // romby
+    doc.setFillColor(201, 168, 76)
+    ;[[CX-5,50],[CX+5,50],[CX-5,H-50],[CX+5,H-50]].forEach(([rx,ry]) => {
+      doc.rect(rx-2.5, ry-2.5, 5, 5, 'F')
     })
 
-    // Ikona / brand
+    // === IKONA AI ===
     doc.setFillColor(29, 158, 117)
-    doc.roundedRect(W/2 - 7, 19, 14, 14, 3, 3, 'F')
+    doc.roundedRect(CX - 8, 16, 16, 16, 3, 3, 'F')
     doc.setFont('helvetica', 'bold')
-    doc.setFontSize(9)
+    doc.setFontSize(10)
     doc.setTextColor(255, 255, 255)
-    doc.text('AI', W/2, 27.5, { align: 'center' })
+    doc.text('AI', CX, 26, { align: 'center' })
 
-    // Nazwa platformy
+    // === NAZWA PLATFORMY ===
     doc.setFont('helvetica', 'bold')
-    doc.setFontSize(13)
+    doc.setFontSize(14)
     doc.setTextColor(255, 255, 255)
-    doc.text('AI Kurs dla każdego', W/2, 42, { align: 'center' })
+    doc.text('AI Kurs dla kazdego', CX, 42, { align: 'center' })
 
-    // Ozdobny napis
+    // === NAGŁÓWEK CERTYFIKATU ===
     doc.setFont('helvetica', 'normal')
-    doc.setFontSize(7)
+    doc.setFontSize(7.5)
     doc.setTextColor(201, 168, 76)
-    doc.text('✦  C E R T Y F I K A T   U K O Ń C Z E N I A  ✦', W/2, 60, { align: 'center' })
+    doc.text('*  C E R T Y F I K A T   U K O N C Z E N I A  *', CX, 59, { align: 'center' })
 
-    // Intro
+    // === INTRO ===
     doc.setFont('helvetica', 'normal')
     doc.setFontSize(10)
     doc.setTextColor(160, 160, 180)
-    doc.text('Niniejszym zaświadcza się, że', W/2, 73, { align: 'center' })
+    doc.text('Niniejszym zaswiadcza sie, ze', CX, 72, { align: 'center' })
 
-    // Imię
+    // === IMIĘ KURSANTA ===
     const name = getUserDisplayName(currentUser)
     doc.setFont('helvetica', 'bold')
-    doc.setFontSize(34)
+    doc.setFontSize(32)
     doc.setTextColor(255, 255, 255)
-    doc.text(name, W/2, 95, { align: 'center' })
+    doc.text(pt(name), CX, 93, { align: 'center' })
 
-    // Linia pod imieniem
-    const nameWidth = Math.min(doc.getTextWidth(name) + 20, W - 80)
+    // linia pod imieniem
+    const nw = Math.min(doc.getTextWidth(pt(name)) + 16, W - 70)
     doc.setDrawColor(29, 158, 117)
-    doc.setLineWidth(0.6)
-    doc.line(W/2 - nameWidth/2, 99, W/2 + nameWidth/2, 99)
+    doc.setLineWidth(0.7)
+    doc.line(CX - nw/2, 97, CX + nw/2, 97)
 
-    // Tekst po imieniu
+    // === TEKST PO IMIENIU ===
     doc.setFont('helvetica', 'normal')
     doc.setFontSize(10)
     doc.setTextColor(160, 160, 180)
-    doc.text('ukończył/a z wynikiem pozytywnym kurs', W/2, 110, { align: 'center' })
+    doc.text('ukonczyl/a z wynikiem pozytywnym kurs', CX, 108, { align: 'center' })
 
-    // Ramka z nazwą kursu
+    // === RAMKA KURSU ===
+    const courseLabel = 'AI ktore oszczedza Twoje pieniadze'
+    doc.setFontSize(11)
+    doc.setFont('helvetica', 'bold')
+    const courseW = doc.getTextWidth(courseLabel) + 28
     doc.setFillColor(15, 30, 52)
     doc.setDrawColor(29, 158, 117)
-    doc.setLineWidth(0.5)
-    const courseText = 'AI które oszczędza Twoje pieniądze'
-    doc.roundedRect(W/2 - 70, 114, 140, 14, 3, 3, 'FD')
-    doc.setFont('helvetica', 'bold')
-    doc.setFontSize(12)
+    doc.setLineWidth(0.6)
+    doc.roundedRect(CX - courseW/2, 112, courseW, 14, 3, 3, 'FD')
     doc.setTextColor(29, 158, 117)
-    doc.text(courseText, W/2, 123, { align: 'center' })
+    doc.text(courseLabel, CX, 121, { align: 'center' })
 
-    // Statystyki
+    // === STATYSTYKI ===
     const total = kursData.modules.reduce((a, m) => a + m.lessons.length, 0)
     const modCount = kursData.modules.length
+    const gap = 52
     const stats = [
-      { label: 'Lekcji', val: String(total) },
-      { label: 'Modułów', val: String(modCount) },
-      { label: 'Ukończono', val: '100%' },
+      { val: String(total),    label: 'LEKCJI'    },
+      { val: String(modCount), label: 'MODULOW'   },
+      { val: '100%',           label: 'UKONCZONO' },
     ]
-    const colW = 36
     stats.forEach((s, i) => {
-      const x = W/2 + (i - 1) * (colW + 12)
+      const x = CX + (i - 1) * gap
       doc.setFont('helvetica', 'bold')
-      doc.setFontSize(14)
+      doc.setFontSize(16)
       doc.setTextColor(29, 158, 117)
-      doc.text(s.val, x, 143, { align: 'center' })
+      doc.text(s.val, x, 142, { align: 'center' })
       doc.setFont('helvetica', 'normal')
       doc.setFontSize(7)
       doc.setTextColor(120, 120, 140)
-      doc.text(s.label.toUpperCase(), x, 148, { align: 'center' })
+      doc.text(s.label, x, 148, { align: 'center' })
     })
 
-    // Data
-    const date = new Date().toLocaleDateString('pl-PL', { year: 'numeric', month: 'long', day: 'numeric' })
+    // === DATA ===
+    const months = ['stycznia','lutego','marca','kwietnia','maja','czerwca','lipca','sierpnia','wrzesnia','pazdziernika','listopada','grudnia']
+    const now = new Date()
+    const dateStr = now.getDate() + ' ' + months[now.getMonth()] + ' ' + now.getFullYear()
+    doc.setFont('helvetica', 'normal')
     doc.setFontSize(9)
     doc.setTextColor(130, 130, 150)
-    doc.text(date, W/2, 162, { align: 'center' })
+    doc.text(dateStr, CX, 160, { align: 'center' })
 
-    // Pieczęć — okrąg
+    // === PIECZĘĆ ===
     doc.setDrawColor(201, 168, 76)
-    doc.setLineWidth(0.8)
-    doc.circle(W/2, 172, 10)
-    doc.setFontSize(16)
+    doc.setLineWidth(1)
+    doc.circle(CX, 170, 9)
+    doc.setDrawColor(201, 168, 76)
+    doc.setLineWidth(0.4)
+    doc.circle(CX, 170, 7)
+    doc.setFont('helvetica', 'bold')
+    doc.setFontSize(14)
     doc.setTextColor(201, 168, 76)
-    doc.text('★', W/2, 175, { align: 'center' })
+    doc.text('*', CX, 173.5, { align: 'center' })
 
-    // Podpisy
+    // === PODPISY ===
+    const sigY = H - 24
     doc.setDrawColor(80, 80, 100)
     doc.setLineWidth(0.3)
-    doc.line(50, H - 26, 120, H - 26)
-    doc.line(W - 120, H - 26, W - 50, H - 26)
+    // lewy podpis
+    const lx = 75
+    doc.line(lx - 32, sigY, lx + 32, sigY)
+    doc.setFont('helvetica', 'normal')
     doc.setFontSize(7.5)
     doc.setTextColor(110, 110, 130)
-    doc.text('AI Kurs dla każdego', 85, H - 21, { align: 'center' })
-    doc.text(name, W - 85, H - 21, { align: 'center' })
+    doc.text('AI Kurs dla kazdego', lx, sigY + 5, { align: 'center' })
+    // prawy podpis
+    const rx2 = W - 75
+    doc.line(rx2 - 32, sigY, rx2 + 32, sigY)
+    doc.text(pt(name), rx2, sigY + 5, { align: 'center' })
 
-    // Nr certyfikatu
+    // === NR CERTYFIKATU ===
     const certId = 'AIKURS-' + currentUser.uid.slice(0, 6).toUpperCase() + '-' + Date.now().toString(36).toUpperCase()
     doc.setFontSize(6)
     doc.setTextColor(60, 60, 75)
-    doc.text('Nr: ' + certId, W/2, H - 12, { align: 'center' })
+    doc.text('Nr: ' + certId, CX, H - 10, { align: 'center' })
 
-    doc.save('certyfikat-ai-kurs-' + name.replace(/\s+/g, '-').toLowerCase() + '.pdf')
+    doc.save('certyfikat-ai-kurs-' + pt(name).replace(/\s+/g, '-').toLowerCase() + '.pdf')
     showToast('Certyfikat pobrany! 🏆', 'success')
-
     document.getElementById('cert-id-preview').textContent = 'Nr: ' + certId
 
     db.collection('uczniowie').doc(currentUser.uid).set({
@@ -956,7 +982,7 @@ function downloadCert() {
     }, { merge: true }).catch(() => {})
 
   } catch (e) {
-    showToast('Błąd generowania PDF: ' + e.message, 'error')
+    showToast('Blad generowania PDF: ' + e.message, 'error')
     console.error(e)
   }
 
