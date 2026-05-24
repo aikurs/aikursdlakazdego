@@ -50,6 +50,7 @@ body{background:var(--bg);color:var(--white);font-family:'DM Sans',system-ui,san
 .spinner-lg{width:40px;height:40px;border-width:3px}
 @keyframes spin{to{transform:rotate(360deg)}}
 .loading-overlay{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1rem;background:var(--bg);z-index:1000}
+/* FIX: klasy toast zdefiniowane lokalnie — nie konfliktują z app.js showToast bo używamy osobnego elementu #panel-toast */
 .toast{position:fixed;bottom:1.5rem;right:1.5rem;padding:.75rem 1.2rem;border-radius:10px;font-size:.86rem;font-weight:500;z-index:2000;opacity:0;pointer-events:none;transition:opacity .25s;display:flex;align-items:center;gap:.5rem}
 .toast.show{opacity:1}
 .toast-success{background:#0f3d2c;border:1px solid var(--green);color:var(--green)}
@@ -173,8 +174,6 @@ body.light{--bg:#f3f4f6;--surface:#fff;--surface2:#f9fafb;--border:rgba(0,0,0,0.
 .comment-date{font-size:.72rem;color:var(--muted);margin-left:auto}
 .comment-text{font-size:.85rem;line-height:1.6;color:rgba(255,255,255,0.75)}
 .comment-reply{margin-top:.75rem;padding-top:.75rem;border-top:1px solid var(--border)}
-
-/* CERTYFIKAT - bez podglądu, tylko sekcja pobierania */
 .cert-center{max-width:580px;margin:0 auto}
 .cert-locked-box{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:2.5rem 2rem;text-align:center;margin-bottom:1.5rem}
 .cert-locked-icon{font-size:3.5rem;margin-bottom:1rem;display:block;opacity:.35}
@@ -200,7 +199,8 @@ body.light{--bg:#f3f4f6;--surface:#fff;--surface2:#f9fafb;--border:rgba(0,0,0,0.
 </style>
 </head>
 <body>
-<div id="toast" class="toast"></div>
+<!-- FIX: zmieniono id na panel-toast żeby nie konfliktować z showToast z app.js -->
+<div id="panel-toast" class="toast"></div>
 <div id="achievement-popup" class="achievement-popup">
   <div class="ach-icon" id="ach-popup-icon">🏆</div>
   <div><div class="ach-title" id="ach-popup-title"></div><div class="ach-desc" id="ach-popup-desc"></div></div>
@@ -327,29 +327,23 @@ body.light{--bg:#f3f4f6;--surface:#fff;--surface2:#f9fafb;--border:rgba(0,0,0,0.
         <div class="achievements-grid" id="achievements-grid"></div>
       </div>
 
-      <!-- CERTYFIKAT — BEZ PODGLĄDU -->
+      <!-- CERTYFIKAT -->
       <div id="view-cert" style="display:none">
         <div class="cert-center">
           <div class="page-header" style="text-align:center">
             <h1>Certyfikat ukończenia 🏆</h1>
             <p id="cert-header-sub">Ukończ wszystkie lekcje, żeby odblokować certyfikat.</p>
           </div>
-
-          <!-- Stan: kurs NIE ukończony -->
           <div id="cert-locked" class="cert-locked-box">
             <span class="cert-locked-icon">🔒</span>
             <div class="cert-locked-title">Certyfikat jest jeszcze zablokowany</div>
             <div class="cert-locked-desc">Ukończ wszystkie lekcje kursu, aby odblokować możliwość pobrania certyfikatu. Twój postęp widoczny jest poniżej.</div>
           </div>
-
-          <!-- Stan: kurs ukończony -->
           <div id="cert-unlocked" class="cert-unlocked-box" style="display:none">
             <span class="cert-unlocked-icon">🎉</span>
             <div class="cert-unlocked-title">Gratulacje! Kurs ukończony!</div>
             <div class="cert-unlocked-desc">Twój certyfikat jest gotowy do pobrania. Kliknij przycisk poniżej, aby wygenerować plik PDF.</div>
           </div>
-
-          <!-- Statystyki -->
           <div class="cert-stats-row">
             <div class="cert-stat">
               <div class="cert-stat-num" id="cert-meta-lessons">—</div>
@@ -364,8 +358,6 @@ body.light{--bg:#f3f4f6;--surface:#fff;--surface2:#f9fafb;--border:rgba(0,0,0,0.
               <div class="cert-stat-label">Ukończono</div>
             </div>
           </div>
-
-          <!-- Pasek postępu -->
           <div class="cert-progress-card">
             <div class="progress-meta" style="margin-bottom:.5rem">
               <span id="cert-done-text">0 / 0 lekcji</span>
@@ -374,8 +366,6 @@ body.light{--bg:#f3f4f6;--surface:#fff;--surface2:#f9fafb;--border:rgba(0,0,0,0.
             <div class="progress-track"><div class="progress-fill" id="cert-bar" style="width:0%"></div></div>
             <p id="cert-sub" style="color:var(--muted);font-size:.84rem;margin-top:.75rem;text-align:center"></p>
           </div>
-
-          <!-- Przycisk pobierania -->
           <button class="btn btn-green btn-lg" id="cert-btn" disabled onclick="downloadCert()" style="width:100%;font-size:1rem;padding:1rem;opacity:.45;cursor:not-allowed">
             🔒 Certyfikat zablokowany
           </button>
@@ -389,7 +379,7 @@ body.light{--bg:#f3f4f6;--surface:#fff;--surface2:#f9fafb;--border:rgba(0,0,0,0.
   </div>
 </div>
 
-<!-- Ukryty element certyfikatu do renderowania PDF (niewidoczny dla użytkownika) -->
+<!-- Ukryty element certyfikatu do renderowania PDF -->
 <div id="cert-render-target" style="position:fixed;left:-9999px;top:-9999px;width:1122px;pointer-events:none;z-index:-1">
   <div id="cert-preview-el" style="background:linear-gradient(160deg,#07111f 0%,#0b1a2e 40%,#071620 100%);padding:3rem 2.8rem 2.6rem;font-family:'DM Sans',sans-serif;color:#fff;position:relative;overflow:hidden;border-radius:18px">
     <div style="position:absolute;inset:0;background:radial-gradient(ellipse 60% 40% at 15% 10%,rgba(29,158,117,0.07) 0%,transparent 60%),radial-gradient(ellipse 50% 35% at 85% 85%,rgba(201,168,76,0.06) 0%,transparent 60%);pointer-events:none"></div>
@@ -428,7 +418,7 @@ body.light{--bg:#f3f4f6;--surface:#fff;--surface2:#f9fafb;--border:rgba(0,0,0,0.
       <div id="pdf-cert-date" style="font-size:.75rem;color:rgba(255,255,255,0.3)">—</div>
       <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-top:1.8rem;padding-top:1.2rem;border-top:1px solid rgba(255,255,255,0.07)">
         <div style="text-align:center">
-          <img src="https://images.unsplash.com/photo-1779626704348-6ecec82425c9?q=80&w=2030&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="podpis" style="height:44px;display:block;margin:0 auto 4px;filter:opacity(0.85)">
+          <img src="https://images.unsplash.com/photo-1779626704348-6ecec82425c9?q=80&w=2030&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="podpis" style="height:44px;display:block;margin:0 auto 4px;filter:opacity(0.85)" crossorigin="anonymous">
           <div style="width:100px;height:1px;background:rgba(255,255,255,0.2);margin:0 auto .4rem"></div>
           <div style="font-size:.7rem;color:rgba(255,255,255,0.3)">AI Kurs dla każdego</div>
         </div>
@@ -449,6 +439,18 @@ body.light{--bg:#f3f4f6;--surface:#fff;--surface2:#f9fafb;--border:rgba(0,0,0,0.
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="app.js"></script>
 <script>
+// FIX: panel.html używa własnej funkcji showPanelToast zamiast nadpisywać showToast z app.js
+function showPanelToast(msg, type='info') {
+  const t = document.getElementById('panel-toast')
+  if (!t) return
+  t.textContent = msg
+  t.className = 'toast toast-' + type + ' show'
+  clearTimeout(t._timer)
+  t._timer = setTimeout(() => t.classList.remove('show'), 3000)
+}
+// Nadpisz globalny showToast żeby w tym pliku działał prawidłowo
+window.showToast = showPanelToast
+
 function safeModules() {
   try {
     if (kursData && Array.isArray(kursData.modules) && kursData.modules.length > 0) return kursData.modules
@@ -604,8 +606,6 @@ function updateProgress() {
   document.getElementById('sb-bar').style.width = pct+'%'
   document.getElementById('sb-done').textContent = done
   document.getElementById('sb-total').textContent = total
-
-  // Sekcja certyfikatu
   document.getElementById('cert-bar').style.width = pct+'%'
   document.getElementById('cert-done-text').textContent = done+' / '+total+' lekcji'
   document.getElementById('cert-pct-text').textContent = pct+'%'
@@ -613,28 +613,18 @@ function updateProgress() {
   document.getElementById('cert-sub').textContent = pct < 100
     ? `Ukończ jeszcze ${total-done} ${total-done===1?'lekcję':'lekcji'}, żeby odblokować certyfikat.`
     : 'Wszystkie lekcje ukończone! Certyfikat gotowy do pobrania.'
-
   const certBtn = document.getElementById('cert-btn')
   const certLocked = document.getElementById('cert-locked')
   const certUnlocked = document.getElementById('cert-unlocked')
-
   if (done === total && total > 0) {
-    // Kurs ukończony
-    certBtn.disabled = false
-    certBtn.style.opacity = '1'
-    certBtn.style.cursor = 'pointer'
+    certBtn.disabled = false; certBtn.style.opacity = '1'; certBtn.style.cursor = 'pointer'
     certBtn.innerHTML = '🏆 Pobierz certyfikat PDF'
-    certLocked.style.display = 'none'
-    certUnlocked.style.display = 'block'
+    certLocked.style.display = 'none'; certUnlocked.style.display = 'block'
     document.getElementById('cert-header-sub').textContent = 'Kurs ukończony! Twój certyfikat czeka.'
   } else {
-    // Kurs nie ukończony
-    certBtn.disabled = true
-    certBtn.style.opacity = '.45'
-    certBtn.style.cursor = 'not-allowed'
+    certBtn.disabled = true; certBtn.style.opacity = '.45'; certBtn.style.cursor = 'not-allowed'
     certBtn.innerHTML = '🔒 Certyfikat zablokowany'
-    certLocked.style.display = 'block'
-    certUnlocked.style.display = 'none'
+    certLocked.style.display = 'block'; certUnlocked.style.display = 'none'
     document.getElementById('cert-header-sub').textContent = 'Ukończ wszystkie lekcje, żeby odblokować certyfikat.'
   }
   calcTimeLeft()
@@ -770,7 +760,7 @@ async function submitQuiz(lesId) {
   try { await db.collection('uczniowie').doc(currentUser.uid).collection('quizy').doc(lesId).set(quizResults[lesId]) } catch(e) {}
   setTimeout(() => {
     document.getElementById('quiz-area').innerHTML += `<div style="margin-top:1rem;padding:1rem;background:rgba(29,158,117,0.08);border:1px solid rgba(29,158,117,0.2);border-radius:var(--radius);text-align:center"><div style="font-family:Syne,sans-serif;font-weight:800;font-size:2rem;color:${score>=70?'var(--green)':'var(--red)'}">${score}%</div><div style="font-size:.85rem;color:var(--muted);margin-top:.3rem">${correct}/${les.quiz.length} poprawnych · ${score>=70?'✓ Zaliczono!':'Spróbuj ponownie'}</div></div>`
-    showToast(score>=70 ? 'Quiz zaliczony! '+score+'%' : 'Spróbuj ponownie. '+score+'%', score>=70?'success':'error')
+    showPanelToast(score>=70 ? 'Quiz zaliczony! '+score+'%' : 'Spróbuj ponownie. '+score+'%', score>=70?'success':'error')
   }, 600)
 }
 
@@ -780,6 +770,7 @@ function resetQuiz(lesId) {
   if (les) renderQuiz(les)
 }
 
+// FIX: usunięto orderBy z zapytania — sortujemy po createdAt w JS
 async function renderComments(lesId) {
   const area = document.getElementById('comments-area')
   area.innerHTML = `<div style="margin-bottom:1rem">
@@ -787,11 +778,20 @@ async function renderComments(lesId) {
     <button class="btn btn-green btn-sm" style="margin-top:.5rem" onclick="addComment('${lesId}')">Wyślij pytanie →</button></div>
   <div id="comments-list"><div style="color:var(--muted);font-size:.85rem;padding:1rem 0">Ładowanie pytań...</div></div>`
   try {
-    const snap = await db.collection('komentarze').doc(lesId).collection('wpisy').orderBy('createdAt','desc').limit(20).get()
+    // FIX: brak orderBy — nie wymaga indeksu złożonego
+    const snap = await db.collection('komentarze').doc(lesId).collection('wpisy').limit(20).get()
     const list = document.getElementById('comments-list')
     if (!list) return
     if (snap.empty) { list.innerHTML='<div style="color:var(--muted);font-size:.84rem;padding:.5rem 0">Brak pytań. Bądź pierwszy!</div>'; return }
-    list.innerHTML = snap.docs.map(doc => {
+
+    // Sortuj po createdAt malejąco w JS
+    const docs = snap.docs.sort((a, b) => {
+      const aT = a.data().createdAt ? a.data().createdAt.toMillis() : 0
+      const bT = b.data().createdAt ? b.data().createdAt.toMillis() : 0
+      return bT - aT
+    })
+
+    list.innerHTML = docs.map(doc => {
       const d = doc.data()
       const date = d.createdAt ? new Date(d.createdAt.toDate()).toLocaleDateString('pl-PL') : ''
       return `<div class="comment-item"><div class="comment-header"><div class="comment-avatar">${(d.authorName||'?')[0].toUpperCase()}</div><span class="comment-author">${d.authorName||'Uczestnik'}</span><span class="comment-date">${date}</span></div><div class="comment-text">${d.text}</div>${d.reply?`<div class="comment-reply"><div class="comment-header"><div class="comment-avatar" style="background:rgba(29,158,117,0.2);color:var(--green)">A</div><span class="comment-author">AI Kurs dla każdego</span></div><div class="comment-text">${d.reply}</div></div>`:''}</div>`
@@ -805,9 +805,9 @@ async function addComment(lesId) {
   try {
     await db.collection('komentarze').doc(lesId).collection('wpisy').add({ text, authorName:getUserDisplayName(currentUser), authorId:currentUser.uid, createdAt:firebase.firestore.FieldValue.serverTimestamp() })
     document.getElementById('new-comment').value = ''
-    showToast('Pytanie wysłane!', 'success')
+    showPanelToast('Pytanie wysłane!', 'success')
     renderComments(lesId)
-  } catch(e) { showToast('Błąd wysyłania pytania.', 'error') }
+  } catch(e) { showPanelToast('Błąd wysyłania pytania.', 'error') }
 }
 
 async function toggleComplete() {
@@ -817,8 +817,8 @@ async function toggleComplete() {
   if (!les) return
   const btn = document.getElementById('btn-complete')
   btn.disabled = true
-  if (completed.has(les.id)) { completed.delete(les.id); showToast('Oznaczono jako nieukończona','info') }
-  else { completed.add(les.id); showToast('Brawo! Lekcja ukończona ✓','success') }
+  if (completed.has(les.id)) { completed.delete(les.id); showPanelToast('Oznaczono jako nieukończona','info') }
+  else { completed.add(les.id); showPanelToast('Brawo! Lekcja ukończona ✓','success') }
   try {
     await db.collection('uczniowie').doc(currentUser.uid).set({ completed:Array.from(completed), lastActivity:firebase.firestore.FieldValue.serverTimestamp(), email:currentUser.email, name:getUserDisplayName(currentUser) }, { merge:true })
   } catch(e) { KV.set('completed_'+currentUser.uid, [...completed]) }
@@ -862,7 +862,7 @@ async function saveHomework(lesId) {
     await db.collection('uczniowie').doc(currentUser.uid).collection('zadania').doc(lesId).set({ content:text, updatedAt:firebase.firestore.FieldValue.serverTimestamp() })
     const el = document.getElementById('hw-saved')
     el.classList.add('show'); setTimeout(()=>el.classList.remove('show'), 2500)
-    showToast('Zadanie zapisane!','success')
+    showPanelToast('Zadanie zapisane!','success')
   } catch(e) { KV.set('hw_'+currentUser.uid+'_'+lesId, text) }
 }
 
@@ -917,51 +917,37 @@ async function downloadCert() {
   const mods = safeModules()
   const total = mods.reduce((a,m) => a + safeLessons(m).length, 0)
   if (completed.size < total || total === 0) {
-    showToast('Ukończ wszystkie lekcje, żeby pobrać certyfikat.', 'error')
+    showPanelToast('Ukończ wszystkie lekcje, żeby pobrać certyfikat.', 'error')
     return
   }
   const btn = document.getElementById('cert-btn')
   btn.disabled = true
   btn.innerHTML = '<span class="spinner"></span> Generuje PDF...'
-
   try {
     if (typeof html2canvas === 'undefined' || !window.jspdf || !window.jspdf.jsPDF) {
-      showToast('Biblioteki PDF się ładują, spróbuj za chwilę.', 'error')
+      showPanelToast('Biblioteki PDF się ładują, spróbuj za chwilę.', 'error')
       btn.disabled = false; btn.innerHTML = '🏆 Pobierz certyfikat PDF'; return
     }
-
     const name = getUserDisplayName(currentUser)
     const certId = 'AIKURS-' + currentUser.uid.slice(0,6).toUpperCase() + '-' + Date.now().toString(36).toUpperCase()
-
-    // Wypełnij ukryty element certyfikatu danymi
     document.getElementById('pdf-cert-name').textContent = name
     document.getElementById('pdf-cert-student').textContent = name
     document.getElementById('pdf-cert-lessons').textContent = total
     document.getElementById('pdf-cert-modules').textContent = mods.length
     document.getElementById('pdf-cert-date').textContent = new Date().toLocaleDateString('pl-PL', { year:'numeric', month:'long', day:'numeric' })
     document.getElementById('pdf-cert-id').textContent = 'Nr: ' + certId
-
-    // Tymczasowo pokaż element do renderowania
     const renderTarget = document.getElementById('cert-render-target')
     renderTarget.style.left = '-9999px'
     renderTarget.style.top = '0'
     renderTarget.style.visibility = 'visible'
-
     await new Promise(r => setTimeout(r, 100))
-
     const certEl = document.getElementById('cert-preview-el')
     const canvas = await html2canvas(certEl, {
-      scale: 2,
-      backgroundColor: '#07111f',
-      useCORS: true,
-      allowTaint: true,
-      logging: false,
-      width: 1122,
+      scale: 2, backgroundColor: '#07111f', useCORS: true,
+      allowTaint: true, logging: false, width: 1122,
     })
-
     renderTarget.style.left = '-9999px'
     renderTarget.style.top = '-9999px'
-
     const imgData = canvas.toDataURL('image/png')
     const { jsPDF } = window.jspdf
     const doc = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' })
@@ -969,26 +955,21 @@ async function downloadCert() {
     doc.setFillColor(7, 17, 31)
     doc.rect(0, 0, pageW, pageH, 'F')
     doc.addImage(imgData, 'PNG', 0, 0, pageW, pageH)
-
     const safeName = name
       .replace(/[ąĄ]/g,'a').replace(/[ćĆ]/g,'c').replace(/[ęĘ]/g,'e')
       .replace(/[łŁ]/g,'l').replace(/[ńŃ]/g,'n').replace(/[óÓ]/g,'o')
       .replace(/[śŚ]/g,'s').replace(/[źŹżŻ]/g,'z')
       .replace(/\s+/g,'-').toLowerCase()
-
     doc.save('certyfikat-ai-kurs-' + safeName + '.pdf')
-    showToast('Certyfikat pobrany! 🏆', 'success')
-
+    showPanelToast('Certyfikat pobrany! 🏆', 'success')
     db.collection('uczniowie').doc(currentUser.uid).set(
       { certDownloaded: true, certDate: firebase.firestore.FieldValue.serverTimestamp(), certId },
       { merge: true }
     ).catch(() => {})
-
   } catch(e) {
     console.error('downloadCert error:', e)
-    showToast('Błąd generowania PDF: ' + e.message, 'error')
+    showPanelToast('Błąd generowania PDF: ' + e.message, 'error')
   }
-
   btn.disabled = false
   btn.innerHTML = '🏆 Pobierz certyfikat PDF'
 }
@@ -1003,13 +984,6 @@ function loadTheme() {
     document.body.classList.add('light')
     document.getElementById('theme-btn').textContent = '☀️'
   }
-}
-
-function showToast(msg, type='info') {
-  const t = document.getElementById('toast')
-  t.textContent = msg
-  t.className = 'toast toast-'+type+' show'
-  setTimeout(()=>t.classList.remove('show'), 3000)
 }
 </script>
 </body>
