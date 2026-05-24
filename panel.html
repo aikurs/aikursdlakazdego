@@ -173,40 +173,30 @@ body.light{--bg:#f3f4f6;--surface:#fff;--surface2:#f9fafb;--border:rgba(0,0,0,0.
 .comment-date{font-size:.72rem;color:var(--muted);margin-left:auto}
 .comment-text{font-size:.85rem;line-height:1.6;color:rgba(255,255,255,0.75)}
 .comment-reply{margin-top:.75rem;padding-top:.75rem;border-top:1px solid var(--border)}
-.cert-center{max-width:680px;margin:0 auto;text-align:center}
-.cert-preview{position:relative;border-radius:20px;padding:3px;background:linear-gradient(135deg,#1d9e75 0%,#0f6e56 25%,#c9a84c 50%,#1d9e75 75%,#0f6e56 100%);margin:1.5rem 0;box-shadow:0 0 60px rgba(29,158,117,0.18)}
-.cert-inner{background:linear-gradient(160deg,#07111f 0%,#0b1a2e 40%,#071620 100%);border-radius:18px;padding:3rem 2.8rem 2.6rem;position:relative;overflow:hidden}
-.cert-inner::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 40% at 15% 10%,rgba(29,158,117,0.07) 0%,transparent 60%),radial-gradient(ellipse 50% 35% at 85% 85%,rgba(201,168,76,0.06) 0%,transparent 60%);pointer-events:none}
-.cert-corner{position:absolute;width:56px;height:56px;opacity:.45}
-.cert-corner.tl{top:18px;left:18px;border-top:2px solid #c9a84c;border-left:2px solid #c9a84c;border-radius:4px 0 0 0}
-.cert-corner.tr{top:18px;right:18px;border-top:2px solid #c9a84c;border-right:2px solid #c9a84c;border-radius:0 4px 0 0}
-.cert-corner.bl{bottom:18px;left:18px;border-bottom:2px solid #c9a84c;border-left:2px solid #c9a84c;border-radius:0 0 0 4px}
-.cert-corner.br{bottom:18px;right:18px;border-bottom:2px solid #c9a84c;border-right:2px solid #c9a84c;border-radius:0 0 4px 0}
-.cert-brand{display:flex;align-items:center;justify-content:center;gap:.6rem;margin-bottom:1.6rem}
-.cert-brand-icon{width:38px;height:38px;background:linear-gradient(135deg,#1d9e75,#0f6e56);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.2rem}
-.cert-brand-name{font-family:'Syne',sans-serif;font-size:1.15rem;font-weight:800;color:#fff}
-.cert-brand-name span{color:rgba(255,255,255,0.35)}
-.cert-ornament{display:flex;align-items:center;gap:.8rem;margin-bottom:1.4rem}
-.cert-ornament-line{flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(201,168,76,0.4),transparent)}
-.cert-ornament-diamond{width:6px;height:6px;background:#c9a84c;transform:rotate(45deg);opacity:.7}
-.cert-intro{font-size:.8rem;color:rgba(255,255,255,0.4);margin-bottom:.6rem}
-.cert-recipient{font-family:'Syne',sans-serif;font-size:2.1rem;font-weight:800;color:#fff;line-height:1.15;margin-bottom:1.2rem;text-shadow:0 0 30px rgba(29,158,117,0.3)}
-.cert-course-wrap{background:rgba(29,158,117,0.08);border:1px solid rgba(29,158,117,0.2);border-radius:12px;padding:.9rem 1.4rem;display:inline-block;margin-bottom:1.4rem}
-.cert-course-label{font-size:.67rem;text-transform:uppercase;letter-spacing:.14em;color:rgba(255,255,255,0.35);margin-bottom:.3rem}
-.cert-course-name{font-family:'Syne',sans-serif;font-size:1.05rem;font-weight:700;color:#fff}
-.cert-meta-row{display:flex;justify-content:center;gap:2.5rem;margin-bottom:1.4rem}
-.cert-meta-item{text-align:center}
-.cert-meta-num{font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;color:#1d9e75}
-.cert-meta-label{font-size:.63rem;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:.1em;margin-top:.15rem}
-.cert-seal{width:68px;height:68px;border-radius:50%;border:2px solid rgba(201,168,76,0.5);display:flex;align-items:center;justify-content:center;font-size:2rem;margin:0 auto 1rem;background:rgba(201,168,76,0.06)}
-.cert-date-text{font-size:.75rem;color:rgba(255,255,255,0.3)}
-.cert-sig-row{display:flex;justify-content:space-between;align-items:flex-end;margin-top:1.8rem;padding-top:1.2rem;border-top:1px solid rgba(255,255,255,0.07)}
-.cert-sig{text-align:center}
-.cert-sig-line{width:100px;height:1px;background:rgba(255,255,255,0.2);margin:0 auto .4rem}
-.cert-sig-name{font-size:.7rem;color:rgba(255,255,255,0.3)}
-.cert-id-text{font-size:.6rem;color:rgba(255,255,255,0.15);margin-top:.6rem}
-.cert-progress-card{background:rgba(29,158,117,0.05);border:1px solid rgba(29,158,117,0.15);border-radius:16px;padding:1.5rem;margin-bottom:1rem}
-@media(max-width:900px){.app-layout{grid-template-columns:1fr}.sidebar{position:static;height:auto}.main-content{height:auto}.dash-stats{grid-template-columns:repeat(2,1fr)}.cert-meta-row{gap:1.2rem}.cert-recipient{font-size:1.5rem}.cert-sig-row{flex-direction:column;gap:1rem;align-items:center}}
+
+/* CERTYFIKAT - bez podglądu, tylko sekcja pobierania */
+.cert-center{max-width:580px;margin:0 auto}
+.cert-locked-box{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:2.5rem 2rem;text-align:center;margin-bottom:1.5rem}
+.cert-locked-icon{font-size:3.5rem;margin-bottom:1rem;display:block;opacity:.35}
+.cert-locked-title{font-family:'Syne',sans-serif;font-weight:800;font-size:1.15rem;margin-bottom:.5rem;color:var(--muted)}
+.cert-locked-desc{font-size:.86rem;color:var(--muted);line-height:1.6}
+.cert-unlocked-box{background:rgba(29,158,117,0.05);border:1px solid rgba(29,158,117,0.25);border-radius:var(--radius-lg);padding:2.5rem 2rem;text-align:center;margin-bottom:1.5rem}
+.cert-unlocked-icon{font-size:3.5rem;margin-bottom:1rem;display:block}
+.cert-unlocked-title{font-family:'Syne',sans-serif;font-weight:800;font-size:1.25rem;margin-bottom:.5rem;color:var(--green)}
+.cert-unlocked-desc{font-size:.86rem;color:rgba(255,255,255,0.65);line-height:1.6}
+.cert-progress-card{background:rgba(29,158,117,0.05);border:1px solid rgba(29,158,117,0.15);border-radius:var(--radius-lg);padding:1.5rem;margin-bottom:1rem}
+.cert-stats-row{display:flex;justify-content:center;gap:2.5rem;margin:1.5rem 0}
+.cert-stat{text-align:center}
+.cert-stat-num{font-family:'Syne',sans-serif;font-weight:800;font-size:1.6rem;color:var(--green)}
+.cert-stat-label{font-size:.67rem;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-top:.2rem}
+
+@media(max-width:900px){
+  .app-layout{grid-template-columns:1fr}
+  .sidebar{position:static;height:auto}
+  .main-content{height:auto}
+  .dash-stats{grid-template-columns:repeat(2,1fr)}
+  .cert-stats-row{gap:1.2rem}
+}
 </style>
 </head>
 <body>
@@ -271,8 +261,10 @@ body.light{--bg:#f3f4f6;--surface:#fff;--surface2:#f9fafb;--border:rgba(0,0,0,0.
       <button class="btn btn-danger btn-sm btn-block" onclick="doLogout()">Wyloguj się</button>
     </div>
   </div>
+
   <div class="main-content" id="main-content">
     <div class="main-inner">
+
       <!-- DASHBOARD -->
       <div id="view-dashboard">
         <div class="page-header"><h1 id="dash-greeting">Cześć!</h1><p>Kontynuuj naukę od miejsca w którym skończyłeś.</p></div>
@@ -292,6 +284,7 @@ body.light{--bg:#f3f4f6;--surface:#fff;--surface2:#f9fafb;--border:rgba(0,0,0,0.
         <h3 style="font-size:.88rem;color:var(--muted);margin-bottom:.75rem;font-weight:500">Ostatnie aktywności</h3>
         <div class="activity-list" id="activity-list"><p style="color:var(--muted);font-size:.84rem">Jeszcze nie ukończyłeś żadnej lekcji. Zacznij teraz!</p></div>
       </div>
+
       <!-- LEKCJA -->
       <div id="view-lesson" style="display:none">
         <div class="lesson-breadcrumb"><span id="l-breadcrumb"></span></div>
@@ -327,114 +320,123 @@ body.light{--bg:#f3f4f6;--surface:#fff;--surface2:#f9fafb;--border:rgba(0,0,0,0.
           <button class="btn btn-outline btn-sm" onclick="goNext2()" id="btn-next">Następna →</button>
         </div>
       </div>
+
       <!-- OSIĄGNIĘCIA -->
       <div id="view-achievements" style="display:none">
         <div class="page-header"><h1>Osiągnięcia 🏅</h1><p>Odblokowuj odznaki ucząc się regularnie.</p></div>
         <div class="achievements-grid" id="achievements-grid"></div>
       </div>
-      <!-- CERTYFIKAT -->
+
+      <!-- CERTYFIKAT — BEZ PODGLĄDU -->
       <div id="view-cert" style="display:none">
         <div class="cert-center">
           <div class="page-header" style="text-align:center">
             <h1>Certyfikat ukończenia 🏆</h1>
-            <p id="cert-header-sub">Ukończ wszystkie lekcje żeby odblokować certyfikat.</p>
+            <p id="cert-header-sub">Ukończ wszystkie lekcje, żeby odblokować certyfikat.</p>
           </div>
-          <div class="cert-preview" id="cert-preview-el">
-            <div class="cert-inner">
-              <div class="cert-corner tl"></div><div class="cert-corner tr"></div>
-              <div class="cert-corner bl"></div><div class="cert-corner br"></div>
 
-              <!-- ROBOT SVG — lewy dolny róg -->
-              <div style="position:absolute;bottom:18px;left:22px;opacity:0.13;pointer-events:none">
-                <svg width="110" height="130" viewBox="0 0 110 130" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <line x1="55" y1="0" x2="55" y2="14" stroke="#1d9e75" stroke-width="2.5" stroke-linecap="round"/>
-                  <circle cx="55" cy="5" r="4" fill="#1d9e75"/>
-                  <rect x="28" y="14" width="54" height="38" rx="10" fill="#1d9e75" fill-opacity="0.4" stroke="#1d9e75" stroke-width="1.8"/>
-                  <rect x="37" y="24" width="13" height="9" rx="3" fill="#07111f"/>
-                  <circle cx="43" cy="28.5" r="3" fill="#c9a84c"/>
-                  <rect x="60" y="24" width="13" height="9" rx="3" fill="#07111f"/>
-                  <circle cx="66" cy="28.5" r="3" fill="#c9a84c"/>
-                  <rect x="40" y="40" width="30" height="5" rx="2.5" fill="#07111f"/>
-                  <rect x="43" y="40" width="5" height="5" rx="1" fill="#1d9e75"/>
-                  <rect x="51" y="40" width="5" height="5" rx="1" fill="#1d9e75"/>
-                  <rect x="59" y="40" width="5" height="5" rx="1" fill="#1d9e75"/>
-                  <rect x="49" y="52" width="12" height="8" rx="3" fill="#1d9e75" fill-opacity="0.5"/>
-                  <rect x="20" y="60" width="70" height="46" rx="10" fill="#1d9e75" fill-opacity="0.3" stroke="#1d9e75" stroke-width="1.8"/>
-                  <rect x="32" y="70" width="46" height="26" rx="5" fill="#07111f" fill-opacity="0.6"/>
-                  <circle cx="45" cy="83" r="5" fill="none" stroke="#1d9e75" stroke-width="1.5"/>
-                  <circle cx="55" cy="78" r="3" fill="#c9a84c"/>
-                  <circle cx="65" cy="83" r="5" fill="none" stroke="#1d9e75" stroke-width="1.5"/>
-                  <rect x="49" y="86" width="12" height="3" rx="1.5" fill="#1d9e75"/>
-                  <rect x="3" y="62" width="14" height="36" rx="7" fill="#1d9e75" fill-opacity="0.4" stroke="#1d9e75" stroke-width="1.5"/>
-                  <circle cx="10" cy="101" r="5" fill="#1d9e75" fill-opacity="0.5"/>
-                  <rect x="93" y="62" width="14" height="36" rx="7" fill="#1d9e75" fill-opacity="0.4" stroke="#1d9e75" stroke-width="1.5"/>
-                  <circle cx="100" cy="101" r="5" fill="#1d9e75" fill-opacity="0.5"/>
-                  <rect x="32" y="106" width="18" height="24" rx="7" fill="#1d9e75" fill-opacity="0.4" stroke="#1d9e75" stroke-width="1.5"/>
-                  <rect x="60" y="106" width="18" height="24" rx="7" fill="#1d9e75" fill-opacity="0.4" stroke="#1d9e75" stroke-width="1.5"/>
-                  <rect x="28" y="124" width="26" height="6" rx="3" fill="#1d9e75" fill-opacity="0.6"/>
-                  <rect x="56" y="124" width="26" height="6" rx="3" fill="#1d9e75" fill-opacity="0.6"/>
-                </svg>
-              </div>
+          <!-- Stan: kurs NIE ukończony -->
+          <div id="cert-locked" class="cert-locked-box">
+            <span class="cert-locked-icon">🔒</span>
+            <div class="cert-locked-title">Certyfikat jest jeszcze zablokowany</div>
+            <div class="cert-locked-desc">Ukończ wszystkie lekcje kursu, aby odblokować możliwość pobrania certyfikatu. Twój postęp widoczny jest poniżej.</div>
+          </div>
 
-              <div class="cert-brand">
-                <div class="cert-brand-icon">🎓</div>
-                <div class="cert-brand-name">AI Kurs<span> dla każdego</span></div>
-              </div>
-              <div class="cert-ornament">
-                <div class="cert-ornament-line"></div><div class="cert-ornament-diamond"></div>
-                <div style="font-size:.58rem;text-transform:uppercase;letter-spacing:.22em;color:rgba(201,168,76,0.6);white-space:nowrap;font-weight:600">Certyfikat ukończenia</div>
-                <div class="cert-ornament-diamond"></div><div class="cert-ornament-line"></div>
-              </div>
-              <div class="cert-intro">Niniejszym zaświadcza się, że</div>
-              <div class="cert-recipient" id="cert-name-preview">—</div>
-              <div class="cert-intro" style="margin-bottom:.8rem">ukończył/a kurs</div>
-              <div class="cert-course-wrap">
-                <div class="cert-course-label">Nazwa kursu</div>
-                <div class="cert-course-name">AI które oszczędza Twoje pieniądze</div>
-              </div>
-              <div class="cert-meta-row">
-                <div class="cert-meta-item"><div class="cert-meta-num" id="cert-meta-lessons">—</div><div class="cert-meta-label">Lekcji</div></div>
-                <div class="cert-meta-item"><div class="cert-meta-num" id="cert-meta-modules">—</div><div class="cert-meta-label">Modułów</div></div>
-                <div class="cert-meta-item"><div class="cert-meta-num">100%</div><div class="cert-meta-label">Ukończono</div></div>
-              </div>
-              <div class="cert-ornament" style="margin-bottom:1rem">
-                <div class="cert-ornament-line"></div><div class="cert-ornament-diamond"></div><div class="cert-ornament-line"></div>
-              </div>
-              <div class="cert-seal">🏆</div>
-              <div class="cert-date-text" id="cert-date-preview">—</div>
+          <!-- Stan: kurs ukończony -->
+          <div id="cert-unlocked" class="cert-unlocked-box" style="display:none">
+            <span class="cert-unlocked-icon">🎉</span>
+            <div class="cert-unlocked-title">Gratulacje! Kurs ukończony!</div>
+            <div class="cert-unlocked-desc">Twój certyfikat jest gotowy do pobrania. Kliknij przycisk poniżej, aby wygenerować plik PDF.</div>
+          </div>
 
-              <!-- PODPISY -->
-              <div class="cert-sig-row">
-                <div class="cert-sig">
-                  <div class="cert-sig-line"></div>
-                  <div class="cert-sig-name">AI Kurs dla każdego</div>
-                </div>
-                <div class="cert-sig">
-                  <img src="https://images.unsplash.com/photo-1779626704348-6ecec82425c9?q=80&w=2030&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                    alt="podpis"
-                    style="height:44px;margin-bottom:2px;display:block;margin-left:auto;margin-right:auto;filter:opacity(0.85)">
-                  <div class="cert-sig-line" style="margin-top:0"></div>
-                  <div class="cert-sig-name" id="cert-sig-student">Kursant</div>
-                </div>
-              </div>
-              <div class="cert-id-text" id="cert-id-preview"></div>
+          <!-- Statystyki -->
+          <div class="cert-stats-row">
+            <div class="cert-stat">
+              <div class="cert-stat-num" id="cert-meta-lessons">—</div>
+              <div class="cert-stat-label">Lekcji</div>
+            </div>
+            <div class="cert-stat">
+              <div class="cert-stat-num" id="cert-meta-modules">—</div>
+              <div class="cert-stat-label">Modułów</div>
+            </div>
+            <div class="cert-stat">
+              <div class="cert-stat-num" id="cert-pct-text">0%</div>
+              <div class="cert-stat-label">Ukończono</div>
             </div>
           </div>
 
+          <!-- Pasek postępu -->
           <div class="cert-progress-card">
             <div class="progress-meta" style="margin-bottom:.5rem">
               <span id="cert-done-text">0 / 0 lekcji</span>
-              <span id="cert-pct-text" style="color:var(--green);font-weight:600">0%</span>
+              <span id="cert-pct-label" style="color:var(--green);font-weight:600">0%</span>
             </div>
             <div class="progress-track"><div class="progress-fill" id="cert-bar" style="width:0%"></div></div>
             <p id="cert-sub" style="color:var(--muted);font-size:.84rem;margin-top:.75rem;text-align:center"></p>
           </div>
-          <button class="btn btn-green btn-lg" id="cert-btn" disabled onclick="downloadCert()" style="width:100%;font-size:1rem;padding:1rem">
-            🏆 Pobierz certyfikat PDF
+
+          <!-- Przycisk pobierania -->
+          <button class="btn btn-green btn-lg" id="cert-btn" disabled onclick="downloadCert()" style="width:100%;font-size:1rem;padding:1rem;opacity:.45;cursor:not-allowed">
+            🔒 Certyfikat zablokowany
           </button>
-          <p style="font-size:.73rem;color:var(--muted);margin-top:.75rem">Certyfikat zostanie wygenerowany jako plik PDF gotowy do druku i udostępnienia.</p>
+          <p style="font-size:.73rem;color:var(--muted);margin-top:.75rem;text-align:center">
+            Certyfikat zostanie wygenerowany jako plik PDF gotowy do druku i udostępnienia.
+          </p>
         </div>
       </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Ukryty element certyfikatu do renderowania PDF (niewidoczny dla użytkownika) -->
+<div id="cert-render-target" style="position:fixed;left:-9999px;top:-9999px;width:1122px;pointer-events:none;z-index:-1">
+  <div id="cert-preview-el" style="background:linear-gradient(160deg,#07111f 0%,#0b1a2e 40%,#071620 100%);padding:3rem 2.8rem 2.6rem;font-family:'DM Sans',sans-serif;color:#fff;position:relative;overflow:hidden;border-radius:18px">
+    <div style="position:absolute;inset:0;background:radial-gradient(ellipse 60% 40% at 15% 10%,rgba(29,158,117,0.07) 0%,transparent 60%),radial-gradient(ellipse 50% 35% at 85% 85%,rgba(201,168,76,0.06) 0%,transparent 60%);pointer-events:none"></div>
+    <div style="position:absolute;top:18px;left:18px;width:56px;height:56px;border-top:2px solid #c9a84c;border-left:2px solid #c9a84c;border-radius:4px 0 0 0;opacity:.45"></div>
+    <div style="position:absolute;top:18px;right:18px;width:56px;height:56px;border-top:2px solid #c9a84c;border-right:2px solid #c9a84c;border-radius:0 4px 0 0;opacity:.45"></div>
+    <div style="position:absolute;bottom:18px;left:18px;width:56px;height:56px;border-bottom:2px solid #c9a84c;border-left:2px solid #c9a84c;border-radius:0 0 0 4px;opacity:.45"></div>
+    <div style="position:absolute;bottom:18px;right:18px;width:56px;height:56px;border-bottom:2px solid #c9a84c;border-right:2px solid #c9a84c;border-radius:0 0 4px 0;opacity:.45"></div>
+    <div style="text-align:center">
+      <div style="display:inline-flex;align-items:center;gap:.6rem;margin-bottom:1.6rem">
+        <div style="width:38px;height:38px;background:linear-gradient(135deg,#1d9e75,#0f6e56);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.2rem">🎓</div>
+        <div style="font-family:'Syne',sans-serif;font-size:1.15rem;font-weight:800;color:#fff">AI Kurs<span style="color:rgba(255,255,255,0.35)"> dla każdego</span></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:.8rem;margin-bottom:1.4rem">
+        <div style="flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(201,168,76,0.4),transparent)"></div>
+        <div style="font-size:.58rem;text-transform:uppercase;letter-spacing:.22em;color:rgba(201,168,76,0.6);white-space:nowrap;font-weight:600">Certyfikat ukończenia</div>
+        <div style="flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(201,168,76,0.4),transparent)"></div>
+      </div>
+      <div style="font-size:.8rem;color:rgba(255,255,255,0.4);margin-bottom:.6rem">Niniejszym zaświadcza się, że</div>
+      <div id="pdf-cert-name" style="font-family:'Syne',sans-serif;font-size:2.1rem;font-weight:800;color:#fff;margin-bottom:1.2rem;text-shadow:0 0 30px rgba(29,158,117,0.3)">—</div>
+      <div style="font-size:.8rem;color:rgba(255,255,255,0.4);margin-bottom:.8rem">ukończył/a kurs</div>
+      <div style="background:rgba(29,158,117,0.08);border:1px solid rgba(29,158,117,0.2);border-radius:12px;padding:.9rem 1.4rem;display:inline-block;margin-bottom:1.4rem">
+        <div style="font-size:.67rem;text-transform:uppercase;letter-spacing:.14em;color:rgba(255,255,255,0.35);margin-bottom:.3rem">Nazwa kursu</div>
+        <div style="font-family:'Syne',sans-serif;font-size:1.05rem;font-weight:700;color:#fff">AI które oszczędza Twoje pieniądze</div>
+      </div>
+      <div style="display:flex;justify-content:center;gap:2.5rem;margin-bottom:1.4rem">
+        <div style="text-align:center"><div id="pdf-cert-lessons" style="font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;color:#1d9e75">—</div><div style="font-size:.63rem;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:.1em;margin-top:.15rem">Lekcji</div></div>
+        <div style="text-align:center"><div id="pdf-cert-modules" style="font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;color:#1d9e75">—</div><div style="font-size:.63rem;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:.1em;margin-top:.15rem">Modułów</div></div>
+        <div style="text-align:center"><div style="font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;color:#1d9e75">100%</div><div style="font-size:.63rem;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:.1em;margin-top:.15rem">Ukończono</div></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:.8rem;margin-bottom:1rem">
+        <div style="flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(201,168,76,0.4),transparent)"></div>
+        <div style="width:6px;height:6px;background:#c9a84c;transform:rotate(45deg);opacity:.7"></div>
+        <div style="flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(201,168,76,0.4),transparent)"></div>
+      </div>
+      <div style="width:68px;height:68px;border-radius:50%;border:2px solid rgba(201,168,76,0.5);display:flex;align-items:center;justify-content:center;font-size:2rem;margin:0 auto 1rem;background:rgba(201,168,76,0.06)">🏆</div>
+      <div id="pdf-cert-date" style="font-size:.75rem;color:rgba(255,255,255,0.3)">—</div>
+      <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-top:1.8rem;padding-top:1.2rem;border-top:1px solid rgba(255,255,255,0.07)">
+        <div style="text-align:center">
+          <div style="width:100px;height:1px;background:rgba(255,255,255,0.2);margin:0 auto .4rem"></div>
+          <div style="font-size:.7rem;color:rgba(255,255,255,0.3)">AI Kurs dla każdego</div>
+        </div>
+        <div style="text-align:center">
+          <div style="width:100px;height:1px;background:rgba(255,255,255,0.2);margin:0 auto .4rem"></div>
+          <div id="pdf-cert-student" style="font-size:.7rem;color:rgba(255,255,255,0.3)">Kursant</div>
+        </div>
+      </div>
+      <div id="pdf-cert-id" style="font-size:.6rem;color:rgba(255,255,255,0.15);margin-top:.6rem"></div>
     </div>
   </div>
 </div>
@@ -448,13 +450,10 @@ body.light{--bg:#f3f4f6;--surface:#fff;--surface2:#f9fafb;--border:rgba(0,0,0,0.
 <script>
 function safeModules() {
   try {
-    if (kursData && Array.isArray(kursData.modules) && kursData.modules.length > 0) {
-      return kursData.modules
-    }
+    if (kursData && Array.isArray(kursData.modules) && kursData.modules.length > 0) return kursData.modules
   } catch(e) {}
   return []
 }
-
 function safeLessons(mod) {
   if (!mod) return []
   if (Array.isArray(mod.lessons)) return mod.lessons
@@ -536,9 +535,6 @@ function initUI() {
   if (currentUser.email === ADMIN_EMAIL) document.getElementById('admin-link').style.display = 'block'
   document.getElementById('dash-greeting').textContent = 'Cześć, ' + (name.split(' ')[0] || name) + '! 👋'
   document.getElementById('streak-num').textContent = streak
-  document.getElementById('cert-name-preview').textContent = name
-  document.getElementById('cert-sig-student').textContent = name
-  document.getElementById('cert-date-preview').textContent = new Date().toLocaleDateString('pl-PL', { year:'numeric', month:'long', day:'numeric' })
   const mods = safeModules()
   const total = mods.reduce((a, m) => a + safeLessons(m).length, 0)
   document.getElementById('cert-meta-lessons').textContent = total || '—'
@@ -607,13 +603,39 @@ function updateProgress() {
   document.getElementById('sb-bar').style.width = pct+'%'
   document.getElementById('sb-done').textContent = done
   document.getElementById('sb-total').textContent = total
+
+  // Sekcja certyfikatu
   document.getElementById('cert-bar').style.width = pct+'%'
   document.getElementById('cert-done-text').textContent = done+' / '+total+' lekcji'
   document.getElementById('cert-pct-text').textContent = pct+'%'
-  document.getElementById('cert-sub').textContent = pct < 100 ? `Ukończ jeszcze ${total-done} lekcji żeby odblokować certyfikat.` : 'Gratulacje! Możesz pobrać swój certyfikat.'
+  document.getElementById('cert-pct-label').textContent = pct+'%'
+  document.getElementById('cert-sub').textContent = pct < 100
+    ? `Ukończ jeszcze ${total-done} ${total-done===1?'lekcję':'lekcji'}, żeby odblokować certyfikat.`
+    : 'Wszystkie lekcje ukończone! Certyfikat gotowy do pobrania.'
+
   const certBtn = document.getElementById('cert-btn')
-  if (done === total && total > 0) { certBtn.disabled = false; document.getElementById('cert-header-sub').textContent = 'Kurs ukończony! Twój certyfikat czeka.' }
-  else certBtn.disabled = true
+  const certLocked = document.getElementById('cert-locked')
+  const certUnlocked = document.getElementById('cert-unlocked')
+
+  if (done === total && total > 0) {
+    // Kurs ukończony
+    certBtn.disabled = false
+    certBtn.style.opacity = '1'
+    certBtn.style.cursor = 'pointer'
+    certBtn.innerHTML = '🏆 Pobierz certyfikat PDF'
+    certLocked.style.display = 'none'
+    certUnlocked.style.display = 'block'
+    document.getElementById('cert-header-sub').textContent = 'Kurs ukończony! Twój certyfikat czeka.'
+  } else {
+    // Kurs nie ukończony
+    certBtn.disabled = true
+    certBtn.style.opacity = '.45'
+    certBtn.style.cursor = 'not-allowed'
+    certBtn.innerHTML = '🔒 Certyfikat zablokowany'
+    certLocked.style.display = 'block'
+    certUnlocked.style.display = 'none'
+    document.getElementById('cert-header-sub').textContent = 'Ukończ wszystkie lekcje, żeby odblokować certyfikat.'
+  }
   calcTimeLeft()
 }
 
@@ -704,6 +726,7 @@ function openLesson(mi, li) {
 }
 
 function loadVideo(ytId, container) { container.innerHTML = `<iframe src="https://www.youtube.com/embed/${ytId}?autoplay=1" allowfullscreen></iframe>` }
+
 function switchTab(name, btn) {
   document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'))
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'))
@@ -804,11 +827,7 @@ async function toggleComplete() {
 
 function goPrev() {
   let mi=currentMod, li=currentLes-1
-  if (li < 0) {
-    mi--
-    if (mi < 0) return
-    li = safeLessons(safeModules()[mi]||{}).length - 1
-  }
+  if (li < 0) { mi--; if (mi < 0) return; li = safeLessons(safeModules()[mi]||{}).length - 1 }
   openLesson(mi, li)
 }
 
@@ -894,50 +913,62 @@ function renderAchievements() {
 }
 
 async function downloadCert() {
+  const mods = safeModules()
+  const total = mods.reduce((a,m) => a + safeLessons(m).length, 0)
+  if (completed.size < total || total === 0) {
+    showToast('Ukończ wszystkie lekcje, żeby pobrać certyfikat.', 'error')
+    return
+  }
   const btn = document.getElementById('cert-btn')
   btn.disabled = true
   btn.innerHTML = '<span class="spinner"></span> Generuje PDF...'
 
   try {
-    if (typeof html2canvas === 'undefined') {
-      showToast('Biblioteka renderowania jeszcze się ładuje, spróbuj za chwilę.', 'error')
+    if (typeof html2canvas === 'undefined' || !window.jspdf || !window.jspdf.jsPDF) {
+      showToast('Biblioteki PDF się ładują, spróbuj za chwilę.', 'error')
       btn.disabled = false; btn.innerHTML = '🏆 Pobierz certyfikat PDF'; return
     }
-    if (!window.jspdf || !window.jspdf.jsPDF) {
-      showToast('Biblioteka PDF jeszcze się ładuje, spróbuj za chwilę.', 'error')
-      btn.disabled = false; btn.innerHTML = '🏆 Pobierz certyfikat PDF'; return
-    }
+
+    const name = getUserDisplayName(currentUser)
+    const certId = 'AIKURS-' + currentUser.uid.slice(0,6).toUpperCase() + '-' + Date.now().toString(36).toUpperCase()
+
+    // Wypełnij ukryty element certyfikatu danymi
+    document.getElementById('pdf-cert-name').textContent = name
+    document.getElementById('pdf-cert-student').textContent = name
+    document.getElementById('pdf-cert-lessons').textContent = total
+    document.getElementById('pdf-cert-modules').textContent = mods.length
+    document.getElementById('pdf-cert-date').textContent = new Date().toLocaleDateString('pl-PL', { year:'numeric', month:'long', day:'numeric' })
+    document.getElementById('pdf-cert-id').textContent = 'Nr: ' + certId
+
+    // Tymczasowo pokaż element do renderowania
+    const renderTarget = document.getElementById('cert-render-target')
+    renderTarget.style.left = '-9999px'
+    renderTarget.style.top = '0'
+    renderTarget.style.visibility = 'visible'
+
+    await new Promise(r => setTimeout(r, 100))
 
     const certEl = document.getElementById('cert-preview-el')
-    if (!certEl) throw new Error('Nie znaleziono elementu certyfikatu')
-
     const canvas = await html2canvas(certEl, {
-      scale: 3,
+      scale: 2,
       backgroundColor: '#07111f',
       useCORS: true,
       allowTaint: true,
-      logging: false
+      logging: false,
+      width: 1122,
     })
+
+    renderTarget.style.left = '-9999px'
+    renderTarget.style.top = '-9999px'
 
     const imgData = canvas.toDataURL('image/png')
     const { jsPDF } = window.jspdf
-
-    const doc = new jsPDF({
-      orientation: 'landscape',
-      unit: 'mm',
-      format: 'a4'
-    })
-
-    const pageW = 297
-    const pageH = 210
-
+    const doc = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' })
+    const pageW = 297, pageH = 210
     doc.setFillColor(7, 17, 31)
     doc.rect(0, 0, pageW, pageH, 'F')
     doc.addImage(imgData, 'PNG', 0, 0, pageW, pageH)
 
-    const certId = 'AIKURS-' + currentUser.uid.slice(0,6).toUpperCase() + '-' + Date.now().toString(36).toUpperCase()
-
-    const name = getUserDisplayName(currentUser) || 'Kursant'
     const safeName = name
       .replace(/[ąĄ]/g,'a').replace(/[ćĆ]/g,'c').replace(/[ęĘ]/g,'e')
       .replace(/[łŁ]/g,'l').replace(/[ńŃ]/g,'n').replace(/[óÓ]/g,'o')
@@ -946,9 +977,6 @@ async function downloadCert() {
 
     doc.save('certyfikat-ai-kurs-' + safeName + '.pdf')
     showToast('Certyfikat pobrany! 🏆', 'success')
-
-    const idEl = document.getElementById('cert-id-preview')
-    if (idEl) idEl.textContent = 'Nr: ' + certId
 
     db.collection('uczniowie').doc(currentUser.uid).set(
       { certDownloaded: true, certDate: firebase.firestore.FieldValue.serverTimestamp(), certId },
@@ -974,6 +1002,13 @@ function loadTheme() {
     document.body.classList.add('light')
     document.getElementById('theme-btn').textContent = '☀️'
   }
+}
+
+function showToast(msg, type='info') {
+  const t = document.getElementById('toast')
+  t.textContent = msg
+  t.className = 'toast toast-'+type+' show'
+  setTimeout(()=>t.classList.remove('show'), 3000)
 }
 </script>
 </body>
