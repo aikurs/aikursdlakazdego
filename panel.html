@@ -864,88 +864,80 @@ async function downloadCert() {
   btn.innerHTML = '<span class="spinner"></span> Generuje PDF...'
 
   try {
-    // Sprawdź czy html2canvas jest załadowany
     if (typeof html2canvas === 'undefined') {
       showToast('Biblioteka renderowania jeszcze się ładuje, spróbuj za chwilę.', 'error')
-      btn.disabled = false
-      btn.innerHTML = '🏆 Pobierz certyfikat PDF'
-      return
+      btn.disabled = false; btn.innerHTML = '🏆 Pobierz certyfikat PDF'; return
     }
-
-    // Sprawdź czy jsPDF jest załadowany
     if (!window.jspdf || !window.jspdf.jsPDF) {
       showToast('Biblioteka PDF jeszcze się ładuje, spróbuj za chwilę.', 'error')
-      btn.disabled = false
-      btn.innerHTML = '🏆 Pobierz certyfikat PDF'
-      return
+      btn.disabled = false; btn.innerHTML = '🏆 Pobierz certyfikat PDF'; return
     }
 
-    // Element certyfikatu w DOM
     const certEl = document.getElementById('cert-preview-el')
     if (!certEl) throw new Error('Nie znaleziono elementu certyfikatu')
 
-    // Renderuj element DOM na canvas — przeglądarka obsługuje polskie znaki poprawnie
+    // Renderuj DOM → canvas z ciemnym tłem
     const canvas = await html2canvas(certEl, {
-      scale: 3,                    // wysoka rozdzielczość
-      backgroundColor: null,       // zachowaj gradient tła
+      scale: 3,
+      backgroundColor: '#07111f',
       useCORS: true,
       allowTaint: true,
-      logging: false,
-      removeContainer: true
+      logging: false
     })
 
     const imgData = canvas.toDataURL('image/png')
-
-    // Utwórz PDF w formacie A4 poziomo
     const { jsPDF } = window.jspdf
+
+    // Wykryj orientację na podstawie proporcji wyrenderowanego elementu
+    const isWider = canvas.width > canvas.height
     const doc = new jsPDF({
-      orientation: 'landscape',
+      orientation: isWider ? 'landscape' : 'portrait',
       unit: 'mm',
       format: 'a4'
     })
 
-    const pageW = 297  // A4 landscape szerokość mm
-    const pageH = 210  // A4 landscape wysokość mm
+    // Wymiary strony PDF
+    const pageW = doc.internal.pageSize.getWidth()
+    const pageH = doc.internal.pageSize.getHeight()
 
-    // Dopasuj obraz do strony zachowując proporcje
+    // Wypełnij całą stronę ciemnym tłem (brak białych krawędzi)
+    doc.setFillColor(7, 17, 31)
+    doc.rect(0, 0, pageW, pageH, 'F')
+
+    // Dopasuj obraz do strony z małym marginesem
+    const margin = 6
+    const maxW = pageW - margin * 2
+    const maxH = pageH - margin * 2
     const imgRatio = canvas.width / canvas.height
-    const pageRatio = pageW / pageH
 
-    let drawW, drawH, drawX, drawY
-
-    if (imgRatio > pageRatio) {
-      // Obraz szerszy niż strona — dopasuj do szerokości
-      drawW = pageW
-      drawH = pageW / imgRatio
-      drawX = 0
-      drawY = (pageH - drawH) / 2
+    let drawW, drawH
+    if (maxW / imgRatio <= maxH) {
+      drawW = maxW
+      drawH = maxW / imgRatio
     } else {
-      // Obraz wyższy niż strona — dopasuj do wysokości
-      drawH = pageH
-      drawW = pageH * imgRatio
-      drawX = (pageW - drawW) / 2
-      drawY = 0
+      drawH = maxH
+      drawW = maxH * imgRatio
     }
+
+    const drawX = (pageW - drawW) / 2
+    const drawY = (pageH - drawH) / 2
 
     doc.addImage(imgData, 'PNG', drawX, drawY, drawW, drawH)
 
-    // Generuj unikalny numer certyfikatu
+    // Unikalny numer certyfikatu
     const certId = 'AIKURS-' + currentUser.uid.slice(0,6).toUpperCase() + '-' + Date.now().toString(36).toUpperCase()
 
-    // Nazwa pliku — bez polskich znaków (tylko nazwa pliku, nie treść)
+    // Nazwa pliku bez polskich znaków (tylko nazwa pliku, nie treść certyfikatu)
     const name = getUserDisplayName(currentUser) || 'Kursant'
     const safeName = name
-      .replace(/ą/g,'a').replace(/ć/g,'c').replace(/ę/g,'e').replace(/ł/g,'l')
-      .replace(/ń/g,'n').replace(/ó/g,'o').replace(/ś/g,'s').replace(/ź/g,'z')
-      .replace(/ż/g,'z').replace(/Ą/g,'A').replace(/Ć/g,'C').replace(/Ę/g,'E')
-      .replace(/Ł/g,'L').replace(/Ń/g,'N').replace(/Ó/g,'O').replace(/Ś/g,'S')
-      .replace(/Ź/g,'Z').replace(/Ż/g,'Z').replace(/\s+/g,'-').toLowerCase()
+      .replace(/[ąĄ]/g,'a').replace(/[ćĆ]/g,'c').replace(/[ęĘ]/g,'e')
+      .replace(/[łŁ]/g,'l').replace(/[ńŃ]/g,'n').replace(/[óÓ]/g,'o')
+      .replace(/[śŚ]/g,'s').replace(/[źŹżŻ]/g,'z')
+      .replace(/\s+/g,'-').toLowerCase()
 
     doc.save('certyfikat-ai-kurs-' + safeName + '.pdf')
-
     showToast('Certyfikat pobrany! 🏆', 'success')
 
-    // Zapisz numer certyfikatu w DOM i w bazie
     const idEl = document.getElementById('cert-id-preview')
     if (idEl) idEl.textContent = 'Nr: ' + certId
 
