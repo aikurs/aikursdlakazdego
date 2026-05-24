@@ -47,7 +47,6 @@
 .autosave-indicator.saving{color:#F5A623;border-color:rgba(245,166,35,0.3)}
 .autosave-indicator.saved{color:var(--green);border-color:rgba(29,158,117,0.3)}
 
-/* Oczekujące płatności */
 .pending-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.25rem;margin-bottom:.75rem;transition:border-color .2s}
 .pending-card:hover{border-color:rgba(255,255,255,0.15)}
 .pending-card-header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem;margin-bottom:.85rem}
@@ -374,19 +373,20 @@ function showSection(name) {
   document.querySelectorAll('[id^="nav-"]').forEach(b => b.classList.remove('active'))
   const el = document.getElementById('nav-' + name)
   if (el) el.classList.add('active')
-  if (name === 'users')   loadUsers()
+  if (name === 'users')    loadUsers()
   if (name === 'comments') loadComments()
-  if (name === 'pending') loadPending()
+  if (name === 'pending')  loadPending()
 }
 
 // ===== OCZEKUJĄCE PŁATNOŚCI =====
+// FIX: usunięto orderBy — sortujemy w JS żeby uniknąć wymogu indeksu złożonego
 async function loadPendingCount() {
   try {
     const snap = await db.collection('uczniowie').where('status', '==', 'pending').get()
     const cnt = snap.size
     const badge = document.getElementById('pending-badge')
-    if (cnt > 0) { badge.textContent = cnt; badge.style.display = 'inline'; }
-    else { badge.style.display = 'none'; }
+    if (cnt > 0) { badge.textContent = cnt; badge.style.display = 'inline' }
+    else { badge.style.display = 'none' }
   } catch(e) {}
 }
 
@@ -394,19 +394,31 @@ async function loadPending() {
   const wrap = document.getElementById('pending-list')
   wrap.innerHTML = '<div style="text-align:center;padding:3rem"><div class="spinner" style="color:var(--green)"></div></div>'
   try {
-    const snap = await db.collection('uczniowie').where('status', '==', 'pending').orderBy('createdAt', 'desc').get()
+    // FIX: brak orderBy — Firestore nie wymaga indeksu złożonego; sortujemy poniżej w JS
+    const snap = await db.collection('uczniowie').where('status', '==', 'pending').get()
+
     if (snap.empty) {
       wrap.innerHTML = '<div style="text-align:center;padding:3rem;color:var(--muted)">✅ Brak oczekujących płatności.</div>'
       document.getElementById('pending-badge').style.display = 'none'
       return
     }
-    const badge = document.getElementById('pending-badge')
-    badge.textContent = snap.size; badge.style.display = 'inline'
 
-    wrap.innerHTML = snap.docs.map(docSnap => {
+    // Sortuj po createdAt malejąco w JS
+    const docs = snap.docs.sort((a, b) => {
+      const aT = a.data().createdAt ? a.data().createdAt.toMillis() : 0
+      const bT = b.data().createdAt ? b.data().createdAt.toMillis() : 0
+      return bT - aT
+    })
+
+    const badge = document.getElementById('pending-badge')
+    badge.textContent = docs.length; badge.style.display = 'inline'
+
+    wrap.innerHTML = docs.map(docSnap => {
       const d = docSnap.data()
       const uid = docSnap.id
-      const date = d.createdAt ? new Date(d.createdAt.toDate()).toLocaleDateString('pl-PL', {day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'}) : '—'
+      const date = d.createdAt
+        ? new Date(d.createdAt.toDate()).toLocaleDateString('pl-PL', {day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'})
+        : '—'
       const tytul = d.przelew?.tytul || ('AI kurs - ' + d.email)
       return `<div class="pending-card" id="pc-${uid}">
         <div class="pending-card-header">
@@ -456,12 +468,10 @@ async function approveUser(uid, email, name) {
           status: 'active',
           approvedAt: firebase.firestore.FieldValue.serverTimestamp()
         })
-        // Usuń kartę z listy
         const card = document.getElementById('pc-' + uid)
         if (card) card.remove()
         showToast('✅ Dostęp aktywowany dla ' + email, 'success')
         loadPendingCount()
-        // Sprawdź czy lista pusta
         if (!document.querySelector('.pending-card')) {
           document.getElementById('pending-list').innerHTML = '<div style="text-align:center;padding:3rem;color:var(--muted)">✅ Brak oczekujących płatności.</div>'
         }
@@ -641,13 +651,26 @@ async function loadUsers(){
 async function exportUsersCSV(){try{const snap=await db.collection('uczniowie').get();const rows=[['Imię','E-mail','Status','Postęp%','Rejestracja']];snap.forEach(doc=>{const d=doc.data();const total=kursData.modules.reduce((a,m)=>a+m.lessons.length,0);const pct=total>0?Math.round((d.completed||[]).length/total*100):0;const date=d.createdAt?new Date(d.createdAt.toDate()).toLocaleDateString('pl-PL'):'—';rows.push([d.name||'—',d.email||'—',d.status||'—',pct+'%',date])});downloadBlob(new Blob(['\uFEFF'+rows.map(r=>r.map(c=>`"${c}"`).join(',')).join('\n')],{type:'text/csv;charset=utf-8'}),'uczniowie.csv');showToast('Wyeksportowano!','success')}catch(e){showToast('Błąd: '+e.message,'error')}}
 
 // ===== COMMENTS =====
+// FIX: usunięto orderBy z zapytań do kolekcji 'wpisy' — sortujemy po createdAt w JS
 async function loadComments(){
   const wrap=document.getElementById('comments-admin-list');if(!wrap)return
   wrap.innerHTML='<div style="text-align:center;padding:2rem"><div class="spinner" style="color:var(--green)"></div></div>'
   try{
     const allLessons=[];kursData.modules.forEach(mod=>mod.lessons.forEach(les=>allLessons.push(les)))
     let allComments=[]
-    for(const les of allLessons){try{const snap=await db.collection('komentarze').doc(les.id).collection('wpisy').orderBy('createdAt','desc').limit(5).get();snap.forEach(doc=>allComments.push({...doc.data(),docId:doc.id,lesId:les.id,lesTitle:les.title}))}catch(e){}}
+    for(const les of allLessons){
+      try{
+        // FIX: brak orderBy — Firestore nie wymaga indeksu; sortujemy poniżej
+        const snap=await db.collection('komentarze').doc(les.id).collection('wpisy').limit(10).get()
+        snap.forEach(doc=>allComments.push({...doc.data(),docId:doc.id,lesId:les.id,lesTitle:les.title}))
+      }catch(e){}
+    }
+    // Sortuj wszystkie komentarze po createdAt malejąco w JS
+    allComments.sort((a,b)=>{
+      const aT = a.createdAt ? a.createdAt.toMillis() : 0
+      const bT = b.createdAt ? b.createdAt.toMillis() : 0
+      return bT - aT
+    })
     if(!allComments.length){wrap.innerHTML='<div style="color:var(--muted);font-size:.88rem;padding:2rem;text-align:center">Brak pytań od uczniów.</div>';return}
     wrap.innerHTML=allComments.map(c=>{
       const date=c.createdAt?new Date(c.createdAt.toDate()).toLocaleDateString('pl-PL'):''
