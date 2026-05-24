@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI DLA KAŻDEGO 2026 — Naffy</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#080809;--s1:#0e0e10;--s2:#131315;--s3:#1a1a1e;
+  --border:#232328;--border2:#2e2e36;--text:#ededf0;
+  --muted:#68687a;--muted2:#45454f;
+  --orange:#ff5c2b;--orange2:#ff8457;
+  --green:#00d68f;--green2:#00f5a0;
+  --red:#ff3b3b;--gold:#f5c518;
+}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden}
+body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;opacity:.025;
+background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+
+nav{position:fixed;top:0;left:0;right:0;z-index:200;height:60px;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;background:rgba(8,8,9,.9);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+.nav-logo{font-family:'Bebas Neue',sans-serif;font-size:1.35rem;letter-spacing:.08em;color:var(--text);text-decoration:none}
+.nav-logo span{color:var(--orange)}
+.nav-r{display:flex;align-items:center;gap:.6rem}
+.nbtn{display:inline-flex;align-items:center;padding:7px 18px;border-radius:5px;font-size:.78rem;font-weight:600;cursor:pointer;text-decoration:none;border:1px solid transparent;transition:all .15s;letter-spacing:.02em;white-space:nowrap}
+.nbtn-ghost{border-color:var(--border2);color:var(--muted)}
+.nbtn-ghost:hover{border-color:var(--text);color:var(--text)}
+.nbtn-cta{background:var(--green);color:#000;border-color:var(--green)}
+.nbtn-cta:hover{background:var(--green2);box-shadow:0 0 20px rgba(0,214,143,.35);transform:translateY(-1px)}
+
+.ticker{background:linear-gradient(90deg,#006644,#00a06a,#006644);padding:9px 2rem;font-size:.78rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#fff;display:flex;align-items:center;justify-content:center;gap:1rem;position:relative;z-index:1;margin-top:60px}
+.ticker-dot{width:6px;height:6px;border-radius:50%;background:#fff;animation:blink 1s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+
+.hero{min-height:92vh;display:grid;grid-template-columns:1fr 1fr;gap:0;align-items:stretch;max-width:1200px;margin:0 auto;padding:4rem 2rem;position:relative;z-index:1}
+.hero-bg-glow{position:absolute;top:-10%;left:-20%;width:60%;height:80%;background:radial-gradient(ellipse,rgba(0,214,143,.05) 0,transparent 65%);pointer-events:none;z-index:0}
+.hero-left{display:flex;flex-direction:column;justify-content:center;padding-right:3rem;position:relative;z-index:1}
+.hero-year{font-size:.72rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--green);margin-bottom:.6rem;display:flex;align-items:center;gap:.5rem}
+.hero-year::before{content:'';display:block;width:18px;height:1px;background:var(--green)}
+.free-pill{display:inline-flex;align-items:center;gap:.4rem;background:rgba(0,214,143,.12);border:1px solid rgba(0,214,143,.3);color:var(--green);font-size:.74rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;padding:5px 14px;border-radius:99px;margin-bottom:.9rem;width:fit-content}
+h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(4.5rem,8vw,7.5rem);line-height:.95;letter-spacing:.02em;color:var(--text);margin-bottom:.15em}
+h1 .orange{color:var(--orange)}
+h1 .stroke{-webkit-text-stroke:1.5px var(--text);color:transparent}
+.hero-sub{font-size:1.05rem;color:var(--muted);line-height:1.75;max-width:460px;margin-bottom:2rem;margin-top:.75rem}
+.hero-cta-row{display:flex;align-items:center;gap:1rem;flex-wrap:wrap;margin-bottom:1.5rem}
+.btn-main{display:inline-flex;align-items:center;gap:.5rem;padding:14px 32px;background:var(--green);color:#000;font-size:1rem;font-weight:800;border-radius:7px;text-decoration:none;border:none;cursor:pointer;transition:all .2s;letter-spacing:.01em}
+.btn-main:hover{background:var(--green2);transform:translateY(-2px);box-shadow:0 8px 30px rgba(0,214,143,.3)}
+.btn-main.orange{background:var(--orange);color:#fff}
+.btn-main.orange:hover{background:#e04a1c;box-shadow:0 8px 30px rgba(255,92,43,.35)}
+.btn-sec{display:inline-flex;align-items:center;gap:.5rem;padding:14px 26px;background:transparent;color:var(--text);font-size:.92rem;font-weight:500;border-radius:7px;text-decoration:none;border:1px solid var(--border2);cursor:pointer;transition:all .15s}
+.btn-sec:hover{border-color:var(--text)}
+.hero-note{font-size:.74rem;color:var(--muted2);letter-spacing:.02em}
+.hero-note span{color:var(--muted)}
+
+.slots-widget{border:1px solid var(--border);border-radius:12px;background:var(--s2);padding:2rem;position:relative;z-index:1;overflow:hidden}
+.slots-widget::before{content:'';position:absolute;top:-40px;right:-40px;width:180px;height:180px;background:radial-gradient(circle,rgba(0,214,143,.07),transparent 70%);pointer-events:none}
+.sw-head{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:1.5rem}
+.sw-title{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:.05em;line-height:1.1}
+.sw-live{display:inline-flex;align-items:center;gap:5px;font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--green);background:rgba(0,214,143,.1);border:1px solid rgba(0,214,143,.2);padding:4px 10px;border-radius:4px}
+.sw-live::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--green);animation:blink 1.2s infinite}
+.tiers{display:flex;flex-direction:column;gap:.9rem;margin-bottom:1.75rem}
+.tier{background:var(--s3);border:1px solid var(--border);border-radius:9px;padding:1.1rem 1.25rem}
+.tier.hot{border-color:rgba(0,214,143,.4);background:rgba(0,214,143,.06)}
+.tier-row1{display:flex;align-items:center;justify-content:space-between;margin-bottom:.6rem}
+.tier-name{font-size:.78rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase}
+.tier-price{font-family:'Bebas Neue',sans-serif;font-size:1.5rem;letter-spacing:.04em}
+.tier-cnt{font-size:.72rem;font-weight:700;letter-spacing:.03em}
+.cnt-ok{color:var(--green)}.cnt-low{color:var(--gold)}.cnt-gone{color:var(--red)}
+.bar-wrap{height:5px;background:var(--border);border-radius:999px;overflow:hidden}
+.bar-fill{height:100%;border-radius:999px;transition:width .8s cubic-bezier(.4,0,.2,1)}
+.fill-1{background:linear-gradient(90deg,var(--green),var(--green2))}
+.fill-2{background:linear-gradient(90deg,var(--orange),var(--orange2))}
+.tier-sub{font-size:.72rem;color:var(--muted);margin-top:.45rem}
+.sw-btn{display:block;width:100%;text-align:center;padding:13px;background:var(--green);color:#000;font-weight:800;font-size:.92rem;border-radius:8px;text-decoration:none;border:none;cursor:pointer;transition:all .2s;letter-spacing:.02em}
+.sw-btn:hover{background:var(--green2);box-shadow:0 6px 24px rgba(0,214,143,.3)}
+.sw-btn.paid{background:var(--orange);color:#fff}
+.sw-btn.paid:hover{background:#e04a1c;box-shadow:0 6px 24px rgba(255,92,43,.3)}
+.sw-btn.locked{background:var(--s3);color:var(--muted2);border:1px solid var(--border);cursor:not-allowed;pointer-events:none}
+.sw-note{font-size:.7rem;color:var(--muted2);text-align:center;margin-top:.75rem}
+
+section{position:relative;z-index:1}
+.wrap{max-width:1200px;margin:0 auto;padding:5rem 2rem}
+.stag{font-size:.68rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--green);margin-bottom:.75rem}
+h2{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.5rem,4vw,3.8rem);letter-spacing:.04em;line-height:1.05;margin-bottom:.5rem}
+h2 .dim{color:var(--muted2)}
+h2 .stroke2{-webkit-text-stroke:1px var(--muted);color:transparent}
+.sub2{font-size:.95rem;color:var(--muted);line-height:1.7;max-width:560px;margin-bottom:2.5rem}
+hr.divider{border:none;border-top:1px solid var(--border);max-width:1200px;margin:0 auto}
+
+.pricing-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1.25rem;max-width:800px}
+.pcard{background:var(--s2);border:1px solid var(--border);border-radius:12px;padding:2rem;position:relative;overflow:hidden;transition:border-color .2s,transform .2s}
+.pcard:hover{border-color:var(--border2);transform:translateY(-3px)}
+.pcard.star-green{border-color:rgba(0,214,143,.4);background:linear-gradient(160deg,rgba(0,214,143,.07) 0%,var(--s2) 55%)}
+.pcard.star-orange{border-color:rgba(255,92,43,.3);background:linear-gradient(160deg,rgba(255,92,43,.05) 0%,var(--s2) 55%)}
+.pcard-badge{position:absolute;top:1.1rem;right:1.1rem;font-size:.62rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;padding:3px 9px;border-radius:3px}
+.b-free{background:var(--green);color:#000}
+.b-paid{background:var(--orange);color:#fff}
+.b-gone{background:rgba(255,59,59,.1);color:var(--red);border:1px solid rgba(255,59,59,.2)}
+.pcard-tier{font-size:.68rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:.5rem}
+.pcard-price{font-family:'Bebas Neue',sans-serif;font-size:4rem;letter-spacing:.02em;line-height:1;margin-bottom:.15rem}
+.pcard-psub{font-size:.76rem;color:var(--muted);margin-bottom:1.25rem;line-height:1.5}
+.pcard-slots{margin-bottom:1.25rem}
+.pcard-slots-row{display:flex;justify-content:space-between;font-size:.72rem;margin-bottom:4px}
+.pcard-features{list-style:none;display:flex;flex-direction:column;gap:.5rem;margin-bottom:1.5rem}
+.pcard-features li{font-size:.83rem;color:var(--muted);display:flex;align-items:flex-start;gap:.5rem;line-height:1.4}
+.pcard-features li .ck{flex-shrink:0;font-size:.75rem;margin-top:2px}
+.ck-y{color:var(--green)}.ck-o{color:var(--orange)}
+.pcard-btn{display:block;width:100%;text-align:center;padding:13px;border-radius:7px;font-weight:800;font-size:.9rem;cursor:pointer;text-decoration:none;transition:all .18s;border:none}
+.pb-green{background:var(--green);color:#000}
+.pb-green:hover{background:var(--green2);box-shadow:0 4px 18px rgba(0,214,143,.3)}
+.pb-orange{background:var(--orange);color:#fff}
+.pb-orange:hover{background:#e04a1c;box-shadow:0 4px 18px rgba(255,92,43,.3)}
+.pb-locked{background:var(--s3);color:var(--muted2);border:1px solid var(--border);cursor:not-allowed;pointer-events:none}
+
+.modules-wrap{display:flex;flex-direction:column;gap:.75rem;margin-top:2.5rem}
+.module{background:var(--s2);border:1px solid var(--border);border-radius:10px;overflow:hidden}
+.module-head{display:flex;align-items:center;gap:1rem;padding:1.1rem 1.5rem;cursor:pointer;transition:background .15s;user-select:none}
+.module-head:hover{background:var(--s3)}
+.module-num{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;letter-spacing:.05em;color:var(--border2);flex-shrink:0;width:42px;text-align:center;line-height:1}
+.module-info{flex:1}
+.module-title{font-size:.95rem;font-weight:600;color:var(--text)}
+.module-meta{font-size:.74rem;color:var(--muted);margin-top:2px}
+.module-toggle{color:var(--muted2);font-size:.8rem;transition:transform .25s}
+.module-toggle.open{transform:rotate(180deg)}
+.module-body{display:none;border-top:1px solid var(--border)}
+.module-body.open{display:block}
+.lesson-item{display:flex;align-items:center;gap:1rem;padding:.85rem 1.5rem;border-bottom:1px solid rgba(35,35,40,.7);transition:background .12s}
+.lesson-item:last-child{border-bottom:none}
+.lesson-item:hover{background:var(--s3)}
+.lesson-dot{width:7px;height:7px;border-radius:50%;background:var(--border2);flex-shrink:0}
+.lesson-title-t{font-size:.85rem;color:var(--muted);flex:1;line-height:1.4}
+.lesson-time{font-size:.72rem;color:var(--muted2);white-space:nowrap}
+
+.urgency-section{background:var(--s1);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.urgency-inner{max-width:1200px;margin:0 auto;padding:3.5rem 2rem;display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center}
+.urg-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(2rem,3.5vw,3rem);letter-spacing:.04em;line-height:1.1;margin-bottom:.75rem}
+.urg-sub{font-size:.9rem;color:var(--muted);line-height:1.7}
+.urg-stats{display:flex;flex-direction:column;gap:.75rem}
+.urg-row{display:flex;align-items:center;justify-content:space-between;padding:.75rem 1.25rem;background:var(--s2);border:1px solid var(--border);border-radius:8px}
+.urg-label{font-size:.8rem;color:var(--muted)}
+.urg-val{font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:.04em}
+.urg-pct{font-size:.72rem;font-weight:700}
+.pct-ok{color:var(--green)}.pct-warn{color:var(--gold)}.pct-red{color:var(--red)}
+
+.facts-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-top:3rem}
+.fact{background:var(--s2);padding:2rem 1.5rem;text-align:center}
+.fact-val{font-family:'Bebas Neue',sans-serif;font-size:3rem;letter-spacing:.04em;color:var(--text);line-height:1}
+.fact-val span{color:var(--green)}
+.fact-lbl{font-size:.76rem;color:var(--muted);margin-top:.4rem;letter-spacing:.03em}
+
+.cta-bottom{background:var(--s1);border-top:1px solid var(--border);text-align:center;padding:6rem 2rem;position:relative;overflow:hidden}
+.cta-bottom::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 80% at 50% 50%,rgba(0,214,143,.06),transparent 70%);pointer-events:none}
+.cta-bottom h2{position:relative;z-index:1;margin-bottom:.5rem}
+.cta-bottom p{color:var(--muted);font-size:1rem;margin-bottom:2.5rem;position:relative;z-index:1;max-width:500px;margin-left:auto;margin-right:auto}
+.cta-bottom-btns{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;position:relative;z-index:1}
+
+footer{border-top:1px solid var(--border);padding:1.75rem 2rem;display:flex;justify-content:space-between;align-items:center;max-width:1200px;margin:0 auto;font-size:.77rem;color:var(--muted2);flex-wrap:wrap;gap:.5rem;position:relative;z-index:1}
+footer a{color:var(--muted2);text-decoration:none}
+footer a:hover{color:var(--text)}
+
+/* Loading skeleton */
+.skel{display:inline-block;background:linear-gradient(90deg,var(--border) 25%,var(--border2) 50%,var(--border) 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;border-radius:3px;color:transparent;min-width:60px}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.fade-up{animation:fadeUp .6s ease both}
+.d1{animation-delay:.1s}.d2{animation-delay:.2s}.d3{animation-delay:.32s}.d4{animation-delay:.5s}
+
+@media(max-width:900px){
+  .hero{grid-template-columns:1fr;padding:3rem 1.25rem;min-height:auto;gap:2.5rem}
+  .hero-left{padding-right:0}
+  .pricing-grid{grid-template-columns:1fr}
+  .facts-grid{grid-template-columns:1fr 1fr}
+  .urgency-inner{grid-template-columns:1fr;gap:2rem}
+  nav{padding:0 1.25rem}
+  .wrap{padding:3.5rem 1.25rem}
+  .nav-r .nbtn-ghost{display:none}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="#" class="nav-logo">AI DLA <span>KAŻDEGO</span></a>
+  <div class="nav-r">
+    <a href="#program" class="nbtn nbtn-ghost">Program</a>
+    <a href="#cennik" class="nbtn nbtn-ghost">Cennik</a>
+    <a href="login.html" class="nbtn nbtn-ghost">Logowanie</a>
+    <a href="rejestracja.html" class="nbtn nbtn-cta" id="nav-cta">Zapisz się →</a>
+  </div>
+</nav>
+
+<div class="ticker">
+  <div class="ticker-dot"></div>
+  <span>🎁 PIERWSZE 50 MIEJSC CAŁKOWICIE ZA DARMO</span>
+  <div class="ticker-dot"></div>
+  <span id="ticker-count">ładowanie…</span>
+  <div class="ticker-dot"></div>
+  <span>EDYCJA 2026</span>
+</div>
+
+<section>
+  <div class="hero">
+    <div class="hero-bg-glow"></div>
+    <div class="hero-left">
+      <div class="hero-year fade-up">Kurs online · Edycja 2026</div>
+      <div class="free-pill fade-up">🎁 Pierwsze 50 miejsc — GRATIS</div>
+      <h1 class="fade-up d1"><span class="stroke">OD</span><br><span class="orange">ZERA</span><br>DO AI</h1>
+      <p class="hero-sub fade-up d2">
+        23 lekcje. 6 modułów. Prompting, automatyzacja, Make.com, wdrożenie w firmie.
+        Pierwsze 50 osób wchodzi <strong style="color:var(--green)">za 0 zł</strong>. Reszta płaci 50 zł. Kto pierwszy ten lepszy.
+      </p>
+      <div class="hero-cta-row fade-up d3">
+        <a href="rejestracja.html" class="btn-main" id="hero-cta">Dołącz za darmo →</a>
+        <a href="#program" class="btn-sec">Zobacz program</a>
+      </div>
+      <p class="hero-note fade-up d4">Darmowych miejsc: <span id="hero-total-left" class="skel">...</span> · 2 progi cenowe · kto pierwszy ten lepszy</p>
+    </div>
+
+    <div class="slots-widget fade-up d2">
+      <div class="sw-head">
+        <div><div class="sw-title">DOSTĘPNE<br>MIEJSCA</div></div>
+        <div class="sw-live">NA ŻYWO</div>
+      </div>
+      <div class="tiers">
+        <div class="tier hot" id="t1">
+          <div class="tier-row1">
+            <span class="tier-name" style="color:var(--green)">🎁 Tier 1 — GRATIS</span>
+            <span class="tier-price" style="color:var(--green)">0 zł</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px">
+            <span style="font-size:.72rem;color:var(--muted)">Pierwsze 50 miejsc</span>
+            <span class="tier-cnt skel" id="t1-cnt">...</span>
+          </div>
+          <div class="bar-wrap"><div class="bar-fill fill-1" id="t1-bar" style="width:0%"></div></div>
+          <div class="tier-sub" id="t1-sub">Bezpłatny dostęp — całkowicie za darmo</div>
+        </div>
+        <div class="tier" id="t2">
+          <div class="tier-row1">
+            <span class="tier-name" style="color:var(--muted)">Tier 2 — Standard</span>
+            <span class="tier-price">50 zł</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px">
+            <span style="font-size:.72rem;color:var(--muted)">Kolejne 100 miejsc (51–150)</span>
+            <span class="tier-cnt skel" id="t2-cnt">...</span>
+          </div>
+          <div class="bar-wrap"><div class="bar-fill fill-2" id="t2-bar" style="width:0%"></div></div>
+          <div class="tier-sub" id="t2-sub"></div>
+        </div>
+      </div>
+      <a href="rejestracja.html" class="sw-btn" id="sw-cta">Dołącz za darmo →</a>
+      <div class="sw-note">Oba plany: identyczny dostęp do całego kursu</div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section>
+  <div class="wrap" style="padding-top:3.5rem;padding-bottom:3.5rem">
+    <div class="facts-grid">
+      <div class="fact"><div class="fact-val">23<span>×</span></div><div class="fact-lbl">lekcje wideo</div></div>
+      <div class="fact"><div class="fact-val"><span>6</span></div><div class="fact-lbl">modułów</div></div>
+      <div class="fact"><div class="fact-val">~<span>5</span>h</div><div class="fact-lbl">materiału</div></div>
+      <div class="fact"><div class="fact-val">100<span>%</span></div><div class="fact-lbl">praktyki</div></div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<div class="urgency-section">
+  <div class="urgency-inner">
+    <div>
+      <div class="stag">Status rejestracji</div>
+      <div class="urg-title">DARMOWE<br>MIEJSCA<br>LECĄ.</div>
+      <p class="urg-sub">Pierwsze 50 osób dostaje pełny kurs <strong style="color:var(--green)">całkowicie za darmo</strong>. Gdy skończą się bezpłatne miejsca, cena wynosi 50 zł — i tak aż do wyczerpania puli 100 płatnych miejsc. Łącznie max 150 uczestników.</p>
+    </div>
+    <div class="urg-stats">
+      <div class="urg-row">
+        <span class="urg-label">🎁 Tier 1 — Gratis (0 zł) · 50 miejsc</span>
+        <div style="text-align:right">
+          <div class="urg-val skel" id="us-t1-val">—</div>
+          <div class="urg-pct" id="us-t1-pct"></div>
+        </div>
+      </div>
+      <div class="urg-row">
+        <span class="urg-label">Tier 2 — Standard (50 zł) · 100 miejsc</span>
+        <div style="text-align:right">
+          <div class="urg-val skel" id="us-t2-val">—</div>
+          <div class="urg-pct" id="us-t2-pct"></div>
+        </div>
+      </div>
+      <a href="rejestracja.html" class="btn-main" id="urg-cta" style="width:100%;justify-content:center;margin-top:.25rem">Dołącz teraz — za darmo →</a>
+    </div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<section id="cennik">
+  <div class="wrap">
+    <div class="stag">Cennik</div>
+    <h2>KTO PIERWSZY<br><span class="dim">TEN TANIEJ</span></h2>
+    <p class="sub2">Oba plany dają dostęp do identycznego kursu. Pierwsze 50 osób wchodzi za <strong style="color:var(--green)">0 zł</strong>. Gdy te miejsca się skończą — cena wynosi 50 zł dla kolejnych 100 osób.</p>
+    <div class="pricing-grid">
+      <div class="pcard star-green">
+        <span class="pcard-badge b-free" id="pb1">🎁 GRATIS</span>
+        <div class="pcard-tier">Tier 1 · Early Bird</div>
+        <div class="pcard-price" style="color:var(--green)">0 zł</div>
+        <div class="pcard-psub">Pierwsze 50 miejsc<br>Całkowicie bezpłatnie</div>
+        <div class="pcard-slots">
+          <div class="pcard-slots-row">
+            <span style="color:var(--muted)">Zajęte</span>
+            <span id="pc1-cnt" class="cnt-ok skel">—</span>
+          </div>
+          <div class="bar-wrap"><div class="bar-fill fill-1" id="pc1-bar" style="width:0%"></div></div>
+        </div>
+        <ul class="pcard-features">
+          <li><span class="ck ck-y">✓</span> Pełny dostęp do 23 lekcji</li>
+          <li><span class="ck ck-y">✓</span> 6 modułów + quizy</li>
+          <li><span class="ck ck-y">✓</span> Certyfikat ukończenia</li>
+          <li><span class="ck ck-y">✓</span> Materiały PDF do każdej lekcji</li>
+          <li><span class="ck ck-y">✓</span> Zadania domowe</li>
+          <li><span class="ck ck-y">✓</span> Dostęp na zawsze</li>
+        </ul>
+        <a href="rejestracja.html?tier=1" class="pcard-btn pb-green" id="pc1-btn">Dołącz za darmo →</a>
+      </div>
+      <div class="pcard star-orange">
+        <span class="pcard-badge b-paid" id="pb2">Tier 2</span>
+        <div class="pcard-tier">Tier 2 · Standard</div>
+        <div class="pcard-price" style="color:var(--orange)">50 zł</div>
+        <div class="pcard-psub">Miejsca 51–150<br>Aktywuje się po wyczerpaniu Tier 1</div>
+        <div class="pcard-slots">
+          <div class="pcard-slots-row">
+            <span style="color:var(--muted)">Zajęte</span>
+            <span id="pc2-cnt" class="cnt-ok skel">—</span>
+          </div>
+          <div class="bar-wrap"><div class="bar-fill fill-2" id="pc2-bar" style="width:0%"></div></div>
+        </div>
+        <ul class="pcard-features">
+          <li><span class="ck ck-o">✓</span> Pełny dostęp do 23 lekcji</li>
+          <li><span class="ck ck-o">✓</span> 6 modułów + quizy</li>
+          <li><span class="ck ck-o">✓</span> Certyfikat ukończenia</li>
+          <li><span class="ck ck-o">✓</span> Materiały PDF do każdej lekcji</li>
+          <li><span class="ck ck-o">✓</span> Zadania domowe</li>
+          <li><span class="ck ck-o">✓</span> Dostęp na zawsze</li>
+        </ul>
+        <a href="rejestracja.html?tier=2" class="pcard-btn pb-orange" id="pc2-btn">Kup za 50 zł →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section id="program">
+  <div class="wrap">
+    <div class="stag">Program kursu</div>
+    <h2>23 LEKCJE.<br><span class="stroke2">6 MODUŁÓW.</span></h2>
+    <p class="sub2">Od absolutnych podstaw AI, przez prompting i automatyzację, aż po wdrożenie w firmie i certyfikat końcowy.</p>
+    <div class="modules-wrap">
+      <div class="module">
+        <div class="module-head" onclick="toggleModule(this)">
+          <div class="module-num">01</div>
+          <div class="module-info"><div class="module-title">Podstawy AI</div><div class="module-meta">4 lekcje · ok. 57 min</div></div>
+          <div class="module-toggle">▼</div>
+        </div>
+        <div class="module-body">
+          <div class="lesson-item"><div class="lesson-dot"></div><div class="lesson-title-t">Czym jest AI i dlaczego to nie science fiction</div><div class="lesson-time">12 min</div></div>
+          <div class="lesson-item"><div class="lesson-dot"></div><div class="lesson-title-t">Jak działa ChatGPT, Claude i inne modele językowe</div><div class="lesson-time">15 min</div></div>
+          <div class="lesson-item"><div class="lesson-dot"></div><div class="lesson-title-t">Przegląd narzędzi AI 2025 — co i kiedy używać</div><div class="lesson-time">10 min</div></div>
+          <div class="lesson-item"><div class="lesson-dot"></div><div class="lesson-title-t">Pierwsze kroki z ChatGPT — ćwiczenie praktyczne</div><div class="lesson-time">20 min</div></div>
+        </div>
+      </div>
+      <div class="module">
+        <div class="module-head" onclick="toggleModule(this)">
+          <div class="module-num">02</div>
+          <div class="module-info"><div class="module-title">Prompting — sztuka rozmawiania z AI</div><div class="module-meta">4 lekcje · ok. 59 min</div></div>
+          <div class="module-toggle">▼</div>
+        </div>
+        <div class="module-body">
+          <div class="lesson-item"><div class="lesson-dot"></div><div class="lesson-title-t">Anatomia dobrego promptu — struktura która zawsze działa</div><div class="lesson-time">14 min</div></div>
+          <div class="lesson-item"><div class="lesson-dot"></div><div class="lesson-title-t">Techniki zaawansowane: role, chain of thought, few-shot</div><div class="lesson-time">18 min</div></div>
+          <div class="lesson-item"><div class="lesson-dot"></div><div class="lesson-title-t">Tworzenie biblioteki promptów dla Twojej firmy</div><div class="lesson-time">12 min</div></div>
+          <div class="lesson-item"><div class="lesson-dot"></div><div class="lesson-title-t">Warsztat promptów — 10 przypadków z życia</div><div class="lesson-time">15 min</div></div>
+        </div>
+      </div>
+      <div class="module">
+        <div class="module-head" onclick="toggleModule(this)">
+          <div class="module-num">03</div>
+          <div class="module-info"><div class="module-title">AI w codziennej pracy firmy</div><div class="module-meta">4 lekcje · ok. 64 min</div></div>
+          <div class="module-toggle">▼</div>
+        </div>
+        <div class="module-body">
+          <div class="lesson-item"><div class="lesson-dot"></div><div class="lesson-title-t">AI do pisania treści: e-maile, oferty, posty</div><div class="lesson-time">16 min</div></div>
+          <div class="lesson-item"><div class="lesson-dot"></div><div class="lesson-title-t">AI do analizy danych i raportów</div><div class="lesson-time">18 min</div></div>
+          <div class="lesson-item"><div class="lesson-dot"></div><div class="lesson-title-t">AI w obsłudze klienta — chatboty i szablony</div><div class="lesson-time">14 min</div></div>
+          <div class="lesson-item"><div class="lesson-dot"></div><div class="lesson-title-t">Generowanie grafik: Midjourney i DALL-E w biznesie</div><div class="lesson-time">16 min</div></div>
+        </div>
+      </div>
+      <div class="module">
+        <div class="module-head" onclick="toggleModule(this)">
+          <div class="module-num">04</div>
+          <div class="module-info"><div class="module-title">Automatyzacja bez kodowania</div><div class="module-meta">4 lekcje · ok. 72 min</div></div>
+          <div class="module-toggle">▼</div>
+        </div>
+        <div class="module-body">
+          <div class="lesson-item"><div class="lesson-dot"></div><div class="lesson-title-t">Wprowadzenie do Make.com — jak zbudować pierwszą automatyzację</div><div class="lesson-time">20 min</div></div>
+          <div class="lesson-item"><div class="lesson-dot"></div><div class="lesson-title-t">Automatyzacja e-maili, formularzy i powiadomień</div><div class="lesson-time">18 min</div></div>
+          <div class="lesson-item"><div class="lesson-dot"></div><div class="lesson-title-t">Połączenie AI z Make — GPT w twoich workflow</div><div class="lesson-time">20 min</div></div>
+          <div class="lesson-item"><div class="lesson-dot"></div><div class="lesson-title-t">Projekt: zbuduj własną automatyzację od zera</div><div class="lesson-time">14 min</div></div>
+        </div>
+      </div>
+      <div class="module">
+        <div class="module-head" onclick="toggleModule(this)">
+          <div class="module-num">05</div>
+          <div class="module-info"><div class="module-title">Wdrożenie AI w firmie</div><div class="module-meta">4 lekcje · ok. 63 min</div></div>
+          <div class="module-toggle">▼</div>
+        </div>
+        <div class="module-body">
+          <div class="lesson-item"><div class="lesson-dot"></div><div class="lesson-title-t">Audyt procesów — gdzie AI da największy zwrot</div><div class="lesson-time">16 min</div></div>
+          <div class="lesson-item"><div class="lesson-dot"></div><div class="lesson-title-t">Koszty i ROI wdrożenia AI — jak liczyć oszczędności</div><div class="lesson-time">14 min</div></div>
+          <div class="lesson-item"><div class="lesson-dot"></div><div class="lesson-title-t">Bezpieczeństwo, RODO i prawa autorskie w AI</div><div class="lesson-time">18 min</div></div>
+          <div class="lesson-item"><div class="lesson-dot"></div><div class="lesson-title-t">Plan wdrożenia na 30 dni — szablon działania</div><div class="lesson-time">15 min</div></div>
+        </div>
+      </div>
+      <div class="module">
+        <div class="module-head" onclick="toggleModule(this)">
+          <div class="module-num">06</div>
+          <div class="module-info"><div class="module-title">AI 2026 i dalej — co dalej</div><div class="module-meta">3 lekcje + egzamin · ok. 80 min</div></div>
+          <div class="module-toggle">▼</div>
+        </div>
+        <div class="module-body">
+          <div class="lesson-item"><div class="lesson-dot"></div><div class="lesson-title-t">Trendy AI na najbliższe 3 lata — co warto obserwować</div><div class="lesson-time">15 min</div></div>
+          <div class="lesson-item"><div class="lesson-dot"></div><div class="lesson-title-t">AI a prawo, prywatność danych i bezpieczeństwo firmy</div><div class="lesson-time">20 min</div></div>
+          <div class="lesson-item"><div class="lesson-dot"></div><div class="lesson-title-t">Jak budować kulturę AI w zespole bez oporu pracowników</div><div class="lesson-time">15 min</div></div>
+          <div class="lesson-item" style="background:rgba(0,214,143,.04);border-left:3px solid var(--green)"><div class="lesson-dot" style="background:var(--green)"></div><div class="lesson-title-t" style="color:var(--text)"><strong>Egzamin końcowy i certyfikat ukończenia kursu</strong></div><div class="lesson-time" style="color:var(--green)">30 min</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="cta-bottom">
+  <h2>DOŁĄCZ TERAZ.<br><span class="dim">ZANIM SKOŃCZĄ SIĘ DARMOWE MIEJSCA.</span></h2>
+  <p>Pierwsze 50 osób wchodzi <strong style="color:var(--green)">za 0 zł</strong>. Zostało jeszcze <span id="cta-left" style="color:var(--green);font-weight:700">…</span> darmowych miejsc.</p>
+  <div class="cta-bottom-btns">
+    <a href="rejestracja.html" class="btn-main" id="bottom-cta" style="font-size:1.05rem;padding:16px 40px">Dołącz za <span id="bottom-price">darmo</span> →</a>
+    <a href="login.html" class="btn-sec" style="font-size:.95rem;padding:16px 28px">Mam już konto</a>
+  </div>
+  <p style="font-size:.72rem;color:var(--muted2);margin-top:1.5rem;position:relative;z-index:1">Tier 1: 0 zł (50 miejsc) · Tier 2: 50 zł (100 miejsc) · Max 150 uczestników łącznie</p>
+</div>
+
+<footer>
+  <span>© 2026 AI DLA KAŻDEGO — Naffy</span>
+  <span>Działalność nierejestrowana</span>
+  <div style="display:flex;gap:1.25rem">
+    <a href="login.html">Logowanie</a>
+    <a href="rejestracja.html">Rejestracja</a>
+  </div>
+</footer>
+
+<!-- ═══════════════════════════════════════════════
+     FIREBASE — licznik miejsc w czasie rzeczywistym
+     ═══════════════════════════════════════════════ -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
+import { getFirestore, doc, onSnapshot, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCDSP_ztZ88ftNZwrG_xA5X-9NWmG-rHGA",
+  authDomain: "ai-kurs-w-biznesie.firebaseapp.com",
+  projectId: "ai-kurs-w-biznesie",
+  storageBucket: "ai-kurs-w-biznesie.firebasestorage.app",
+  messagingSenderId: "978692477925",
+  appId: "1:978692477925:web:264bdd5a60d12e1415d50c",
+  measurementId: "G-PKT77Y8SMD"
+};
+
+const T1_MAX = 50;
+const T2_MAX = 100;
+
+const app = initializeApp(firebaseConfig);
+const db  = getFirestore(app);
+
+// ── Utwórz dokument jeśli nie istnieje ──
+const slotsRef = doc(db, "kurs", "miejsca");
+getDoc(slotsRef).then(snap => {
+  if (!snap.exists()) {
+    setDoc(slotsRef, { t1_sold: 0, t2_sold: 0 });
+  }
+});
+
+// ── Helpers ──
+function removeSkel(el){ if(el) el.classList.remove('skel'); }
+
+function pctClass(left, max){
+  const p = (left/max)*100;
+  if(left===0) return 'cnt-gone';
+  if(p<=30)    return 'cnt-low';
+  return 'cnt-ok';
+}
+function pctUrgClass(pct){
+  if(pct>=80) return 'pct-red';
+  if(pct>=50) return 'pct-warn';
+  return 'pct-ok';
+}
+function $(id){ return document.getElementById(id); }
+function setText(id, val){ const e=$(id); if(e){ e.textContent=val; removeSkel(e); } }
+function setWidth(id, pct){ const e=$(id); if(e) e.style.width=Math.min(100,pct)+'%'; }
+function setClass(id, cls){
+  const e=$(id); if(!e) return;
+  e.className = e.className.split(' ')
+    .filter(c=>!['cnt-ok','cnt-low','cnt-gone','skel'].includes(c))
+    .join(' ') + ' ' + cls;
+}
+
+// ── Główna funkcja aktualizacji UI ──
+function render(t1Sold, t2Sold){
+  const T1_LEFT = T1_MAX - t1Sold;
+  const T2_LEFT = T2_MAX - t2Sold;
+  const t1pct   = (t1Sold / T1_MAX) * 100;
+  const t2pct   = (t2Sold / T2_MAX) * 100;
+
+  const at = T1_LEFT > 0 ? 1 : T2_LEFT > 0 ? 2 : 0;
+
+  // TICKER
+  if(T1_LEFT > 0)
+    setText('ticker-count', T1_LEFT + ' DARMOWYCH MIEJSC ZOSTAŁO');
+  else
+    setText('ticker-count', T2_LEFT > 0 ? T2_LEFT + ' MIEJSC (50 ZŁ)' : 'BRAK WOLNYCH MIEJSC');
+
+  // HERO note
+  if(T1_LEFT > 0)
+    setText('hero-total-left', T1_LEFT + ' darmowych');
+  else if(T2_LEFT > 0)
+    setText('hero-total-left', 'brak — zostało ' + T2_LEFT + ' płatnych (50 zł)');
+  else
+    setText('hero-total-left', 'brak');
+
+  // BARS
+  setWidth('t1-bar', t1pct);
+  setWidth('t2-bar', t2pct);
+
+  // TIER 1 counter
+  if(T1_LEFT === 0){
+    setText('t1-cnt', 'WYPRZEDANY'); setClass('t1-cnt','cnt-gone');
+    setText('t1-sub', 'Darmowe miejsca wyczerpane');
+  } else {
+    setText('t1-cnt', T1_LEFT + ' z ' + T1_MAX + ' wolnych');
+    setClass('t1-cnt', pctClass(T1_LEFT, T1_MAX));
+    setText('t1-sub', T1_LEFT <= 10
+      ? '⚡ Zostało tylko ' + T1_LEFT + ' darmowych!'
+      : 'Bezpłatny dostęp — całkowicie za darmo');
+  }
+
+  // TIER 2 counter
+  if(T2_LEFT === 0){
+    setText('t2-cnt', 'WYPRZEDANY'); setClass('t2-cnt','cnt-gone');
+    setText('t2-sub', 'Kurs wyprzedany');
+  } else if(T1_LEFT > 0){
+    setText('t2-cnt', 'Otwiera się po wyczerpaniu Tier 1'); setClass('t2-cnt','cnt-gone');
+    setText('t2-sub', 'Aktywuje się gdy skończą się darmowe miejsca');
+  } else {
+    setText('t2-cnt', T2_LEFT + ' z ' + T2_MAX + ' wolnych');
+    setClass('t2-cnt', pctClass(T2_LEFT, T2_MAX));
+    setText('t2-sub', T2_LEFT <= 20 ? '⚡ Zostało tylko ' + T2_LEFT + '!' : '');
+  }
+
+  // SW BUTTON
+  const swBtn = $('sw-cta');
+  if(swBtn){
+    if(at===1){ swBtn.className='sw-btn'; swBtn.textContent='Dołącz za darmo →'; }
+    else if(at===2){ swBtn.className='sw-btn paid'; swBtn.textContent='Kup dostęp za 50 zł →'; }
+    else { swBtn.className='sw-btn locked'; swBtn.textContent='🔒 Wszystkie miejsca zajęte'; }
+  }
+
+  // PRICING BARS + counts
+  setWidth('pc1-bar', t1pct);
+  setWidth('pc2-bar', t2pct);
+  setText('pc1-cnt', T1_LEFT===0 ? 'Wyprzedany' : t1Sold+'/'+T1_MAX+' zajętych');
+  setText('pc2-cnt', T2_LEFT===0 ? 'Wyprzedany' : t2Sold+'/'+T2_MAX+' zajętych');
+  setClass('pc1-cnt', pctClass(T1_LEFT, T1_MAX));
+  setClass('pc2-cnt', pctClass(T2_LEFT, T2_MAX));
+
+  if(T1_LEFT===0){
+    setText('pb1','🔒 Wyprzedany'); $('pb1').className='pcard-badge b-gone';
+    const b=$('pc1-btn'); b.textContent='Wyprzedany'; b.className='pcard-btn pb-locked';
+  }
+  if(T2_LEFT===0){
+    setText('pb2','🔒 Wyprzedany'); $('pb2').className='pcard-badge b-gone';
+    const b=$('pc2-btn'); b.textContent='Wyprzedany'; b.className='pcard-btn pb-locked';
+  }
+
+  // URGENCY
+  setText('us-t1-val', T1_LEFT===0 ? 'BRAK' : T1_LEFT+' wolnych');
+  setText('us-t2-val', T2_LEFT===0 ? 'BRAK' : T1_LEFT>0 ? 'Niedostępny' : T2_LEFT+' wolnych');
+  removeSkel($('us-t1-val')); removeSkel($('us-t2-val'));
+  const p1=$('us-t1-pct');
+  if(p1){ p1.textContent=Math.round(t1pct)+'% zajęte'; p1.className='urg-pct '+pctUrgClass(t1pct); }
+  const p2=$('us-t2-pct');
+  if(p2 && T1_LEFT===0){ p2.textContent=Math.round(t2pct)+'% zajęte'; p2.className='urg-pct '+pctUrgClass(t2pct); }
+
+  // URG CTA
+  const urgBtn=$('urg-cta');
+  if(urgBtn){
+    if(at===1){ urgBtn.textContent='Dołącz teraz — za darmo →'; urgBtn.style.background='var(--green)'; urgBtn.style.color='#000'; }
+    else if(at===2){ urgBtn.textContent='Kup teraz — 50 zł →'; urgBtn.style.background='var(--orange)'; urgBtn.style.color='#fff'; }
+    else { urgBtn.textContent='🔒 Wszystkie miejsca zajęte'; urgBtn.style.background='#333'; urgBtn.style.cursor='not-allowed'; urgBtn.style.pointerEvents='none'; }
+  }
+
+  // CTA BOTTOM
+  setText('cta-left', T1_LEFT > 0 ? T1_LEFT : T2_LEFT);
+  const bp=$('bottom-price');
+  if(bp){ bp.textContent = at===1?'darmo':at===2?'50 zł':'—'; }
+  const bc=$('bottom-cta');
+  if(bc){
+    if(at===1){ bc.style.background='var(--green)'; bc.style.color='#000'; }
+    else if(at===2){ bc.style.background='var(--orange)'; bc.style.color='#fff'; }
+    else { bc.textContent='🔒 Wszystkie miejsca zajęte'; bc.style.background='#333'; bc.style.cursor='not-allowed'; bc.style.pointerEvents='none'; }
+  }
+
+  // NAV + HERO btn
+  const navCta=$('nav-cta');
+  const heroCta=$('hero-cta');
+  if(at===2){
+    if(navCta){ navCta.style.background='var(--orange)'; navCta.style.borderColor='var(--orange)'; navCta.style.color='#fff'; }
+    if(heroCta){ heroCta.textContent='Kup dostęp za 50 zł →'; heroCta.classList.add('orange'); }
+  } else if(at===0){
+    if(heroCta){ heroCta.textContent='🔒 Brak miejsc'; heroCta.style.background='#333'; heroCta.style.color='var(--muted2)'; heroCta.style.cursor='not-allowed'; heroCta.style.pointerEvents='none'; }
+  }
+}
+
+// ── onSnapshot — aktualizacja w czasie rzeczywistym ──
+onSnapshot(slotsRef, (snap) => {
+  if(snap.exists()){
+    const data = snap.data();
+    render(data.t1_sold || 0, data.t2_sold || 0);
+  } else {
+    render(0, 0);
+  }
+});
+</script>
+
+<script>
+// Accordion modułów (nie-module, bez Firebase)
+function toggleModule(head){
+  const body = head.nextElementSibling;
+  const tog  = head.querySelector('.module-toggle');
+  const open = body.classList.contains('open');
+  document.querySelectorAll('.module-body').forEach(b=>b.classList.remove('open'));
+  document.querySelectorAll('.module-toggle').forEach(t=>t.classList.remove('open'));
+  if(!open){ body.classList.add('open'); tog.classList.add('open'); }
+}
+</script>
+</body>
+</html>
