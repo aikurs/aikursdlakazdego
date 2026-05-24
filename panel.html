@@ -888,41 +888,22 @@ async function downloadCert() {
     const imgData = canvas.toDataURL('image/png')
     const { jsPDF } = window.jspdf
 
-    // Wykryj orientację na podstawie proporcji wyrenderowanego elementu
-    const isWider = canvas.width > canvas.height
+    // Zawsze landscape A4 — certyfikat rozciągamy na całą stronę
     const doc = new jsPDF({
-      orientation: isWider ? 'landscape' : 'portrait',
+      orientation: 'landscape',
       unit: 'mm',
       format: 'a4'
     })
 
-    // Wymiary strony PDF
-    const pageW = doc.internal.pageSize.getWidth()
-    const pageH = doc.internal.pageSize.getHeight()
+    const pageW = 297
+    const pageH = 210
 
-    // Wypełnij całą stronę ciemnym tłem (brak białych krawędzi)
+    // Wypełnij całą stronę ciemnym tłem
     doc.setFillColor(7, 17, 31)
     doc.rect(0, 0, pageW, pageH, 'F')
 
-    // Dopasuj obraz do strony z małym marginesem
-    const margin = 6
-    const maxW = pageW - margin * 2
-    const maxH = pageH - margin * 2
-    const imgRatio = canvas.width / canvas.height
-
-    let drawW, drawH
-    if (maxW / imgRatio <= maxH) {
-      drawW = maxW
-      drawH = maxW / imgRatio
-    } else {
-      drawH = maxH
-      drawW = maxH * imgRatio
-    }
-
-    const drawX = (pageW - drawW) / 2
-    const drawY = (pageH - drawH) / 2
-
-    doc.addImage(imgData, 'PNG', drawX, drawY, drawW, drawH)
+    // Rozciągnij certyfikat na CAŁĄ stronę bez marginesów
+    doc.addImage(imgData, 'PNG', 0, 0, pageW, pageH)
 
     // Unikalny numer certyfikatu
     const certId = 'AIKURS-' + currentUser.uid.slice(0,6).toUpperCase() + '-' + Date.now().toString(36).toUpperCase()
