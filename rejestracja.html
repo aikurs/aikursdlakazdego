@@ -21,17 +21,13 @@ body::before { content:''; position:fixed; inset:0; background: radial-gradient(
 .form-state p { text-align: center; }
 .back-link { display: block; text-align: center; margin-top: 1.5rem; font-size: .82rem; color: var(--muted); text-decoration: none; transition: color .2s; }
 .back-link:hover { color: var(--white); }
-.slots-badge {
-  display: inline-flex; align-items: center; gap: .4rem;
-  background: rgba(29,158,117,0.08); border: 1px solid rgba(29,158,117,0.25);
-  border-radius: 999px; padding: .3rem .9rem; font-size: .78rem;
-  color: var(--green); margin-bottom: 1.2rem; font-weight: 600; letter-spacing: .02em;
-}
-.slots-badge .dot { width:7px;height:7px;background:var(--green);border-radius:50%;animation:pulse-dot 1.5s ease-in-out infinite; }
-@keyframes pulse-dot { 0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.7)} }
-.slots-badge.few { background:rgba(255,170,0,0.08);border-color:rgba(255,170,0,0.3);color:#ffaa00; }
+.alert-error { display: none; background: rgba(248,81,73,0.12); border: 1px solid rgba(248,81,73,0.3); color: #f85149; border-radius: 6px; padding: .65rem 1rem; font-size: .83rem; margin-bottom: 1rem; }
+.slots-badge { display: inline-flex; align-items: center; gap: .4rem; background: rgba(0,214,143,0.08); border: 1px solid rgba(0,214,143,0.25); border-radius: 999px; padding: .3rem .9rem; font-size: .78rem; color: #00d68f; margin-bottom: 1.2rem; font-weight: 600; }
+.slots-badge .dot { width:7px;height:7px;border-radius:50%;background:#00d68f;animation:pulse-dot 1.5s ease-in-out infinite; }
+@keyframes pulse-dot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.7)}}
+.slots-badge.few { background:rgba(255,170,0,.08);border-color:rgba(255,170,0,.3);color:#ffaa00; }
 .slots-badge.few .dot { background:#ffaa00; }
-.slots-badge.none { background:rgba(248,81,73,0.08);border-color:rgba(248,81,73,0.3);color:#f85149; }
+.slots-badge.none { background:rgba(248,81,73,.08);border-color:rgba(248,81,73,.3);color:#f85149; }
 .slots-badge.none .dot { background:#f85149; }
 </style>
 </head>
@@ -58,7 +54,7 @@ body::before { content:''; position:fixed; inset:0; background: radial-gradient(
         <span id="slots-text">Sprawdzam dostępność...</span>
       </div>
     </div>
-    <div class="alert alert-error" id="reg-error" style="display:none"></div>
+    <div class="alert-error" id="reg-error"></div>
     <div class="input-group">
       <label>Adres e-mail</label>
       <input class="input" type="email" id="reg-email" placeholder="np. twoj-email@gmail.com">
@@ -75,23 +71,23 @@ body::before { content:''; position:fixed; inset:0; background: radial-gradient(
       <label>Powtórz hasło</label>
       <input class="input" type="password" id="reg-pass2" placeholder="••••••••">
     </div>
-    <button class="btn btn-green btn-block btn-lg" id="reg-btn" onclick="doRegister()">
+    <button class="btn btn-green btn-block btn-lg" id="reg-btn">
       Utwórz konto i zacznij kurs →
     </button>
-  </div>
-
-  <div class="state" id="state-error">
-    <div class="state-icon">❌</div>
-    <h2>Link wygasł lub jest nieprawidłowy</h2>
-    <p>Ten link zaproszenia mógł wygasnąć lub już został użyty. Napisz do nas żeby otrzymać nowe zaproszenie.</p>
-    <a href="index.html" class="btn btn-outline btn-block">Wróć do logowania</a>
   </div>
 
   <div class="state" id="state-limit">
     <div class="state-icon">🔒</div>
     <h2>Brak wolnych miejsc</h2>
-    <p>Wszystkie 50 darmowych miejsc zostało już zajętych. Napisz do nas, żeby dowiedzieć się kiedy pojawią się nowe.</p>
+    <p>Wszystkie 50 darmowych miejsc zostało już zajętych. Napisz do nas, żeby dowiedzieć się o nowych miejscach.</p>
     <a href="index.html" class="btn btn-outline btn-block">Wróć do strony głównej</a>
+  </div>
+
+  <div class="state" id="state-error">
+    <div class="state-icon">❌</div>
+    <h2>Link wygasł lub jest nieprawidłowy</h2>
+    <p>Ten link zaproszenia mógł wygasnąć lub już został użyty.</p>
+    <a href="index.html" class="btn btn-outline btn-block">Wróć do logowania</a>
   </div>
 
   <div class="state" id="state-success">
@@ -104,196 +100,195 @@ body::before { content:''; position:fixed; inset:0; background: radial-gradient(
   <a href="index.html" class="back-link">← Wróć do logowania</a>
 </div>
 
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-<script src="app.js"></script>
-<script>
-// ─── Alert helpers ────────────────────────────────────────────────────────────
-function showAlert(id, msg) {
-  const el = document.getElementById(id)
-  if (!el) return
-  el.textContent = msg
-  el.style.display = 'block'
-}
-function hideAlert(id) {
-  const el = document.getElementById(id)
-  if (!el) return
-  el.textContent = ''
-  el.style.display = 'none'
-}
+<!-- Firebase v11 modułowy — ten sam co index.html -->
+<script type="module">
+import { initializeApp }                        from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
+import { getAuth, createUserWithEmailAndPassword, updateProfile, onAuthStateChanged, signInWithEmailLink, isSignInWithEmailLink }
+                                                from "https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js";
+import { getFirestore, doc, getDoc, setDoc, increment }
+                                                from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
 
 // ─── Config ───────────────────────────────────────────────────────────────────
-const REGISTRATION_LIMIT = 50
-const META_DOC = 'meta/registrations'
+const FIREBASE_CONFIG = {
+  apiKey: "AIzaSyCDSP_ztZ88ftNZwrG_xA5X-9NWmG-rHGA",
+  authDomain: "ai-kurs-w-biznesie.firebaseapp.com",
+  projectId: "ai-kurs-w-biznesie",
+  storageBucket: "ai-kurs-w-biznesie.firebasestorage.app",
+  messagingSenderId: "978692477925",
+  appId: "1:978692477925:web:264bdd5a60d12e1415d50c"
+};
 
-// Użyj istniejącej instancji lub utwórz nową
-if(!firebase.apps.length) firebase.initializeApp(FIREBASE_CONFIG)
-const db = firebase.firestore()
+const T1_LIMIT = 50;
 
-// FIX: flaga blokująca redirect podczas rejestracji
-let registrationInProgress = false
+const app  = initializeApp(FIREBASE_CONFIG);
+const auth = getAuth(app);
+const db   = getFirestore(app);
 
-// ─── Helpers UI ───────────────────────────────────────────────────────────────
-function setState(name){
-  document.querySelectorAll('.state').forEach(s => s.classList.remove('active'))
-  document.getElementById('state-' + name).classList.add('active')
+const slotsRef = doc(db, "kurs", "miejsca");
+
+// ─── UI helpers ───────────────────────────────────────────────────────────────
+function setState(name) {
+  document.querySelectorAll('.state').forEach(s => s.classList.remove('active'));
+  document.getElementById('state-' + name).classList.add('active');
 }
 
-function getUrlParams(){
-  const params = new URLSearchParams(window.location.search)
-  return { mode: params.get('mode'), oobCode: params.get('oobCode'), email: params.get('email') }
+function showErr(msg) {
+  const el = document.getElementById('reg-error');
+  el.textContent = msg;
+  el.style.display = 'block';
 }
 
-// ─── Licznik ──────────────────────────────────────────────────────────────────
-async function getRegistrationCount(){
-  try {
-    const snap = await db.doc(META_DOC).get()
-    if(!snap.exists) return 0
-    return snap.data().count || 0
-  } catch(e) {
-    console.warn('Błąd odczytu licznika:', e)
-    return null
-  }
+function hideErr() {
+  const el = document.getElementById('reg-error');
+  el.textContent = '';
+  el.style.display = 'none';
 }
 
-async function incrementRegistrationCount(){
-  // set + merge = tworzy dokument jeśli nie istnieje, inkrementuje jeśli istnieje
-  await db.doc(META_DOC).set({
-    count: firebase.firestore.FieldValue.increment(1),
-    limit: REGISTRATION_LIMIT,
-    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-  }, { merge: true })
-}
+function updateBadge(t1Sold) {
+  const badge = document.getElementById('slots-badge');
+  const text  = document.getElementById('slots-text');
+  const left  = T1_LIMIT - t1Sold;
+  const btn   = document.getElementById('reg-btn');
 
-function updateSlotsBadge(count){
-  const badge = document.getElementById('slots-badge')
-  const text  = document.getElementById('slots-text')
-  const btn   = document.getElementById('reg-btn')
-  const remaining = REGISTRATION_LIMIT - (count || 0)
-
-  if(count === null){
-    text.textContent = 'Nie można sprawdzić dostępności'
-    return
-  }
-  if(remaining <= 0){
-    text.textContent = 'Brak wolnych miejsc (0/' + REGISTRATION_LIMIT + ')'
-    badge.className = 'slots-badge none'
-    if(btn){ btn.disabled = true; btn.innerHTML = '🔒 Brak wolnych miejsc' }
-    return
-  }
-  if(remaining <= 10){
-    text.textContent = 'Zostało tylko ' + remaining + ' z ' + REGISTRATION_LIMIT + ' miejsc!'
-    badge.className = 'slots-badge few'
+  if (left <= 0) {
+    text.textContent = 'Brak wolnych miejsc';
+    badge.className = 'slots-badge none';
+    btn.disabled = true;
+    btn.textContent = '🔒 Brak wolnych miejsc';
+  } else if (left <= 10) {
+    text.textContent = 'Zostało tylko ' + left + ' z ' + T1_LIMIT + ' miejsc!';
+    badge.className = 'slots-badge few';
   } else {
-    text.textContent = 'Zostało ' + remaining + ' z ' + REGISTRATION_LIMIT + ' darmowych miejsc'
-    badge.className = 'slots-badge'
+    text.textContent = 'Zostało ' + left + ' z ' + T1_LIMIT + ' darmowych miejsc';
+    badge.className = 'slots-badge';
   }
+}
+
+// ─── Pobierz aktualny licznik ─────────────────────────────────────────────────
+async function getT1Sold() {
+  try {
+    const snap = await getDoc(slotsRef);
+    if (!snap.exists()) return 0;
+    return snap.data().t1_sold || 0;
+  } catch(e) {
+    console.warn('Błąd odczytu licznika:', e);
+    return 0;
+  }
+}
+
+// ─── Inkrementuj t1_sold ──────────────────────────────────────────────────────
+async function incrementT1() {
+  await setDoc(slotsRef, { t1_sold: increment(1) }, { merge: true });
 }
 
 // ─── INIT ─────────────────────────────────────────────────────────────────────
-window.addEventListener('load', async () => {
-  // FIX: redirect tylko gdy rejestracja NIE jest w toku
-  firebase.auth().onAuthStateChanged(user => {
-    if(user && !registrationInProgress) {
-      window.location.href = 'panel.html'
+let registrationInProgress = false;
+
+onAuthStateChanged(auth, user => {
+  if (user && !registrationInProgress) {
+    window.location.href = 'panel.html';
+  }
+});
+
+const params = new URLSearchParams(window.location.search);
+const urlEmail = params.get('email');
+
+// Sprawdź limit przed pokazaniem formularza
+const t1Sold = await getT1Sold();
+
+if (t1Sold >= T1_LIMIT) {
+  setState('limit');
+} else {
+  // Ustaw email jeśli jest w URL
+  if (urlEmail) {
+    const emailInput = document.getElementById('reg-email');
+    emailInput.value = decodeURIComponent(urlEmail);
+    emailInput.readOnly = true;
+  }
+
+  // Email link sign-in
+  if (isSignInWithEmailLink(auth, window.location.href)) {
+    let email = urlEmail || localStorage.getItem('naffy_invite_email') || '';
+    if (!email) email = window.prompt('Podaj swój adres e-mail (ten na który dostałeś zaproszenie):');
+    if (!email) { setState('error'); }
+    else {
+      const emailInput = document.getElementById('reg-email');
+      emailInput.value = email;
+      emailInput.readOnly = true;
     }
-  })
-
-  const p = getUrlParams()
-  const count = await getRegistrationCount()
-
-  if(count !== null && count >= REGISTRATION_LIMIT){
-    setState('limit')
-    return
   }
 
-  if(firebase.auth().isSignInWithEmailLink(window.location.href)){
-    let email = p.email || localStorage.getItem('naffy_invite_email') || ''
-    if(!email) email = window.prompt('Podaj swój adres e-mail (ten na który dostałeś zaproszenie):')
-    if(!email){ setState('error'); return }
-    document.getElementById('reg-email').value = email
-    document.getElementById('reg-email').readOnly = true
-    setState('form')
-    updateSlotsBadge(count)
-    return
-  }
-
-  if(p.email){
-    document.getElementById('reg-email').value = decodeURIComponent(p.email)
-    document.getElementById('reg-email').readOnly = true
-    setState('form')
-    updateSlotsBadge(count)
-    return
-  }
-
-  document.getElementById('reg-email').readOnly = false
-  setState('form')
-  updateSlotsBadge(count)
-})
+  updateBadge(t1Sold);
+  setState('form');
+}
 
 // ─── Rejestracja ──────────────────────────────────────────────────────────────
-async function doRegister(){
-  const email = document.getElementById('reg-email').value.trim()
-  const name  = document.getElementById('reg-name').value.trim()
-  const pass  = document.getElementById('reg-pass').value
-  const pass2 = document.getElementById('reg-pass2').value
+document.getElementById('reg-btn').addEventListener('click', async () => {
+  const email = document.getElementById('reg-email').value.trim();
+  const name  = document.getElementById('reg-name').value.trim();
+  const pass  = document.getElementById('reg-pass').value;
+  const pass2 = document.getElementById('reg-pass2').value;
 
-  hideAlert('reg-error')
+  hideErr();
 
-  if(!email){ showAlert('reg-error','Wpisz swój adres e-mail.'); return }
-  if(!name){  showAlert('reg-error','Wpisz swoje imię i nazwisko.'); return }
-  if(pass.length < 8){ showAlert('reg-error','Hasło musi mieć co najmniej 8 znaków.'); return }
-  if(pass !== pass2){  showAlert('reg-error','Hasła się nie zgadzają. Spróbuj ponownie.'); return }
+  if (!email) { showErr('Wpisz swój adres e-mail.'); return; }
+  if (!name)  { showErr('Wpisz swoje imię i nazwisko.'); return; }
+  if (pass.length < 8) { showErr('Hasło musi mieć co najmniej 8 znaków.'); return; }
+  if (pass !== pass2)  { showErr('Hasła się nie zgadzają. Spróbuj ponownie.'); return; }
 
-  const btn = document.getElementById('reg-btn')
-  btn.disabled = true
-  btn.innerHTML = '<span class="spinner"></span> Tworzę konto...'
+  const btn = document.getElementById('reg-btn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> Tworzę konto...';
 
-  // FIX: ustaw flagę żeby onAuthStateChanged nie przekierował przedwcześnie
-  registrationInProgress = true
+  registrationInProgress = true;
 
   try {
-    // KROK 1: double-check limitu
-    const currentCount = await getRegistrationCount()
-    if(currentCount !== null && currentCount >= REGISTRATION_LIMIT){
-      setState('limit')
-      registrationInProgress = false
-      return
+    // 1. Double-check limitu
+    const currentSold = await getT1Sold();
+    if (currentSold >= T1_LIMIT) {
+      setState('limit');
+      registrationInProgress = false;
+      return;
     }
 
-    // KROK 2: utwórz konto
-    let userCredential
-    if(firebase.auth().isSignInWithEmailLink(window.location.href)){
-      userCredential = await firebase.auth().signInWithEmailLink(email, window.location.href)
-      await userCredential.user.updatePassword(pass)
+    // 2. Utwórz konto w Firebase Auth
+    let userCredential;
+    if (isSignInWithEmailLink(auth, window.location.href)) {
+      userCredential = await signInWithEmailLink(auth, email, window.location.href);
+      await userCredential.user.updatePassword(pass);
     } else {
-      userCredential = await firebase.auth().createUserWithEmailAndPassword(email, pass)
+      userCredential = await createUserWithEmailAndPassword(auth, email, pass);
     }
 
-    await userCredential.user.updateProfile({ displayName: name })
+    await updateProfile(userCredential.user, { displayName: name });
 
-    // KROK 3: zapisz licznik (teraz użytkownik jest zalogowany — auth rules OK)
-    await incrementRegistrationCount()
+    console.log('✅ Konto utworzone:', userCredential.user.uid);
 
-    // KROK 4: dopiero teraz przekieruj
-    localStorage.removeItem('naffy_invite_email')
-    registrationInProgress = false
-    setState('success')
-    setTimeout(() => { window.location.href = 'panel.html' }, 2500)
+    // 3. Zapisz licznik do Firestore (użytkownik jest już zalogowany)
+    await incrementT1();
+
+    console.log('✅ Licznik zaktualizowany');
+
+    localStorage.removeItem('naffy_invite_email');
+    registrationInProgress = false;
+    setState('success');
+    setTimeout(() => { window.location.href = 'panel.html'; }, 2500);
 
   } catch(e) {
-    console.error('Błąd rejestracji:', e)
-    registrationInProgress = false
-    let msg = 'Coś poszło nie tak. Spróbuj ponownie.'
-    if(e.code === 'auth/email-already-in-use') msg = 'Konto z tym e-mailem już istnieje. Zaloguj się zamiast rejestrować.'
-    if(e.code === 'auth/invalid-action-code')  msg = 'Link wygasł lub był już użyty. Poproś o nowe zaproszenie.'
-    if(e.code === 'auth/weak-password')         msg = 'Hasło jest za słabe. Użyj min. 8 znaków.'
-    showAlert('reg-error', msg)
-    btn.disabled = false
-    btn.innerHTML = 'Utwórz konto i zacznij kurs →'
+    console.error('❌ Błąd rejestracji:', e.code, e.message);
+    registrationInProgress = false;
+
+    let msg = 'Coś poszło nie tak. Spróbuj ponownie.';
+    if (e.code === 'auth/email-already-in-use') msg = 'Konto z tym e-mailem już istnieje. Zaloguj się zamiast rejestrować.';
+    if (e.code === 'auth/invalid-action-code')  msg = 'Link wygasł lub był już użyty. Poproś o nowe zaproszenie.';
+    if (e.code === 'auth/weak-password')         msg = 'Hasło jest za słabe. Użyj min. 8 znaków.';
+    if (e.code === 'permission-denied')          msg = 'Błąd uprawnień Firestore. Skontaktuj się z administratorem.';
+
+    showErr(msg);
+    btn.disabled = false;
+    btn.innerHTML = 'Utwórz konto i zacznij kurs →';
   }
-}
+});
 </script>
 </body>
 </html>
