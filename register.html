@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rejestracja — AI Kurs dla każdego</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --green:#1d9e75;--red:#e24b4a;--blue:#378add;--yellow:#f5c842;
+  --bg:#07111f;--surface:#0d1d30;--surface2:#112035;
+  --border:rgba(255,255,255,0.07);--white:#fff;--muted:rgba(255,255,255,0.4);
+  --radius:10px;--radius-lg:16px;
+}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);color:var(--white);
+  font-family:'DM Sans',sans-serif;min-height:100vh;
+  display:flex;flex-direction:column;
+}
+
+/* BG GRADIENT */
+body::before{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:
+    radial-gradient(ellipse 70% 50% at 10% 0%, rgba(29,158,117,0.1) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 40% at 90% 80%, rgba(55,138,221,0.07) 0%, transparent 60%);
+}
+
+/* NOISE */
+body::after{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.025;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+}
+
+/* NAV */
+nav{
+  position:relative;z-index:10;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:1.25rem 2rem;border-bottom:1px solid var(--border);
+}
+.logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.1rem;color:var(--white);text-decoration:none}
+.logo span{color:var(--green)}
+.nav-link{font-size:.84rem;color:var(--muted);text-decoration:none;transition:color .2s}
+.nav-link:hover{color:var(--white)}
+
+/* MAIN */
+main{
+  position:relative;z-index:1;
+  flex:1;display:flex;align-items:flex-start;justify-content:center;
+  padding:3rem 1rem 4rem;gap:3rem;max-width:1060px;margin:0 auto;width:100%;
+}
+
+/* LEFT — INFO */
+.info-col{flex:1;max-width:440px;padding-top:.5rem}
+.info-tag{
+  display:inline-flex;align-items:center;gap:.5rem;
+  font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.1em;
+  color:var(--green);background:rgba(29,158,117,0.1);border:1px solid rgba(29,158,117,0.2);
+  border-radius:50px;padding:.3rem .85rem;margin-bottom:1.5rem;
+}
+.info-tag .dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 1.6s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+.info-col h1{
+  font-family:'Syne',sans-serif;font-weight:800;font-size:2.2rem;line-height:1.2;
+  margin-bottom:1rem;
+}
+.info-col h1 span{color:var(--green)}
+.info-col p{font-size:.92rem;color:var(--muted);line-height:1.7;margin-bottom:2rem}
+
+.what-you-get{display:grid;gap:.65rem;margin-bottom:2rem}
+.get-item{
+  display:flex;align-items:center;gap:.75rem;
+  font-size:.87rem;color:rgba(255,255,255,0.8);
+  padding:.65rem .9rem;
+  background:rgba(255,255,255,0.02);border:1px solid var(--border);
+  border-radius:var(--radius);transition:border-color .2s;
+}
+.get-item:hover{border-color:rgba(29,158,117,0.25)}
+.get-icon{font-size:1.1rem;flex-shrink:0;width:28px;text-align:center}
+
+.price-box{
+  background:rgba(29,158,117,0.06);
+  border:1px solid rgba(29,158,117,0.2);
+  border-radius:var(--radius-lg);
+  padding:1.25rem 1.4rem;
+  display:flex;align-items:center;justify-content:space-between;gap:1rem;
+}
+.price-amount{font-family:'Syne',sans-serif;font-weight:800;font-size:2rem;color:var(--green)}
+.price-label{font-size:.75rem;color:var(--muted);margin-top:.2rem}
+.price-note{font-size:.78rem;color:var(--muted);text-align:right;line-height:1.5}
+.price-note strong{color:var(--white)}
+
+/* RIGHT — FORM */
+.form-col{width:420px;flex-shrink:0}
+
+.reg-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--radius-lg);padding:2rem;
+}
+
+.form-title{
+  font-family:'Syne',sans-serif;font-weight:700;font-size:1.1rem;
+  margin-bottom:.4rem;
+}
+.form-sub{font-size:.82rem;color:var(--muted);margin-bottom:1.75rem;line-height:1.5}
+
+.input-group{margin-bottom:1rem}
+.input-group label{display:block;font-size:.78rem;color:var(--muted);margin-bottom:.4rem;font-weight:500}
+.input{
+  width:100%;background:var(--surface2);border:1px solid var(--border);
+  border-radius:var(--radius);padding:.72rem 1rem;
+  color:var(--white);font-family:'DM Sans',sans-serif;font-size:.9rem;
+  outline:none;transition:border-color .2s;
+}
+.input:focus{border-color:rgba(29,158,117,0.5);background:rgba(17,32,53,0.8)}
+.input::placeholder{color:rgba(255,255,255,0.2)}
+.input.error{border-color:rgba(226,75,74,0.5)}
+
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:.85rem}
+
+.terms-row{
+  display:flex;align-items:flex-start;gap:.7rem;
+  font-size:.8rem;color:var(--muted);margin-bottom:1.4rem;line-height:1.5;
+}
+.terms-row input[type=checkbox]{
+  margin-top:.1rem;flex-shrink:0;
+  width:16px;height:16px;accent-color:var(--green);cursor:pointer;
+}
+.terms-row a{color:var(--green);text-decoration:none}
+.terms-row a:hover{text-decoration:underline}
+
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:.5rem;
+  padding:.78rem 1.4rem;border-radius:var(--radius);
+  font-family:'DM Sans',sans-serif;font-size:.9rem;font-weight:600;
+  cursor:pointer;border:none;transition:all .2s;width:100%;
+}
+.btn-green{background:var(--green);color:#fff}
+.btn-green:hover:not(:disabled){background:#1ab882;transform:translateY(-1px)}
+.btn-green:disabled{opacity:.45;cursor:not-allowed;transform:none}
+
+.spinner{
+  display:inline-block;width:16px;height:16px;
+  border:2px solid rgba(255,255,255,0.3);border-top-color:#fff;
+  border-radius:50%;animation:spin .7s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* DIVIDER */
+.or-divider{
+  display:flex;align-items:center;gap:.75rem;
+  font-size:.73rem;color:var(--muted);margin:1.2rem 0;
+}
+.or-divider::before,.or-divider::after{
+  content:'';flex:1;height:1px;background:var(--border);
+}
+
+/* STEPS */
+.steps{display:grid;gap:.5rem;margin-bottom:1.6rem}
+.step{
+  display:flex;align-items:center;gap:.7rem;
+  font-size:.81rem;color:rgba(255,255,255,0.65);
+}
+.step-num{
+  width:22px;height:22px;border-radius:50%;
+  background:rgba(29,158,117,0.15);border:1px solid rgba(29,158,117,0.3);
+  color:var(--green);font-size:.68rem;font-weight:700;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+
+/* FIELD ERROR */
+.field-err{font-size:.74rem;color:var(--red);margin-top:.3rem;display:none}
+.field-err.show{display:block}
+
+/* ALERT */
+.alert{border-radius:var(--radius);padding:.85rem 1rem;font-size:.85rem;margin-bottom:1rem;display:none;line-height:1.5}
+.alert.show{display:block}
+.alert-error{background:rgba(226,75,74,0.1);border:1px solid rgba(226,75,74,0.3);color:#ff8a89}
+.alert-success{background:rgba(29,158,117,0.08);border:1px solid rgba(29,158,117,0.25);color:#5dcaa5}
+
+/* SUCCESS STATE */
+.success-view{display:none;text-align:center;padding:.5rem 0}
+.success-view.show{display:block}
+.success-icon{font-size:3.5rem;margin-bottom:1rem;display:block}
+.success-title{font-family:'Syne',sans-serif;font-weight:800;font-size:1.3rem;margin-bottom:.6rem}
+.success-desc{font-size:.86rem;color:var(--muted);line-height:1.7;margin-bottom:1.5rem}
+
+/* PRZELEW BOX */
+.przelew-box{
+  background:rgba(29,158,117,0.05);border:1px solid rgba(29,158,117,0.2);
+  border-radius:var(--radius);padding:1rem 1.1rem;text-align:left;margin-bottom:1rem;
+}
+.przelew-row{display:flex;justify-content:space-between;align-items:flex-start;gap:.5rem;margin-bottom:.5rem}
+.przelew-row:last-child{margin-bottom:0}
+.przelew-label{font-size:.73rem;color:var(--muted);flex-shrink:0}
+.przelew-val{font-size:.83rem;font-weight:600;text-align:right;word-break:break-all}
+.przelew-val.mono{font-family:monospace;color:#00d68f;font-size:.88rem;letter-spacing:.03em}
+
+.copy-btn{
+  background:transparent;border:1px solid var(--border);
+  border-radius:6px;padding:.25rem .6rem;font-size:.7rem;
+  color:var(--muted);cursor:pointer;transition:all .2s;
+  font-family:'DM Sans',sans-serif;margin-left:.5rem;white-space:nowrap;
+}
+.copy-btn:hover{border-color:rgba(29,158,117,0.4);color:var(--green)}
+
+.info-note{
+  font-size:.78rem;color:var(--muted);
+  background:var(--surface2);border:1px solid var(--border);
+  border-radius:var(--radius);padding:.75rem .9rem;line-height:1.6;
+}
+
+/* LOGIN LINK */
+.login-link{text-align:center;font-size:.82rem;color:var(--muted);margin-top:1.2rem}
+.login-link a{color:var(--green);text-decoration:none;font-weight:500}
+.login-link a:hover{text-decoration:underline}
+
+/* TOAST */
+#toast{
+  position:fixed;bottom:1.5rem;right:1.5rem;z-index:9999;
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--radius);padding:.75rem 1.1rem;
+  font-size:.85rem;opacity:0;pointer-events:none;
+  transition:opacity .3s;display:flex;align-items:center;gap:.5rem;
+}
+#toast.show{opacity:1}
+#toast.success{border-color:rgba(29,158,117,0.4);color:#5dcaa5}
+#toast.error{border-color:rgba(226,75,74,0.4);color:#ff8a89}
+
+/* FOOTER */
+footer{
+  position:relative;z-index:1;
+  text-align:center;padding:1.5rem;
+  font-size:.75rem;color:rgba(255,255,255,0.2);
+  border-top:1px solid var(--border);
+}
+
+@media(max-width:860px){
+  main{flex-direction:column;align-items:center;padding:2rem 1rem 3rem}
+  .info-col{max-width:100%;padding-top:0}
+  .form-col{width:100%;max-width:480px}
+  .info-col h1{font-size:1.7rem}
+}
+@media(max-width:480px){
+  nav{padding:1rem}
+  .form-row{grid-template-columns:1fr}
+  main{padding:1.5rem 1rem 3rem}
+}
+</style>
+</head>
+<body>
+
+<div id="toast"></div>
+
+<nav>
+  <a href="index.html" class="logo">AI Kurs<span> dla każdego</span></a>
+  <a href="index.html" class="nav-link">Zaloguj się →</a>
+</nav>
+
+<main>
+  <!-- INFO COL -->
+  <div class="info-col">
+    <div class="info-tag">
+      <span class="dot"></span>Dostępnych miejsc: <span id="slots-left">ładowanie…</span>
+    </div>
+    <h1>Zacznij oszczędzać<br>z <span>AI</span> już dziś</h1>
+    <p>Praktyczny kurs online dla przedsiębiorców i freelancerów. Bez teorii — konkretne narzędzia, które od razu wdrożysz w swojej firmie.</p>
+
+    <div class="what-you-get">
+      <div class="get-item"><span class="get-icon">🎬</span>24 lekcje wideo w 6 modułach</div>
+      <div class="get-item"><span class="get-icon">📄</span>Materiały PDF i szablony promptów</div>
+      <div class="get-item"><span class="get-icon">📝</span>Zadania domowe + quizy</div>
+      <div class="get-item"><span class="get-icon">💬</span>Możliwość zadawania pytań</div>
+      <div class="get-item"><span class="get-icon">🏆</span>Certyfikat ukończenia kursu</div>
+      <div class="get-item"><span class="get-icon">♾️</span>Dożywotni dostęp do materiałów</div>
+    </div>
+
+    <div class="price-box">
+      <div>
+        <div class="price-amount">50 zł</div>
+        <div class="price-label">jednorazowa opłata · dostęp bezterminowy</div>
+      </div>
+      <div class="price-note">
+        Płatność <strong>przelewem</strong><br>
+        Dostęp po weryfikacji wpłaty
+      </div>
+    </div>
+  </div>
+
+  <!-- FORM COL -->
+  <div class="form-col">
+    <div class="reg-card">
+
+      <!-- FORMULARZ -->
+      <div id="form-view">
+        <div class="form-title">Stwórz konto</div>
+        <div class="form-sub">Wypełnij formularz, a my wyślemy Ci dane do przelewu.</div>
+
+        <div class="steps">
+          <div class="step"><span class="step-num">1</span>Wypełnij formularz i kliknij "Zarejestruj"</div>
+          <div class="step"><span class="step-num">2</span>Wykonaj przelew 50 zł na podane konto</div>
+          <div class="step"><span class="step-num">3</span>Po weryfikacji otrzymasz dostęp do kursu</div>
+        </div>
+
+        <div id="form-alert" class="alert alert-error"></div>
+
+        <div class="form-row">
+          <div class="input-group">
+            <label>Imię</label>
+            <input class="input" type="text" id="reg-fname" placeholder="Jan" autocomplete="given-name">
+            <div class="field-err" id="err-fname">Podaj imię</div>
+          </div>
+          <div class="input-group">
+            <label>Nazwisko</label>
+            <input class="input" type="text" id="reg-lname" placeholder="Kowalski" autocomplete="family-name">
+            <div class="field-err" id="err-lname">Podaj nazwisko</div>
+          </div>
+        </div>
+
+        <div class="input-group">
+          <label>Adres e-mail</label>
+          <input class="input" type="email" id="reg-email" placeholder="jan@firma.pl" autocomplete="email">
+          <div class="field-err" id="err-email">Podaj prawidłowy e-mail</div>
+        </div>
+
+        <div class="input-group">
+          <label>Hasło do konta</label>
+          <input class="input" type="password" id="reg-pass" placeholder="min. 8 znaków" autocomplete="new-password">
+          <div class="field-err" id="err-pass">Hasło musi mieć min. 8 znaków</div>
+        </div>
+
+        <div class="terms-row">
+          <input type="checkbox" id="reg-terms">
+          <label for="reg-terms">
+            Akceptuję <a href="#" onclick="return false">regulamin</a> i
+            <a href="#" onclick="return false">politykę prywatności</a>.
+            Rozumiem, że dostęp zostanie przyznany po zaksięgowaniu wpłaty.
+          </label>
+        </div>
+
+        <button class="btn btn-green" id="btn-register" onclick="doRegister()">
+          Zarejestruj się i przejdź do płatności →
+        </button>
+
+        <div class="or-divider">lub</div>
+        <div class="login-link">Masz już konto? <a href="index.html">Zaloguj się</a></div>
+      </div>
+
+      <!-- SUCCESS VIEW -->
+      <div class="success-view" id="success-view">
+        <span class="success-icon">✅</span>
+        <div class="success-title">Konto utworzone!</div>
+        <div class="success-desc">
+          Twoje konto zostało zarejestrowane. Teraz wykonaj przelew — dostęp do kursu aktywujemy ręcznie po weryfikacji wpłaty (zwykle w ciągu 24h).
+        </div>
+
+        <div class="przelew-box">
+          <div style="font-size:.7rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.75rem">
+            📋 Dane do przelewu
+          </div>
+          <div class="przelew-row">
+            <span class="przelew-label">Odbiorca</span>
+            <span class="przelew-val">AI Kurs dla każdego</span>
+          </div>
+          <div class="przelew-row">
+            <span class="przelew-label">Numer konta</span>
+            <span class="przelew-val mono" id="success-konto">
+              65 1160 2202 0000 0005 7582 4614
+              <button class="copy-btn" onclick="copyText('65 1160 2202 0000 0005 7582 4614')">kopiuj</button>
+            </span>
+          </div>
+          <div class="przelew-row">
+            <span class="przelew-label">Kwota</span>
+            <span class="przelew-val" style="color:var(--green);font-size:.95rem;font-weight:700">50,00 zł</span>
+          </div>
+          <div class="przelew-row">
+            <span class="przelew-label">Tytuł przelewu</span>
+            <span class="przelew-val mono" id="success-tytul">AI kurs - </span>
+          </div>
+        </div>
+
+        <div class="info-note">
+          ⏳ <strong>Co dalej?</strong> Po zaksięgowaniu wpłaty administrator weryfikuje przelew i aktywuje Twój dostęp — zwykle w ciągu 24 godzin. Otrzymasz możliwość zalogowania się na <a href="index.html" style="color:var(--green)">stronie głównej</a>.
+        </div>
+      </div>
+
+    </div>
+
+    <div class="login-link" id="footer-login-link">Masz już konto? <a href="index.html">Zaloguj się</a></div>
+  </div>
+</main>
+
+<footer>© 2025 AI Kurs dla każdego · Wszelkie prawa zastrzeżone</footer>
+
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="app.js"></script>
+<script>
+if (!firebase.apps.length) firebase.initializeApp(FIREBASE_CONFIG)
+const db = firebase.firestore()
+const auth = firebase.auth()
+
+// ── Liczba miejsc ─────────────────────────────────────────────
+// Zmień MAX_SLOTS na docelową liczbę miejsc w kursie
+const MAX_SLOTS = 50
+
+async function loadSlotsLeft() {
+  try {
+    // Liczymy tylko aktywnych uczniów (status === 'active')
+    // Pending NIE zajmuje miejsca — zgodnie z wymaganiem
+    const snap = await db.collection('uczniowie').where('status', '==', 'active').get()
+    const taken = snap.size
+    const left = Math.max(0, MAX_SLOTS - taken)
+    const el = document.getElementById('slots-left')
+    if (el) el.textContent = left > 0 ? left + ' wolnych' : 'BRAK MIEJSC'
+    return left
+  } catch(e) {
+    const el = document.getElementById('slots-left')
+    if (el) el.textContent = 'sprawdź wkrótce'
+    return 999 // fallback — nie blokuj rejestracji przy błędzie odczytu
+  }
+}
+loadSlotsLeft()
+
+// ── Walidacja ────────────────────────────────────────────────
+function showErr(id, show) {
+  const el = document.getElementById('err-' + id)
+  const inp = document.getElementById('reg-' + id)
+  if (!el || !inp) return
+  el.classList.toggle('show', show)
+  inp.classList.toggle('error', show)
+}
+
+function validate() {
+  const fname = document.getElementById('reg-fname').value.trim()
+  const lname = document.getElementById('reg-lname').value.trim()
+  const email = document.getElementById('reg-email').value.trim()
+  const pass  = document.getElementById('reg-pass').value
+  const terms = document.getElementById('reg-terms').checked
+  let ok = true
+
+  showErr('fname', !fname); if (!fname) ok = false
+  showErr('lname', !lname); if (!lname) ok = false
+  showErr('email', !email || !email.includes('@')); if (!email || !email.includes('@')) ok = false
+  showErr('pass',  pass.length < 8); if (pass.length < 8) ok = false
+
+  if (!terms) {
+    showAlert('Zaakceptuj regulamin i politykę prywatności.', 'error')
+    ok = false
+  }
+  return ok
+}
+
+// ── Alert w formularzu ───────────────────────────────────────
+function showAlert(msg, type='error') {
+  const el = document.getElementById('form-alert')
+  el.textContent = msg
+  el.className = 'alert alert-' + type + ' show'
+}
+function hideAlert() {
+  document.getElementById('form-alert').classList.remove('show')
+}
+
+// ── Toast ─────────────────────────────────────────────────────
+function toast(msg, type='success') {
+  const t = document.getElementById('toast')
+  t.textContent = msg
+  t.className = 'show ' + type
+  clearTimeout(t._t)
+  t._t = setTimeout(() => t.classList.remove('show'), 3500)
+}
+
+// ── Rejestracja ──────────────────────────────────────────────
+async function doRegister() {
+  hideAlert()
+  if (!validate()) return
+
+  const fname = document.getElementById('reg-fname').value.trim()
+  const lname = document.getElementById('reg-lname').value.trim()
+  const email = document.getElementById('reg-email').value.trim()
+  const pass  = document.getElementById('reg-pass').value
+  const name  = fname + ' ' + lname
+
+  const btn = document.getElementById('btn-register')
+  btn.disabled = true
+  btn.innerHTML = '<span class="spinner"></span> Tworzę konto…'
+
+  try {
+    // Sprawdź czy są jeszcze wolne miejsca (active users)
+    const slotsLeft = await loadSlotsLeft()
+    // Nie blokujemy przy slotsLeft <= 0 — to decyzja biznesowa admina;
+    // można odblokować poniższy blok jeśli chcesz twarde ograniczenie:
+    // if (slotsLeft <= 0) {
+    //   showAlert('Brak wolnych miejsc. Skontaktuj się z nami.')
+    //   btn.disabled = false; btn.innerHTML = 'Zarejestruj się i przejdź do płatności →'
+    //   return
+    // }
+
+    // Utwórz konto w Firebase Auth
+    const cred = await auth.createUserWithEmailAndPassword(email, pass)
+    await cred.user.updateProfile({ displayName: name })
+
+    // Zapisz w Firestore ze statusem 'pending' — NIE zajmuje miejsca w t2_sold
+    // dopóki admin nie zmieni status na 'active'
+    await db.collection('uczniowie').doc(cred.user.uid).set({
+      name,
+      email,
+      status: 'pending',       // ← klucz: nie 'active', więc nie liczy się do miejsc
+      completed: [],
+      streak: 0,
+      przelew: {
+        tytul: 'AI kurs - ' + email,
+        kwota: '50,00 zł',
+        konto: '65 1160 2202 0000 0005 7582 4614',
+      },
+      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+    })
+
+    // Wyloguj od razu — user nie ma dostępu dopóki admin nie zatwierdzi
+    await auth.signOut()
+
+    // Pokaż dane do przelewu
+    showSuccess(email)
+
+  } catch(e) {
+    let msg = e.message
+    if (e.code === 'auth/email-already-in-use') msg = 'Ten adres e-mail jest już zarejestrowany. Zaloguj się lub użyj innego.'
+    if (e.code === 'auth/weak-password') msg = 'Hasło jest za słabe. Użyj min. 8 znaków.'
+    if (e.code === 'auth/invalid-email') msg = 'Nieprawidłowy adres e-mail.'
+    showAlert(msg)
+    btn.disabled = false
+    btn.innerHTML = 'Zarejestruj się i przejdź do płatności →'
+  }
+}
+
+// ── Pokaż ekran sukcesu ──────────────────────────────────────
+function showSuccess(email) {
+  document.getElementById('form-view').style.display = 'none'
+  document.getElementById('footer-login-link').style.display = 'none'
+  const sv = document.getElementById('success-view')
+  sv.classList.add('show')
+
+  // Wstaw email w tytuł przelewu
+  const tytulEl = document.getElementById('success-tytul')
+  const tytul = 'AI kurs - ' + email
+  tytulEl.innerHTML = `<span>${tytul}</span> <button class="copy-btn" onclick="copyText('${tytul}')">kopiuj</button>`
+}
+
+// ── Kopiuj do schowka ─────────────────────────────────────────
+function copyText(text) {
+  navigator.clipboard.writeText(text).then(() => {
+    toast('Skopiowano do schowka ✓', 'success')
+  }).catch(() => {
+    // fallback dla starych przeglądarek
+    const ta = document.createElement('textarea')
+    ta.value = text
+    document.body.appendChild(ta)
+    ta.select()
+    document.execCommand('copy')
+    document.body.removeChild(ta)
+    toast('Skopiowano ✓', 'success')
+  })
+}
+
+// ── Enter submit ───────────────────────────────────────────────
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && document.getElementById('form-view').style.display !== 'none') {
+    doRegister()
+  }
+})
+
+// ── Wyczyść error przy wpisywaniu ─────────────────────────────
+;['fname','lname','email','pass'].forEach(id => {
+  const inp = document.getElementById('reg-' + id)
+  if (inp) inp.addEventListener('input', () => { showErr(id, false); hideAlert() })
+})
+</script>
+</body>
+</html>
