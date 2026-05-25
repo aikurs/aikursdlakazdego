@@ -160,7 +160,6 @@ footer{border-top:1px solid var(--border);padding:1.75rem 2rem;display:flex;just
 footer a{color:var(--muted2);text-decoration:none}
 footer a:hover{color:var(--text)}
 
-/* Loading skeleton */
 .skel{display:inline-block;background:linear-gradient(90deg,var(--border) 25%,var(--border2) 50%,var(--border) 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;border-radius:3px;color:transparent;min-width:60px}
 @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
 
@@ -293,7 +292,7 @@ footer a:hover{color:var(--text)}
           <div class="urg-pct" id="us-t2-pct"></div>
         </div>
       </div>
-      <a href="register.html" class="btn-main" id="urg-cta" style="width:100%;justify-content:center;margin-top:.25rem">Dołącz teraz — za darmo →</a>
+      <a href="rejestracja.html" class="btn-main" id="urg-cta" style="width:100%;justify-content:center;margin-top:.25rem">Dołącz teraz — za darmo →</a>
     </div>
   </div>
 </div>
@@ -348,7 +347,8 @@ footer a:hover{color:var(--text)}
           <li><span class="ck ck-o">✓</span> Zadania domowe</li>
           <li><span class="ck ck-o">✓</span> Dostęp na zawsze</li>
         </ul>
-        <a href="register.html?tier=2" class="pcard-btn pb-orange" id="pc2-btn">Kup za 50 zł →</a>
+        <!-- FIX: było register.html — zmieniono na rejestracja.html -->
+        <a href="rejestracja.html?tier=2" class="pcard-btn pb-orange" id="pc2-btn">Kup za 50 zł →</a>
       </div>
     </div>
   </div>
@@ -463,9 +463,6 @@ footer a:hover{color:var(--text)}
   </div>
 </footer>
 
-<!-- ═══════════════════════════════════════════════
-     FIREBASE — licznik miejsc w czasie rzeczywistym
-     ═══════════════════════════════════════════════ -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
 import { getFirestore, doc, onSnapshot, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
@@ -486,17 +483,12 @@ const T2_MAX = 100;
 const app = initializeApp(firebaseConfig);
 const db  = getFirestore(app);
 
-// ── Utwórz dokument jeśli nie istnieje ──
 const slotsRef = doc(db, "kurs", "miejsca");
 getDoc(slotsRef).then(snap => {
-  if (!snap.exists()) {
-    setDoc(slotsRef, { t1_sold: 0, t2_sold: 0 });
-  }
+  if (!snap.exists()) setDoc(slotsRef, { t1_sold: 0, t2_sold: 0 });
 });
 
-// ── Helpers ──
 function removeSkel(el){ if(el) el.classList.remove('skel'); }
-
 function pctClass(left, max){
   const p = (left/max)*100;
   if(left===0) return 'cnt-gone';
@@ -518,22 +510,18 @@ function setClass(id, cls){
     .join(' ') + ' ' + cls;
 }
 
-// ── Główna funkcja aktualizacji UI ──
 function render(t1Sold, t2Sold){
   const T1_LEFT = T1_MAX - t1Sold;
   const T2_LEFT = T2_MAX - t2Sold;
   const t1pct   = (t1Sold / T1_MAX) * 100;
   const t2pct   = (t2Sold / T2_MAX) * 100;
-
   const at = T1_LEFT > 0 ? 1 : T2_LEFT > 0 ? 2 : 0;
 
-  // TICKER
   if(T1_LEFT > 0)
     setText('ticker-count', T1_LEFT + ' DARMOWYCH MIEJSC ZOSTAŁO');
   else
     setText('ticker-count', T2_LEFT > 0 ? T2_LEFT + ' MIEJSC (50 ZŁ)' : 'BRAK WOLNYCH MIEJSC');
 
-  // HERO note
   if(T1_LEFT > 0)
     setText('hero-total-left', T1_LEFT + ' darmowych');
   else if(T2_LEFT > 0)
@@ -541,23 +529,18 @@ function render(t1Sold, t2Sold){
   else
     setText('hero-total-left', 'brak');
 
-  // BARS
   setWidth('t1-bar', t1pct);
   setWidth('t2-bar', t2pct);
 
-  // TIER 1 counter
   if(T1_LEFT === 0){
     setText('t1-cnt', 'WYPRZEDANY'); setClass('t1-cnt','cnt-gone');
     setText('t1-sub', 'Darmowe miejsca wyczerpane');
   } else {
     setText('t1-cnt', T1_LEFT + ' z ' + T1_MAX + ' wolnych');
     setClass('t1-cnt', pctClass(T1_LEFT, T1_MAX));
-    setText('t1-sub', T1_LEFT <= 10
-      ? '⚡ Zostało tylko ' + T1_LEFT + ' darmowych!'
-      : 'Bezpłatny dostęp — całkowicie za darmo');
+    setText('t1-sub', T1_LEFT <= 10 ? '⚡ Zostało tylko ' + T1_LEFT + ' darmowych!' : 'Bezpłatny dostęp — całkowicie za darmo');
   }
 
-  // TIER 2 counter
   if(T2_LEFT === 0){
     setText('t2-cnt', 'WYPRZEDANY'); setClass('t2-cnt','cnt-gone');
     setText('t2-sub', 'Kurs wyprzedany');
@@ -570,15 +553,13 @@ function render(t1Sold, t2Sold){
     setText('t2-sub', T2_LEFT <= 20 ? '⚡ Zostało tylko ' + T2_LEFT + '!' : '');
   }
 
-  // SW BUTTON
   const swBtn = $('sw-cta');
   if(swBtn){
-    if(at===1){ swBtn.className='sw-btn'; swBtn.textContent='Dołącz za darmo →'; }
-    else if(at===2){ swBtn.className='sw-btn paid'; swBtn.textContent='Kup dostęp za 50 zł →'; }
+    if(at===1){ swBtn.className='sw-btn'; swBtn.textContent='Dołącz za darmo →'; swBtn.href='rejestracja.html'; }
+    else if(at===2){ swBtn.className='sw-btn paid'; swBtn.textContent='Kup dostęp za 50 zł →'; swBtn.href='rejestracja.html?tier=2'; }
     else { swBtn.className='sw-btn locked'; swBtn.textContent='🔒 Wszystkie miejsca zajęte'; }
   }
 
-  // PRICING BARS + counts
   setWidth('pc1-bar', t1pct);
   setWidth('pc2-bar', t2pct);
   setText('pc1-cnt', T1_LEFT===0 ? 'Wyprzedany' : t1Sold+'/'+T1_MAX+' zajętych');
@@ -595,7 +576,6 @@ function render(t1Sold, t2Sold){
     const b=$('pc2-btn'); b.textContent='Wyprzedany'; b.className='pcard-btn pb-locked';
   }
 
-  // URGENCY
   setText('us-t1-val', T1_LEFT===0 ? 'BRAK' : T1_LEFT+' wolnych');
   setText('us-t2-val', T2_LEFT===0 ? 'BRAK' : T1_LEFT>0 ? 'Niedostępny' : T2_LEFT+' wolnych');
   removeSkel($('us-t1-val')); removeSkel($('us-t2-val'));
@@ -604,37 +584,33 @@ function render(t1Sold, t2Sold){
   const p2=$('us-t2-pct');
   if(p2 && T1_LEFT===0){ p2.textContent=Math.round(t2pct)+'% zajęte'; p2.className='urg-pct '+pctUrgClass(t2pct); }
 
-  // URG CTA
   const urgBtn=$('urg-cta');
   if(urgBtn){
-    if(at===1){ urgBtn.textContent='Dołącz teraz — za darmo →'; urgBtn.style.background='var(--green)'; urgBtn.style.color='#000'; }
-    else if(at===2){ urgBtn.textContent='Kup teraz — 50 zł →'; urgBtn.style.background='var(--orange)'; urgBtn.style.color='#fff'; }
+    if(at===1){ urgBtn.textContent='Dołącz teraz — za darmo →'; urgBtn.style.background='var(--green)'; urgBtn.style.color='#000'; urgBtn.href='rejestracja.html'; }
+    else if(at===2){ urgBtn.textContent='Kup teraz — 50 zł →'; urgBtn.style.background='var(--orange)'; urgBtn.style.color='#fff'; urgBtn.href='rejestracja.html?tier=2'; }
     else { urgBtn.textContent='🔒 Wszystkie miejsca zajęte'; urgBtn.style.background='#333'; urgBtn.style.cursor='not-allowed'; urgBtn.style.pointerEvents='none'; }
   }
 
-  // CTA BOTTOM
   setText('cta-left', T1_LEFT > 0 ? T1_LEFT : T2_LEFT);
   const bp=$('bottom-price');
   if(bp){ bp.textContent = at===1?'darmo':at===2?'50 zł':'—'; }
   const bc=$('bottom-cta');
   if(bc){
-    if(at===1){ bc.style.background='var(--green)'; bc.style.color='#000'; }
-    else if(at===2){ bc.style.background='var(--orange)'; bc.style.color='#fff'; }
+    if(at===1){ bc.style.background='var(--green)'; bc.style.color='#000'; bc.href='rejestracja.html'; }
+    else if(at===2){ bc.style.background='var(--orange)'; bc.style.color='#fff'; bc.href='rejestracja.html?tier=2'; }
     else { bc.textContent='🔒 Wszystkie miejsca zajęte'; bc.style.background='#333'; bc.style.cursor='not-allowed'; bc.style.pointerEvents='none'; }
   }
 
-  // NAV + HERO btn
   const navCta=$('nav-cta');
   const heroCta=$('hero-cta');
   if(at===2){
-    if(navCta){ navCta.style.background='var(--orange)'; navCta.style.borderColor='var(--orange)'; navCta.style.color='#fff'; }
-    if(heroCta){ heroCta.textContent='Kup dostęp za 50 zł →'; heroCta.classList.add('orange'); }
+    if(navCta){ navCta.style.background='var(--orange)'; navCta.style.borderColor='var(--orange)'; navCta.style.color='#fff'; navCta.href='rejestracja.html?tier=2'; }
+    if(heroCta){ heroCta.textContent='Kup dostęp za 50 zł →'; heroCta.classList.add('orange'); heroCta.href='rejestracja.html?tier=2'; }
   } else if(at===0){
     if(heroCta){ heroCta.textContent='🔒 Brak miejsc'; heroCta.style.background='#333'; heroCta.style.color='var(--muted2)'; heroCta.style.cursor='not-allowed'; heroCta.style.pointerEvents='none'; }
   }
 }
 
-// ── onSnapshot — aktualizacja w czasie rzeczywistym ──
 onSnapshot(slotsRef, (snap) => {
   if(snap.exists()){
     const data = snap.data();
@@ -646,7 +622,6 @@ onSnapshot(slotsRef, (snap) => {
 </script>
 
 <script>
-// Accordion modułów (nie-module, bez Firebase)
 function toggleModule(head){
   const body = head.nextElementSibling;
   const tog  = head.querySelector('.module-toggle');
