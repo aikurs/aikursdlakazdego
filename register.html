@@ -150,19 +150,11 @@ h2{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:.06em;mar
 if (!firebase.apps.length) firebase.initializeApp(FIREBASE_CONFIG)
 const db = firebase.firestore()
 
-// ============================================
-// TWÓJ STRIPE PAYMENT LINK dla Tier 2 (50 zł)
-// Wygeneruj go w Stripe Dashboard:
-// Products → Payment Links → Create
-// Ustaw cenę 50 zł, jednorazowa płatność
-// Dodaj parametr ?prefilled_email={EMAIL} do URL
-// ============================================
-const STRIPE_PAYMENT_LINK = 'WKLEJ_TUTAJ_LINK_STRIPE_PAYMENT_LINK'
+const STRIPE_PAYMENT_LINK = 'https://buy.stripe.com/eVq8wI1Ca5HhflBg6MbV600'
 
 let stripeCheckoutUrl = null
 let createdUserUid = null
 
-// Wskaźnik kroków
 function setDot(n) {
   document.querySelectorAll('.step-dot').forEach((d,i) => {
     d.classList.toggle('done', i < n)
@@ -181,9 +173,6 @@ function showAlert(id, msg) {
 }
 function hideAlert(id) { document.getElementById(id).classList.remove('show') }
 
-// ============================================
-// KROK 1 → 2: Walidacja danych
-// ============================================
 function goStep2() {
   const name  = document.getElementById('reg-name').value.trim()
   const email = document.getElementById('reg-email').value.trim()
@@ -197,9 +186,6 @@ function goStep2() {
   showStep(2)
 }
 
-// ============================================
-// KROK 2 → 3: Utwórz konto + przekieruj do Stripe
-// ============================================
 async function goStep3() {
   const name  = document.getElementById('reg-name').value.trim()
   const email = document.getElementById('reg-email').value.trim()
@@ -216,13 +202,11 @@ async function goStep3() {
   document.getElementById('step3-sub').textContent = 'Zakładam konto i przygotowuję płatność...'
 
   try {
-    // 1. Utwórz konto Firebase Auth
     let userCred
     try {
       userCred = await firebase.auth().createUserWithEmailAndPassword(email, pass)
     } catch (e) {
       if (e.code === 'auth/email-already-in-use') {
-        // Email już istnieje — zaloguj zamiast rejestrować
         userCred = await firebase.auth().signInWithEmailAndPassword(email, pass)
       } else {
         throw e
@@ -233,25 +217,22 @@ async function goStep3() {
     createdUserUid = user.uid
     await user.updateProfile({ displayName: name })
 
-    // 2. Zapisz do Firestore z paid: FALSE — czeka na płatność
     await db.collection('uczniowie').doc(user.uid).set({
       email,
       name,
       tier: 2,
-      paid: false,           // ← KLUCZOWE: false dopóki Stripe nie potwierdzi
-      approved: false,       // ← Zablokowany do czasu płatności
+      paid: false,
+      approved: false,
       completed: [],
       streak: 0,
       createdAt: firebase.firestore.FieldValue.serverTimestamp()
     }, { merge: true })
 
-    // 3. Przygotuj link Stripe z prefilled emailem
     stripeCheckoutUrl = STRIPE_PAYMENT_LINK +
       (STRIPE_PAYMENT_LINK.includes('?') ? '&' : '?') +
       'prefilled_email=' + encodeURIComponent(email) +
-      '&client_reference_id=' + user.uid  // ← uid przekazany do Stripe dla webhooka
+      '&client_reference_id=' + user.uid
 
-    // 4. Pokaż przycisk płatności
     document.getElementById('step3-icon').textContent = '💳'
     document.getElementById('step3-title').textContent = 'KONTO GOTOWE!'
     document.getElementById('step3-sub').textContent =
@@ -265,7 +246,6 @@ async function goStep3() {
       'auth/weak-password':        'Hasło jest za słabe. Użyj min. 8 znaków.',
       'auth/wrong-password':       'Nieprawidłowe hasło dla istniejącego konta.',
     }
-    // Wróć do kroku 2 z błędem
     showStep(2)
     showAlert('s2-alert', msgs[e.code] || 'Błąd: ' + e.message)
     btn.disabled = false
@@ -273,22 +253,14 @@ async function goStep3() {
   }
 }
 
-// ============================================
-// PRZEKIERUJ DO STRIPE
-// ============================================
 function redirectToStripe() {
   if (!stripeCheckoutUrl) {
     alert('Błąd — brak linku płatności. Odśwież stronę.')
     return
   }
-  // Otwórz Stripe w tym samym oknie
   window.location.href = stripeCheckoutUrl
 }
 
-// ============================================
-// SPRAWDŹ CZY WRÓCIŁ PO PŁATNOŚCI
-// Stripe przekierowuje z ?payment=success lub ?payment=cancel
-// ============================================
 window.addEventListener('load', async () => {
   const params = new URLSearchParams(window.location.search)
 
@@ -298,10 +270,8 @@ window.addEventListener('load', async () => {
     document.getElementById('step3-title').textContent = 'WERYFIKUJĘ PŁATNOŚĆ...'
     document.getElementById('step3-sub').textContent = 'Sprawdzam potwierdzenie płatności od Stripe...'
 
-    // Poczekaj chwilę na webhook
     await new Promise(r => setTimeout(r, 3000))
 
-    // Sprawdź w Firestore czy paid === true
     const user = firebase.auth().currentUser
     if (user) {
       const doc = await db.collection('uczniowie').doc(user.uid).get()
@@ -311,7 +281,6 @@ window.addEventListener('load', async () => {
         document.getElementById('step3-sub').textContent = 'Płatność potwierdzona! Twój dostęp do kursu jest aktywny. Możesz się teraz zalogować.'
         document.getElementById('step3-success').style.display = 'block'
       } else {
-        // Webhook może jeszcze nie dotarł
         document.getElementById('step3-icon').textContent = '⏳'
         document.getElementById('step3-title').textContent = 'PRZETWARZAMY...'
         document.getElementById('step3-sub').textContent = 'Płatność jest przetwarzana. Może to zająć kilka minut. Sprawdź e-mail lub spróbuj zalogować się za chwilę.'
@@ -329,7 +298,6 @@ window.addEventListener('load', async () => {
     document.getElementById('step3-title').textContent = 'PŁATNOŚĆ ANULOWANA'
     document.getElementById('step3-sub').textContent = 'Anulowałeś płatność. Twoje konto jest założone — możesz wrócić i zapłacić w dowolnym momencie.'
     document.getElementById('step3-btn-wrap').style.display = 'block'
-    // Odtwórz link jeśli jest zalogowany
     const user = firebase.auth().currentUser
     if (user) {
       stripeCheckoutUrl = STRIPE_PAYMENT_LINK +
