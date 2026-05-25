@@ -3,398 +3,144 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Rejestracja — AI Kurs dla każdego</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<title>Rejestracja — AI DLA KAŻDEGO 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 :root{
-  --green:#1d9e75;--red:#e24b4a;--blue:#378add;--yellow:#f5c842;
-  --bg:#07111f;--surface:#0d1d30;--surface2:#112035;
-  --border:rgba(255,255,255,0.07);--white:#fff;--muted:rgba(255,255,255,0.4);
-  --radius:10px;--radius-lg:16px;
+  --bg:#080809;--s1:#0e0e10;--s2:#131315;--s3:#1a1a1e;
+  --border:#232328;--border2:#2e2e36;--text:#ededf0;
+  --muted:#68687a;--muted2:#45454f;
+  --orange:#ff5c2b;--orange2:#ff8457;
+  --green:#00d68f;--green2:#00f5a0;
+  --red:#ff3b3b;--gold:#f5c518;
 }
-html{scroll-behavior:smooth}
-body{
-  background:var(--bg);color:var(--white);
-  font-family:'DM Sans',sans-serif;min-height:100vh;
-  display:flex;flex-direction:column;
-}
-
-/* BG GRADIENT */
-body::before{
-  content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
-  background:
-    radial-gradient(ellipse 70% 50% at 10% 0%, rgba(29,158,117,0.1) 0%, transparent 60%),
-    radial-gradient(ellipse 50% 40% at 90% 80%, rgba(55,138,221,0.07) 0%, transparent 60%);
-}
-
-/* NOISE */
-body::after{
-  content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.025;
-  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-}
-
-/* NAV */
-nav{
-  position:relative;z-index:10;
-  display:flex;align-items:center;justify-content:space-between;
-  padding:1.25rem 2rem;border-bottom:1px solid var(--border);
-}
-.logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.1rem;color:var(--white);text-decoration:none}
-.logo span{color:var(--green)}
-.nav-link{font-size:.84rem;color:var(--muted);text-decoration:none;transition:color .2s}
-.nav-link:hover{color:var(--white)}
-
-/* MAIN */
-main{
-  position:relative;z-index:1;
-  flex:1;display:flex;align-items:flex-start;justify-content:center;
-  padding:3rem 1rem 4rem;gap:3rem;max-width:1060px;margin:0 auto;width:100%;
-}
-
-/* LEFT — INFO */
-.info-col{flex:1;max-width:440px;padding-top:.5rem}
-.info-tag{
-  display:inline-flex;align-items:center;gap:.5rem;
-  font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.1em;
-  color:var(--green);background:rgba(29,158,117,0.1);border:1px solid rgba(29,158,117,0.2);
-  border-radius:50px;padding:.3rem .85rem;margin-bottom:1.5rem;
-}
-.info-tag .dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 1.6s infinite}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
-
-.info-col h1{
-  font-family:'Syne',sans-serif;font-weight:800;font-size:2.2rem;line-height:1.2;
-  margin-bottom:1rem;
-}
-.info-col h1 span{color:var(--green)}
-.info-col p{font-size:.92rem;color:var(--muted);line-height:1.7;margin-bottom:2rem}
-
-.what-you-get{display:grid;gap:.65rem;margin-bottom:2rem}
-.get-item{
-  display:flex;align-items:center;gap:.75rem;
-  font-size:.87rem;color:rgba(255,255,255,0.8);
-  padding:.65rem .9rem;
-  background:rgba(255,255,255,0.02);border:1px solid var(--border);
-  border-radius:var(--radius);transition:border-color .2s;
-}
-.get-item:hover{border-color:rgba(29,158,117,0.25)}
-.get-icon{font-size:1.1rem;flex-shrink:0;width:28px;text-align:center}
-
-.price-box{
-  background:rgba(29,158,117,0.06);
-  border:1px solid rgba(29,158,117,0.2);
-  border-radius:var(--radius-lg);
-  padding:1.25rem 1.4rem;
-  display:flex;align-items:center;justify-content:space-between;gap:1rem;
-}
-.price-amount{font-family:'Syne',sans-serif;font-weight:800;font-size:2rem;color:var(--green)}
-.price-label{font-size:.75rem;color:var(--muted);margin-top:.2rem}
-.price-note{font-size:.78rem;color:var(--muted);text-align:right;line-height:1.5}
-.price-note strong{color:var(--white)}
-
-/* RIGHT — FORM */
-.form-col{width:420px;flex-shrink:0}
-
-.reg-card{
-  background:var(--surface);border:1px solid var(--border);
-  border-radius:var(--radius-lg);padding:2rem;
-}
-
-.form-title{
-  font-family:'Syne',sans-serif;font-weight:700;font-size:1.1rem;
-  margin-bottom:.4rem;
-}
-.form-sub{font-size:.82rem;color:var(--muted);margin-bottom:1.75rem;line-height:1.5}
-
-.input-group{margin-bottom:1rem}
-.input-group label{display:block;font-size:.78rem;color:var(--muted);margin-bottom:.4rem;font-weight:500}
-.input{
-  width:100%;background:var(--surface2);border:1px solid var(--border);
-  border-radius:var(--radius);padding:.72rem 1rem;
-  color:var(--white);font-family:'DM Sans',sans-serif;font-size:.9rem;
-  outline:none;transition:border-color .2s;
-}
-.input:focus{border-color:rgba(29,158,117,0.5);background:rgba(17,32,53,0.8)}
-.input::placeholder{color:rgba(255,255,255,0.2)}
-.input.error{border-color:rgba(226,75,74,0.5)}
-
-.form-row{display:grid;grid-template-columns:1fr 1fr;gap:.85rem}
-
-.terms-row{
-  display:flex;align-items:flex-start;gap:.7rem;
-  font-size:.8rem;color:var(--muted);margin-bottom:1.4rem;line-height:1.5;
-}
-.terms-row input[type=checkbox]{
-  margin-top:.1rem;flex-shrink:0;
-  width:16px;height:16px;accent-color:var(--green);cursor:pointer;
-}
-.terms-row a{color:var(--green);text-decoration:none}
-.terms-row a:hover{text-decoration:underline}
-
-.btn{
-  display:inline-flex;align-items:center;justify-content:center;gap:.5rem;
-  padding:.78rem 1.4rem;border-radius:var(--radius);
-  font-family:'DM Sans',sans-serif;font-size:.9rem;font-weight:600;
-  cursor:pointer;border:none;transition:all .2s;width:100%;
-}
-.btn-green{background:var(--green);color:#fff}
-.btn-green:hover:not(:disabled){background:#1ab882;transform:translateY(-1px)}
-.btn-green:disabled{opacity:.45;cursor:not-allowed;transform:none}
-
-.spinner{
-  display:inline-block;width:16px;height:16px;
-  border:2px solid rgba(255,255,255,0.3);border-top-color:#fff;
-  border-radius:50%;animation:spin .7s linear infinite;
-}
-@keyframes spin{to{transform:rotate(360deg)}}
-
-/* DIVIDER */
-.or-divider{
-  display:flex;align-items:center;gap:.75rem;
-  font-size:.73rem;color:var(--muted);margin:1.2rem 0;
-}
-.or-divider::before,.or-divider::after{
-  content:'';flex:1;height:1px;background:var(--border);
-}
-
-/* STEPS */
-.steps{display:grid;gap:.5rem;margin-bottom:1.6rem}
-.step{
-  display:flex;align-items:center;gap:.7rem;
-  font-size:.81rem;color:rgba(255,255,255,0.65);
-}
-.step-num{
-  width:22px;height:22px;border-radius:50%;
-  background:rgba(29,158,117,0.15);border:1px solid rgba(29,158,117,0.3);
-  color:var(--green);font-size:.68rem;font-weight:700;
-  display:flex;align-items:center;justify-content:center;flex-shrink:0;
-}
-
-/* FIELD ERROR */
-.field-err{font-size:.74rem;color:var(--red);margin-top:.3rem;display:none}
-.field-err.show{display:block}
-
-/* ALERT */
-.alert{border-radius:var(--radius);padding:.85rem 1rem;font-size:.85rem;margin-bottom:1rem;display:none;line-height:1.5}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:1.5rem;position:relative}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at 30% 20%,rgba(255,92,43,0.05) 0%,transparent 55%);pointer-events:none}
+.card{background:var(--s2);border:1px solid var(--border);border-radius:14px;padding:2.5rem 2.25rem;max-width:460px;width:100%;position:relative;overflow:hidden;z-index:1}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--orange),transparent 60%)}
+.logo-wrap{text-align:center;margin-bottom:2rem}
+.logo-main{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:.1em;color:var(--text);text-decoration:none}
+.logo-main span{color:var(--green)}
+.logo-sub{font-size:.76rem;color:var(--muted);margin-top:.25rem}
+h2{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:.06em;margin-bottom:.4rem}
+.step{display:none}.step.active{display:block}
+.field{margin-bottom:1rem}
+.field label{display:block;font-size:.72rem;color:var(--muted);margin-bottom:.4rem;font-weight:600;letter-spacing:.05em;text-transform:uppercase}
+.input{width:100%;background:var(--s3);border:1px solid var(--border);border-radius:7px;padding:.75rem 1rem;color:var(--text);font-family:'DM Sans',sans-serif;font-size:.9rem;outline:none;transition:border-color .2s}
+.input:focus{border-color:rgba(255,92,43,.5)}
+.input::placeholder{color:var(--muted2)}
+.btn{display:flex;align-items:center;justify-content:center;gap:.5rem;width:100%;padding:.9rem;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:.95rem;font-weight:700;cursor:pointer;border:none;transition:all .2s;letter-spacing:.01em}
+.btn-orange{background:var(--orange);color:#fff}
+.btn-orange:hover:not(:disabled){background:var(--orange2);box-shadow:0 6px 24px rgba(255,92,43,.3);transform:translateY(-1px)}
+.btn-outline{background:transparent;color:var(--muted);border:1px solid var(--border2)}
+.btn-outline:hover{border-color:var(--text);color:var(--text)}
+.btn:disabled{opacity:.5;cursor:not-allowed;transform:none !important}
+.alert{padding:.7rem .9rem;border-radius:7px;font-size:.82rem;margin-bottom:1rem;display:none;line-height:1.5;border:1px solid}
 .alert.show{display:block}
-.alert-error{background:rgba(226,75,74,0.1);border:1px solid rgba(226,75,74,0.3);color:#ff8a89}
-.alert-success{background:rgba(29,158,117,0.08);border:1px solid rgba(29,158,117,0.25);color:#5dcaa5}
-
-/* SUCCESS STATE */
-.success-view{display:none;text-align:center;padding:.5rem 0}
-.success-view.show{display:block}
-.success-icon{font-size:3.5rem;margin-bottom:1rem;display:block}
-.success-title{font-family:'Syne',sans-serif;font-weight:800;font-size:1.3rem;margin-bottom:.6rem}
-.success-desc{font-size:.86rem;color:var(--muted);line-height:1.7;margin-bottom:1.5rem}
-
-/* PRZELEW BOX */
-.przelew-box{
-  background:rgba(29,158,117,0.05);border:1px solid rgba(29,158,117,0.2);
-  border-radius:var(--radius);padding:1rem 1.1rem;text-align:left;margin-bottom:1rem;
-}
-.przelew-row{display:flex;justify-content:space-between;align-items:flex-start;gap:.5rem;margin-bottom:.5rem}
-.przelew-row:last-child{margin-bottom:0}
-.przelew-label{font-size:.73rem;color:var(--muted);flex-shrink:0}
-.przelew-val{font-size:.83rem;font-weight:600;text-align:right;word-break:break-all}
-.przelew-val.mono{font-family:monospace;color:#00d68f;font-size:.88rem;letter-spacing:.03em}
-
-.copy-btn{
-  background:transparent;border:1px solid var(--border);
-  border-radius:6px;padding:.25rem .6rem;font-size:.7rem;
-  color:var(--muted);cursor:pointer;transition:all .2s;
-  font-family:'DM Sans',sans-serif;margin-left:.5rem;white-space:nowrap;
-}
-.copy-btn:hover{border-color:rgba(29,158,117,0.4);color:var(--green)}
-
-.info-note{
-  font-size:.78rem;color:var(--muted);
-  background:var(--surface2);border:1px solid var(--border);
-  border-radius:var(--radius);padding:.75rem .9rem;line-height:1.6;
-}
-
-/* LOGIN LINK */
-.login-link{text-align:center;font-size:.82rem;color:var(--muted);margin-top:1.2rem}
-.login-link a{color:var(--green);text-decoration:none;font-weight:500}
-.login-link a:hover{text-decoration:underline}
-
-/* TOAST */
-#toast{
-  position:fixed;bottom:1.5rem;right:1.5rem;z-index:9999;
-  background:var(--surface);border:1px solid var(--border);
-  border-radius:var(--radius);padding:.75rem 1.1rem;
-  font-size:.85rem;opacity:0;pointer-events:none;
-  transition:opacity .3s;display:flex;align-items:center;gap:.5rem;
-}
-#toast.show{opacity:1}
-#toast.success{border-color:rgba(29,158,117,0.4);color:#5dcaa5}
-#toast.error{border-color:rgba(226,75,74,0.4);color:#ff8a89}
-
-/* FOOTER */
-footer{
-  position:relative;z-index:1;
-  text-align:center;padding:1.5rem;
-  font-size:.75rem;color:rgba(255,255,255,0.2);
-  border-top:1px solid var(--border);
-}
-
-@media(max-width:860px){
-  main{flex-direction:column;align-items:center;padding:2rem 1rem 3rem}
-  .info-col{max-width:100%;padding-top:0}
-  .form-col{width:100%;max-width:480px}
-  .info-col h1{font-size:1.7rem}
-}
-@media(max-width:480px){
-  nav{padding:1rem}
-  .form-row{grid-template-columns:1fr}
-  main{padding:1.5rem 1rem 3rem}
-}
+.alert-error{background:rgba(255,59,59,.08);border-color:rgba(255,59,59,.25);color:#ff8a8a}
+.alert-success{background:rgba(0,214,143,.08);border-color:rgba(0,214,143,.25);color:var(--green)}
+.price-box{background:var(--s3);border:1px solid rgba(255,92,43,.3);border-radius:10px;padding:1.25rem;margin-bottom:1.5rem;display:flex;align-items:center;justify-content:space-between}
+.price-left .label{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.price-left .name{font-size:.95rem;font-weight:600;margin-top:.2rem}
+.price-right{font-family:'Bebas Neue',sans-serif;font-size:2.5rem;color:var(--orange);letter-spacing:.04em}
+.features{list-style:none;margin-bottom:1.5rem;display:flex;flex-direction:column;gap:.5rem}
+.features li{font-size:.83rem;color:var(--muted);display:flex;align-items:center;gap:.5rem}
+.features li::before{content:'✓';color:var(--green);font-weight:700;flex-shrink:0}
+.steps-indicator{display:flex;gap:.5rem;margin-bottom:1.75rem}
+.step-dot{flex:1;height:3px;border-radius:3px;background:var(--border2);transition:background .3s}
+.step-dot.done{background:var(--orange)}
+.spinner{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,.25);border-top-color:#fff;border-radius:50%;animation:spin .6s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.card-foot{text-align:center;margin-top:1.25rem;font-size:.76rem;color:var(--muted2)}
+.card-foot a{color:var(--muted);text-decoration:none}
+.card-foot a:hover{color:var(--text)}
+.secure-note{display:flex;align-items:center;gap:.5rem;font-size:.74rem;color:var(--muted2);margin-top:.75rem;justify-content:center}
+.status-icon{font-size:3rem;text-align:center;margin-bottom:.75rem}
+.status-title{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:.06em;text-align:center;margin-bottom:.5rem}
+.status-sub{font-size:.85rem;color:var(--muted);line-height:1.65;text-align:center;margin-bottom:1.5rem}
 </style>
 </head>
 <body>
+<div class="card">
+  <div class="logo-wrap">
+    <a href="index.html" class="logo-main">AI DLA <span>KAŻDEGO</span></a>
+    <p class="logo-sub">Edycja 2026 · Rejestracja Tier 2</p>
+  </div>
 
-<div id="toast"></div>
+  <div class="steps-indicator">
+    <div class="step-dot" id="dot-1"></div>
+    <div class="step-dot" id="dot-2"></div>
+    <div class="step-dot" id="dot-3"></div>
+  </div>
 
-<nav>
-  <a href="index.html" class="logo">AI Kurs<span> dla każdego</span></a>
-  <a href="index.html" class="nav-link">Zaloguj się →</a>
-</nav>
-
-<main>
-  <!-- INFO COL -->
-  <div class="info-col">
-    <div class="info-tag">
-      <span class="dot"></span>Dostępnych miejsc: <span id="slots-left">ładowanie…</span>
+  <!-- KROK 1: Dane konta -->
+  <div class="step active" id="step-1">
+    <h2>UTWÓRZ KONTO</h2>
+    <p style="font-size:.84rem;color:var(--muted);margin-bottom:1.5rem;line-height:1.6">
+      Najpierw zakładasz konto. Dostęp do kursu zostanie aktywowany automatycznie po udanej płatności.
+    </p>
+    <div class="alert alert-error" id="s1-alert"></div>
+    <div class="field">
+      <label>Imię i nazwisko</label>
+      <input class="input" type="text" id="reg-name" placeholder="Jan Kowalski">
     </div>
-    <h1>Zacznij oszczędzać<br>z <span>AI</span> już dziś</h1>
-    <p>Praktyczny kurs online dla przedsiębiorców i freelancerów. Bez teorii — konkretne narzędzia, które od razu wdrożysz w swojej firmie.</p>
-
-    <div class="what-you-get">
-      <div class="get-item"><span class="get-icon">🎬</span>24 lekcje wideo w 6 modułach</div>
-      <div class="get-item"><span class="get-icon">📄</span>Materiały PDF i szablony promptów</div>
-      <div class="get-item"><span class="get-icon">📝</span>Zadania domowe + quizy</div>
-      <div class="get-item"><span class="get-icon">💬</span>Możliwość zadawania pytań</div>
-      <div class="get-item"><span class="get-icon">🏆</span>Certyfikat ukończenia kursu</div>
-      <div class="get-item"><span class="get-icon">♾️</span>Dożywotni dostęp do materiałów</div>
+    <div class="field">
+      <label>E-mail</label>
+      <input class="input" type="email" id="reg-email" placeholder="twoj@email.com">
     </div>
+    <div class="field">
+      <label>Hasło (min. 8 znaków)</label>
+      <input class="input" type="password" id="reg-pass" placeholder="••••••••" minlength="8">
+    </div>
+    <button class="btn btn-orange" id="btn-s1" onclick="goStep2()">Dalej → Podsumowanie zamówienia</button>
+    <div class="card-foot">Masz już konto? <a href="login.html">Zaloguj się</a></div>
+  </div>
 
+  <!-- KROK 2: Podsumowanie i płatność -->
+  <div class="step" id="step-2">
+    <h2>ZAMÓWIENIE</h2>
     <div class="price-box">
-      <div>
-        <div class="price-amount">50 zł</div>
-        <div class="price-label">jednorazowa opłata · dostęp bezterminowy</div>
+      <div class="price-left">
+        <div class="label">Tier 2 · Standard</div>
+        <div class="name">AI DLA KAŻDEGO 2026</div>
       </div>
-      <div class="price-note">
-        Płatność <strong>przelewem</strong><br>
-        Dostęp po weryfikacji wpłaty
-      </div>
+      <div class="price-right">50 ZŁ</div>
+    </div>
+    <ul class="features">
+      <li>Pełny dostęp do 23 lekcji wideo</li>
+      <li>6 modułów + quizy + zadania domowe</li>
+      <li>Certyfikat ukończenia kursu</li>
+      <li>Materiały PDF do każdej lekcji</li>
+      <li>Dostęp bezterminowy</li>
+    </ul>
+    <div class="alert alert-error" id="s2-alert"></div>
+    <button class="btn btn-orange" id="btn-s2" onclick="goStep3()">
+      Utwórz konto i przejdź do płatności →
+    </button>
+    <div class="secure-note">🔒 Płatność obsługiwana przez Stripe · SSL</div>
+    <div class="card-foot" style="margin-top:.75rem">
+      <a href="#" onclick="document.getElementById('step-1').classList.add('active');document.getElementById('step-2').classList.remove('active');return false">← Wróć</a>
     </div>
   </div>
 
-  <!-- FORM COL -->
-  <div class="form-col">
-    <div class="reg-card">
-
-      <!-- FORMULARZ -->
-      <div id="form-view">
-        <div class="form-title">Stwórz konto</div>
-        <div class="form-sub">Wypełnij formularz, a my wyślemy Ci dane do przelewu.</div>
-
-        <div class="steps">
-          <div class="step"><span class="step-num">1</span>Wypełnij formularz i kliknij "Zarejestruj"</div>
-          <div class="step"><span class="step-num">2</span>Wykonaj przelew 50 zł na podane konto</div>
-          <div class="step"><span class="step-num">3</span>Po weryfikacji otrzymasz dostęp do kursu</div>
-        </div>
-
-        <div id="form-alert" class="alert alert-error"></div>
-
-        <div class="form-row">
-          <div class="input-group">
-            <label>Imię</label>
-            <input class="input" type="text" id="reg-fname" placeholder="Jan" autocomplete="given-name">
-            <div class="field-err" id="err-fname">Podaj imię</div>
-          </div>
-          <div class="input-group">
-            <label>Nazwisko</label>
-            <input class="input" type="text" id="reg-lname" placeholder="Kowalski" autocomplete="family-name">
-            <div class="field-err" id="err-lname">Podaj nazwisko</div>
-          </div>
-        </div>
-
-        <div class="input-group">
-          <label>Adres e-mail</label>
-          <input class="input" type="email" id="reg-email" placeholder="jan@firma.pl" autocomplete="email">
-          <div class="field-err" id="err-email">Podaj prawidłowy e-mail</div>
-        </div>
-
-        <div class="input-group">
-          <label>Hasło do konta</label>
-          <input class="input" type="password" id="reg-pass" placeholder="min. 8 znaków" autocomplete="new-password">
-          <div class="field-err" id="err-pass">Hasło musi mieć min. 8 znaków</div>
-        </div>
-
-        <div class="terms-row">
-          <input type="checkbox" id="reg-terms">
-          <label for="reg-terms">
-            Akceptuję <a href="#" onclick="return false">regulamin</a> i
-            <a href="#" onclick="return false">politykę prywatności</a>.
-            Rozumiem, że dostęp zostanie przyznany po zaksięgowaniu wpłaty.
-          </label>
-        </div>
-
-        <button class="btn btn-green" id="btn-register" onclick="doRegister()">
-          Zarejestruj się i przejdź do płatności →
-        </button>
-
-        <div class="or-divider">lub</div>
-        <div class="login-link">Masz już konto? <a href="index.html">Zaloguj się</a></div>
-      </div>
-
-      <!-- SUCCESS VIEW -->
-      <div class="success-view" id="success-view">
-        <span class="success-icon">✅</span>
-        <div class="success-title">Konto utworzone!</div>
-        <div class="success-desc">
-          Twoje konto zostało zarejestrowane. Teraz wykonaj przelew — dostęp do kursu aktywujemy ręcznie po weryfikacji wpłaty (zwykle w ciągu 24h).
-        </div>
-
-        <div class="przelew-box">
-          <div style="font-size:.7rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.75rem">
-            📋 Dane do przelewu
-          </div>
-          <div class="przelew-row">
-            <span class="przelew-label">Odbiorca</span>
-            <span class="przelew-val">AI Kurs dla każdego</span>
-          </div>
-          <div class="przelew-row">
-            <span class="przelew-label">Numer konta</span>
-            <span class="przelew-val mono" id="success-konto">
-              65 1160 2202 0000 0005 7582 4614
-              <button class="copy-btn" onclick="copyText('65 1160 2202 0000 0005 7582 4614')">kopiuj</button>
-            </span>
-          </div>
-          <div class="przelew-row">
-            <span class="przelew-label">Kwota</span>
-            <span class="przelew-val" style="color:var(--green);font-size:.95rem;font-weight:700">50,00 zł</span>
-          </div>
-          <div class="przelew-row">
-            <span class="przelew-label">Tytuł przelewu</span>
-            <span class="przelew-val mono" id="success-tytul">AI kurs - </span>
-          </div>
-        </div>
-
-        <div class="info-note">
-          ⏳ <strong>Co dalej?</strong> Po zaksięgowaniu wpłaty administrator weryfikuje przelew i aktywuje Twój dostęp — zwykle w ciągu 24 godzin. Otrzymasz możliwość zalogowania się na <a href="index.html" style="color:var(--green)">stronie głównej</a>.
-        </div>
-      </div>
-
+  <!-- KROK 3: Oczekiwanie / sukces -->
+  <div class="step" id="step-3">
+    <div class="status-icon" id="step3-icon">⏳</div>
+    <div class="status-title" id="step3-title">PRZETWARZAM...</div>
+    <p class="status-sub" id="step3-sub">Tworzę konto i przygotowuję płatność Stripe...</p>
+    <div id="step3-btn-wrap" style="display:none">
+      <button class="btn btn-orange" id="btn-pay" onclick="redirectToStripe()">
+        Zapłać 50 zł przez Stripe →
+      </button>
+      <div class="secure-note" style="margin-top:.75rem">🔒 Bezpieczna płatność · Stripe · BLIK · Karta</div>
     </div>
-
-    <div class="login-link" id="footer-login-link">Masz już konto? <a href="index.html">Zaloguj się</a></div>
+    <div id="step3-success" style="display:none">
+      <a href="login.html" class="btn btn-outline" style="margin-top:.5rem">Zaloguj się do kursu →</a>
+    </div>
   </div>
-</main>
 
-<footer>© 2025 AI Kurs dla każdego · Wszelkie prawa zastrzeżone</footer>
+</div>
 
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
@@ -403,181 +149,195 @@ footer{
 <script>
 if (!firebase.apps.length) firebase.initializeApp(FIREBASE_CONFIG)
 const db = firebase.firestore()
-const auth = firebase.auth()
 
-// ── Liczba miejsc ─────────────────────────────────────────────
-// Zmień MAX_SLOTS na docelową liczbę miejsc w kursie
-const MAX_SLOTS = 50
+// ============================================
+// TWÓJ STRIPE PAYMENT LINK dla Tier 2 (50 zł)
+// Wygeneruj go w Stripe Dashboard:
+// Products → Payment Links → Create
+// Ustaw cenę 50 zł, jednorazowa płatność
+// Dodaj parametr ?prefilled_email={EMAIL} do URL
+// ============================================
+const STRIPE_PAYMENT_LINK = 'WKLEJ_TUTAJ_LINK_STRIPE_PAYMENT_LINK'
 
-async function loadSlotsLeft() {
-  try {
-    // Liczymy tylko aktywnych uczniów (status === 'active')
-    // Pending NIE zajmuje miejsca — zgodnie z wymaganiem
-    const snap = await db.collection('uczniowie').where('status', '==', 'active').get()
-    const taken = snap.size
-    const left = Math.max(0, MAX_SLOTS - taken)
-    const el = document.getElementById('slots-left')
-    if (el) el.textContent = left > 0 ? left + ' wolnych' : 'BRAK MIEJSC'
-    return left
-  } catch(e) {
-    const el = document.getElementById('slots-left')
-    if (el) el.textContent = 'sprawdź wkrótce'
-    return 999 // fallback — nie blokuj rejestracji przy błędzie odczytu
-  }
-}
-loadSlotsLeft()
+let stripeCheckoutUrl = null
+let createdUserUid = null
 
-// ── Walidacja ────────────────────────────────────────────────
-function showErr(id, show) {
-  const el = document.getElementById('err-' + id)
-  const inp = document.getElementById('reg-' + id)
-  if (!el || !inp) return
-  el.classList.toggle('show', show)
-  inp.classList.toggle('error', show)
-}
-
-function validate() {
-  const fname = document.getElementById('reg-fname').value.trim()
-  const lname = document.getElementById('reg-lname').value.trim()
-  const email = document.getElementById('reg-email').value.trim()
-  const pass  = document.getElementById('reg-pass').value
-  const terms = document.getElementById('reg-terms').checked
-  let ok = true
-
-  showErr('fname', !fname); if (!fname) ok = false
-  showErr('lname', !lname); if (!lname) ok = false
-  showErr('email', !email || !email.includes('@')); if (!email || !email.includes('@')) ok = false
-  showErr('pass',  pass.length < 8); if (pass.length < 8) ok = false
-
-  if (!terms) {
-    showAlert('Zaakceptuj regulamin i politykę prywatności.', 'error')
-    ok = false
-  }
-  return ok
-}
-
-// ── Alert w formularzu ───────────────────────────────────────
-function showAlert(msg, type='error') {
-  const el = document.getElementById('form-alert')
-  el.textContent = msg
-  el.className = 'alert alert-' + type + ' show'
-}
-function hideAlert() {
-  document.getElementById('form-alert').classList.remove('show')
-}
-
-// ── Toast ─────────────────────────────────────────────────────
-function toast(msg, type='success') {
-  const t = document.getElementById('toast')
-  t.textContent = msg
-  t.className = 'show ' + type
-  clearTimeout(t._t)
-  t._t = setTimeout(() => t.classList.remove('show'), 3500)
-}
-
-// ── Rejestracja ──────────────────────────────────────────────
-async function doRegister() {
-  hideAlert()
-  if (!validate()) return
-
-  const fname = document.getElementById('reg-fname').value.trim()
-  const lname = document.getElementById('reg-lname').value.trim()
-  const email = document.getElementById('reg-email').value.trim()
-  const pass  = document.getElementById('reg-pass').value
-  const name  = fname + ' ' + lname
-
-  const btn = document.getElementById('btn-register')
-  btn.disabled = true
-  btn.innerHTML = '<span class="spinner"></span> Tworzę konto…'
-
-  try {
-    // Sprawdź czy są jeszcze wolne miejsca (active users)
-    const slotsLeft = await loadSlotsLeft()
-    // Nie blokujemy przy slotsLeft <= 0 — to decyzja biznesowa admina;
-    // można odblokować poniższy blok jeśli chcesz twarde ograniczenie:
-    // if (slotsLeft <= 0) {
-    //   showAlert('Brak wolnych miejsc. Skontaktuj się z nami.')
-    //   btn.disabled = false; btn.innerHTML = 'Zarejestruj się i przejdź do płatności →'
-    //   return
-    // }
-
-    // Utwórz konto w Firebase Auth
-    const cred = await auth.createUserWithEmailAndPassword(email, pass)
-    await cred.user.updateProfile({ displayName: name })
-
-    // Zapisz w Firestore ze statusem 'pending' — NIE zajmuje miejsca w t2_sold
-    // dopóki admin nie zmieni status na 'active'
-    await db.collection('uczniowie').doc(cred.user.uid).set({
-      name,
-      email,
-      status: 'pending',       // ← klucz: nie 'active', więc nie liczy się do miejsc
-      completed: [],
-      streak: 0,
-      przelew: {
-        tytul: 'AI kurs - ' + email,
-        kwota: '50,00 zł',
-        konto: '65 1160 2202 0000 0005 7582 4614',
-      },
-      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-    })
-
-    // Wyloguj od razu — user nie ma dostępu dopóki admin nie zatwierdzi
-    await auth.signOut()
-
-    // Pokaż dane do przelewu
-    showSuccess(email)
-
-  } catch(e) {
-    let msg = e.message
-    if (e.code === 'auth/email-already-in-use') msg = 'Ten adres e-mail jest już zarejestrowany. Zaloguj się lub użyj innego.'
-    if (e.code === 'auth/weak-password') msg = 'Hasło jest za słabe. Użyj min. 8 znaków.'
-    if (e.code === 'auth/invalid-email') msg = 'Nieprawidłowy adres e-mail.'
-    showAlert(msg)
-    btn.disabled = false
-    btn.innerHTML = 'Zarejestruj się i przejdź do płatności →'
-  }
-}
-
-// ── Pokaż ekran sukcesu ──────────────────────────────────────
-function showSuccess(email) {
-  document.getElementById('form-view').style.display = 'none'
-  document.getElementById('footer-login-link').style.display = 'none'
-  const sv = document.getElementById('success-view')
-  sv.classList.add('show')
-
-  // Wstaw email w tytuł przelewu
-  const tytulEl = document.getElementById('success-tytul')
-  const tytul = 'AI kurs - ' + email
-  tytulEl.innerHTML = `<span>${tytul}</span> <button class="copy-btn" onclick="copyText('${tytul}')">kopiuj</button>`
-}
-
-// ── Kopiuj do schowka ─────────────────────────────────────────
-function copyText(text) {
-  navigator.clipboard.writeText(text).then(() => {
-    toast('Skopiowano do schowka ✓', 'success')
-  }).catch(() => {
-    // fallback dla starych przeglądarek
-    const ta = document.createElement('textarea')
-    ta.value = text
-    document.body.appendChild(ta)
-    ta.select()
-    document.execCommand('copy')
-    document.body.removeChild(ta)
-    toast('Skopiowano ✓', 'success')
+// Wskaźnik kroków
+function setDot(n) {
+  document.querySelectorAll('.step-dot').forEach((d,i) => {
+    d.classList.toggle('done', i < n)
   })
 }
 
-// ── Enter submit ───────────────────────────────────────────────
-document.addEventListener('keydown', e => {
-  if (e.key === 'Enter' && document.getElementById('form-view').style.display !== 'none') {
-    doRegister()
-  }
-})
+function showStep(n) {
+  document.querySelectorAll('.step').forEach(s => s.classList.remove('active'))
+  document.getElementById('step-' + n).classList.add('active')
+  setDot(n - 1)
+}
 
-// ── Wyczyść error przy wpisywaniu ─────────────────────────────
-;['fname','lname','email','pass'].forEach(id => {
-  const inp = document.getElementById('reg-' + id)
-  if (inp) inp.addEventListener('input', () => { showErr(id, false); hideAlert() })
+function showAlert(id, msg) {
+  const el = document.getElementById(id)
+  el.innerHTML = msg; el.classList.add('show')
+}
+function hideAlert(id) { document.getElementById(id).classList.remove('show') }
+
+// ============================================
+// KROK 1 → 2: Walidacja danych
+// ============================================
+function goStep2() {
+  const name  = document.getElementById('reg-name').value.trim()
+  const email = document.getElementById('reg-email').value.trim()
+  const pass  = document.getElementById('reg-pass').value
+  hideAlert('s1-alert')
+
+  if (!name)  { showAlert('s1-alert', 'Podaj imię i nazwisko.'); return }
+  if (!email || !email.includes('@')) { showAlert('s1-alert', 'Podaj prawidłowy e-mail.'); return }
+  if (pass.length < 8) { showAlert('s1-alert', 'Hasło musi mieć min. 8 znaków.'); return }
+
+  showStep(2)
+}
+
+// ============================================
+// KROK 2 → 3: Utwórz konto + przekieruj do Stripe
+// ============================================
+async function goStep3() {
+  const name  = document.getElementById('reg-name').value.trim()
+  const email = document.getElementById('reg-email').value.trim()
+  const pass  = document.getElementById('reg-pass').value
+  const btn   = document.getElementById('btn-s2')
+
+  hideAlert('s2-alert')
+  btn.disabled = true
+  btn.innerHTML = '<span class="spinner"></span> Tworzę konto...'
+
+  showStep(3)
+  document.getElementById('step3-icon').textContent = '⏳'
+  document.getElementById('step3-title').textContent = 'TWORZĘ KONTO...'
+  document.getElementById('step3-sub').textContent = 'Zakładam konto i przygotowuję płatność...'
+
+  try {
+    // 1. Utwórz konto Firebase Auth
+    let userCred
+    try {
+      userCred = await firebase.auth().createUserWithEmailAndPassword(email, pass)
+    } catch (e) {
+      if (e.code === 'auth/email-already-in-use') {
+        // Email już istnieje — zaloguj zamiast rejestrować
+        userCred = await firebase.auth().signInWithEmailAndPassword(email, pass)
+      } else {
+        throw e
+      }
+    }
+
+    const user = userCred.user
+    createdUserUid = user.uid
+    await user.updateProfile({ displayName: name })
+
+    // 2. Zapisz do Firestore z paid: FALSE — czeka na płatność
+    await db.collection('uczniowie').doc(user.uid).set({
+      email,
+      name,
+      tier: 2,
+      paid: false,           // ← KLUCZOWE: false dopóki Stripe nie potwierdzi
+      approved: false,       // ← Zablokowany do czasu płatności
+      completed: [],
+      streak: 0,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    }, { merge: true })
+
+    // 3. Przygotuj link Stripe z prefilled emailem
+    stripeCheckoutUrl = STRIPE_PAYMENT_LINK +
+      (STRIPE_PAYMENT_LINK.includes('?') ? '&' : '?') +
+      'prefilled_email=' + encodeURIComponent(email) +
+      '&client_reference_id=' + user.uid  // ← uid przekazany do Stripe dla webhooka
+
+    // 4. Pokaż przycisk płatności
+    document.getElementById('step3-icon').textContent = '💳'
+    document.getElementById('step3-title').textContent = 'KONTO GOTOWE!'
+    document.getElementById('step3-sub').textContent =
+      'Konto zostało utworzone. Teraz przejdź do bezpiecznej płatności Stripe. Dostęp do kursu aktywuje się automatycznie po potwierdzeniu płatności.'
+    document.getElementById('step3-btn-wrap').style.display = 'block'
+
+  } catch (e) {
+    const msgs = {
+      'auth/email-already-in-use': 'Ten e-mail jest już zarejestrowany. Spróbuj się zalogować.',
+      'auth/invalid-email':        'Nieprawidłowy format e-maila.',
+      'auth/weak-password':        'Hasło jest za słabe. Użyj min. 8 znaków.',
+      'auth/wrong-password':       'Nieprawidłowe hasło dla istniejącego konta.',
+    }
+    // Wróć do kroku 2 z błędem
+    showStep(2)
+    showAlert('s2-alert', msgs[e.code] || 'Błąd: ' + e.message)
+    btn.disabled = false
+    btn.innerHTML = 'Utwórz konto i przejdź do płatności →'
+  }
+}
+
+// ============================================
+// PRZEKIERUJ DO STRIPE
+// ============================================
+function redirectToStripe() {
+  if (!stripeCheckoutUrl) {
+    alert('Błąd — brak linku płatności. Odśwież stronę.')
+    return
+  }
+  // Otwórz Stripe w tym samym oknie
+  window.location.href = stripeCheckoutUrl
+}
+
+// ============================================
+// SPRAWDŹ CZY WRÓCIŁ PO PŁATNOŚCI
+// Stripe przekierowuje z ?payment=success lub ?payment=cancel
+// ============================================
+window.addEventListener('load', async () => {
+  const params = new URLSearchParams(window.location.search)
+
+  if (params.get('payment') === 'success') {
+    showStep(3)
+    document.getElementById('step3-icon').textContent = '⏳'
+    document.getElementById('step3-title').textContent = 'WERYFIKUJĘ PŁATNOŚĆ...'
+    document.getElementById('step3-sub').textContent = 'Sprawdzam potwierdzenie płatności od Stripe...'
+
+    // Poczekaj chwilę na webhook
+    await new Promise(r => setTimeout(r, 3000))
+
+    // Sprawdź w Firestore czy paid === true
+    const user = firebase.auth().currentUser
+    if (user) {
+      const doc = await db.collection('uczniowie').doc(user.uid).get()
+      if (doc.exists && doc.data().paid === true) {
+        document.getElementById('step3-icon').textContent = '🎉'
+        document.getElementById('step3-title').textContent = 'DOSTĘP AKTYWOWANY!'
+        document.getElementById('step3-sub').textContent = 'Płatność potwierdzona! Twój dostęp do kursu jest aktywny. Możesz się teraz zalogować.'
+        document.getElementById('step3-success').style.display = 'block'
+      } else {
+        // Webhook może jeszcze nie dotarł
+        document.getElementById('step3-icon').textContent = '⏳'
+        document.getElementById('step3-title').textContent = 'PRZETWARZAMY...'
+        document.getElementById('step3-sub').textContent = 'Płatność jest przetwarzana. Może to zająć kilka minut. Sprawdź e-mail lub spróbuj zalogować się za chwilę.'
+        document.getElementById('step3-success').style.display = 'block'
+      }
+    } else {
+      document.getElementById('step3-icon').textContent = '✅'
+      document.getElementById('step3-title').textContent = 'PRAWIE GOTOWE!'
+      document.getElementById('step3-sub').textContent = 'Płatność zarejestrowana. Zaloguj się — dostęp zostanie aktywowany automatycznie.'
+      document.getElementById('step3-success').style.display = 'block'
+    }
+  } else if (params.get('payment') === 'cancel') {
+    showStep(3)
+    document.getElementById('step3-icon').textContent = '↩️'
+    document.getElementById('step3-title').textContent = 'PŁATNOŚĆ ANULOWANA'
+    document.getElementById('step3-sub').textContent = 'Anulowałeś płatność. Twoje konto jest założone — możesz wrócić i zapłacić w dowolnym momencie.'
+    document.getElementById('step3-btn-wrap').style.display = 'block'
+    // Odtwórz link jeśli jest zalogowany
+    const user = firebase.auth().currentUser
+    if (user) {
+      stripeCheckoutUrl = STRIPE_PAYMENT_LINK +
+        (STRIPE_PAYMENT_LINK.includes('?') ? '&' : '?') +
+        'prefilled_email=' + encodeURIComponent(user.email) +
+        '&client_reference_id=' + user.uid
+    }
+  }
 })
 </script>
 </body>
