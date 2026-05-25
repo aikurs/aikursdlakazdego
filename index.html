@@ -347,8 +347,7 @@ footer a:hover{color:var(--text)}
           <li><span class="ck ck-o">✓</span> Zadania domowe</li>
           <li><span class="ck ck-o">✓</span> Dostęp na zawsze</li>
         </ul>
-        <!-- FIX: było register.html — zmieniono na rejestracja.html -->
-        <a href="rejestracja.html?tier=2" class="pcard-btn pb-orange" id="pc2-btn">Kup za 50 zł →</a>
+        <a href="register.html?tier=2" class="pcard-btn pb-orange" id="pc2-btn">Kup za 50 zł →</a>
       </div>
     </div>
   </div>
@@ -556,7 +555,7 @@ function render(t1Sold, t2Sold){
   const swBtn = $('sw-cta');
   if(swBtn){
     if(at===1){ swBtn.className='sw-btn'; swBtn.textContent='Dołącz za darmo →'; swBtn.href='rejestracja.html'; }
-    else if(at===2){ swBtn.className='sw-btn paid'; swBtn.textContent='Kup dostęp za 50 zł →'; swBtn.href='rejestracja.html?tier=2'; }
+    else if(at===2){ swBtn.className='sw-btn paid'; swBtn.textContent='Kup dostęp za 50 zł →'; swBtn.href='register.html?tier=2'; }
     else { swBtn.className='sw-btn locked'; swBtn.textContent='🔒 Wszystkie miejsca zajęte'; }
   }
 
@@ -587,7 +586,7 @@ function render(t1Sold, t2Sold){
   const urgBtn=$('urg-cta');
   if(urgBtn){
     if(at===1){ urgBtn.textContent='Dołącz teraz — za darmo →'; urgBtn.style.background='var(--green)'; urgBtn.style.color='#000'; urgBtn.href='rejestracja.html'; }
-    else if(at===2){ urgBtn.textContent='Kup teraz — 50 zł →'; urgBtn.style.background='var(--orange)'; urgBtn.style.color='#fff'; urgBtn.href='rejestracja.html?tier=2'; }
+    else if(at===2){ urgBtn.textContent='Kup teraz — 50 zł →'; urgBtn.style.background='var(--orange)'; urgBtn.style.color='#fff'; urgBtn.href='register.html?tier=2'; }
     else { urgBtn.textContent='🔒 Wszystkie miejsca zajęte'; urgBtn.style.background='#333'; urgBtn.style.cursor='not-allowed'; urgBtn.style.pointerEvents='none'; }
   }
 
@@ -597,15 +596,15 @@ function render(t1Sold, t2Sold){
   const bc=$('bottom-cta');
   if(bc){
     if(at===1){ bc.style.background='var(--green)'; bc.style.color='#000'; bc.href='rejestracja.html'; }
-    else if(at===2){ bc.style.background='var(--orange)'; bc.style.color='#fff'; bc.href='rejestracja.html?tier=2'; }
+    else if(at===2){ bc.style.background='var(--orange)'; bc.style.color='#fff'; bc.href='register.html?tier=2'; }
     else { bc.textContent='🔒 Wszystkie miejsca zajęte'; bc.style.background='#333'; bc.style.cursor='not-allowed'; bc.style.pointerEvents='none'; }
   }
 
   const navCta=$('nav-cta');
   const heroCta=$('hero-cta');
   if(at===2){
-    if(navCta){ navCta.style.background='var(--orange)'; navCta.style.borderColor='var(--orange)'; navCta.style.color='#fff'; navCta.href='rejestracja.html?tier=2'; }
-    if(heroCta){ heroCta.textContent='Kup dostęp za 50 zł →'; heroCta.classList.add('orange'); heroCta.href='rejestracja.html?tier=2'; }
+    if(navCta){ navCta.style.background='var(--orange)'; navCta.style.borderColor='var(--orange)'; navCta.style.color='#fff'; navCta.href='register.html?tier=2'; }
+    if(heroCta){ heroCta.textContent='Kup dostęp za 50 zł →'; heroCta.classList.add('orange'); heroCta.href='register.html?tier=2'; }
   } else if(at===0){
     if(heroCta){ heroCta.textContent='🔒 Brak miejsc'; heroCta.style.background='#333'; heroCta.style.color='var(--muted2)'; heroCta.style.cursor='not-allowed'; heroCta.style.pointerEvents='none'; }
   }
