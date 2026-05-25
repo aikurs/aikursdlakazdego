@@ -209,7 +209,7 @@ footer a:hover{color:var(--text)}
       <h1 class="fade-up d1"><span class="stroke">OD</span><br><span class="orange">ZERA</span><br>DO AI</h1>
       <p class="hero-sub fade-up d2">
         23 lekcje. 6 modułów. Prompting, automatyzacja, Make.com, wdrożenie w firmie.
-        Pierwsze 50 osób wchodzi <strong style="color:var(--green)">za 0 zł</strong>. Reszta płaci 50 zł. Kto pierwszy ten lepszy.
+        Pierwsze 50 osób wchodzi <strong style="color:var(--green)">za 0 zł</strong>. Reszta płaci 50 zł +23% vat. Kto pierwszy ten lepszy.
       </p>
       <div class="hero-cta-row fade-up d3">
         <a href="rejestracja.html" class="btn-main" id="hero-cta">Dołącz za darmo →</a>
@@ -239,7 +239,7 @@ footer a:hover{color:var(--text)}
         <div class="tier" id="t2">
           <div class="tier-row1">
             <span class="tier-name" style="color:var(--muted)">Tier 2 — Standard</span>
-            <span class="tier-price">50 zł</span>
+            <span class="tier-price">50 zł + 11,50 vat</span>
           </div>
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px">
             <span style="font-size:.72rem;color:var(--muted)">Kolejne 100 miejsc (51–150)</span>
@@ -286,7 +286,7 @@ footer a:hover{color:var(--text)}
         </div>
       </div>
       <div class="urg-row">
-        <span class="urg-label">Tier 2 — Standard (50 zł) · 100 miejsc</span>
+        <span class="urg-label">Tier 2 — Standard (50 zł + 11,50 vat) · 100 miejsc</span>
         <div style="text-align:right">
           <div class="urg-val skel" id="us-t2-val">—</div>
           <div class="urg-pct" id="us-t2-pct"></div>
@@ -330,7 +330,7 @@ footer a:hover{color:var(--text)}
       <div class="pcard star-orange">
         <span class="pcard-badge b-paid" id="pb2">Tier 2</span>
         <div class="pcard-tier">Tier 2 · Standard</div>
-        <div class="pcard-price" style="color:var(--orange)">50 zł</div>
+        <div class="pcard-price" style="color:var(--orange)">50 + 11,50 vat zł</div>
         <div class="pcard-psub">Miejsca 51–150<br>Aktywuje się po wyczerpaniu Tier 1</div>
         <div class="pcard-slots">
           <div class="pcard-slots-row">
@@ -347,7 +347,7 @@ footer a:hover{color:var(--text)}
           <li><span class="ck ck-o">✓</span> Zadania domowe</li>
           <li><span class="ck ck-o">✓</span> Dostęp na zawsze</li>
         </ul>
-        <a href="register.html?tier=2" class="pcard-btn pb-orange" id="pc2-btn">Kup za 50 zł →</a>
+        <a href="register.html?tier=2" class="pcard-btn pb-orange" id="pc2-btn">Kup za 50 + 11,50 vat zł →</a>
       </div>
     </div>
   </div>
@@ -450,7 +450,7 @@ footer a:hover{color:var(--text)}
     <a href="rejestracja.html" class="btn-main" id="bottom-cta" style="font-size:1.05rem;padding:16px 40px">Dołącz za <span id="bottom-price">darmo</span> →</a>
     <a href="login.html" class="btn-sec" style="font-size:.95rem;padding:16px 28px">Mam już konto</a>
   </div>
-  <p style="font-size:.72rem;color:var(--muted2);margin-top:1.5rem;position:relative;z-index:1">Tier 1: 0 zł (50 miejsc) · Tier 2: 50 zł (100 miejsc) · Max 150 uczestników łącznie</p>
+  <p style="font-size:.72rem;color:var(--muted2);margin-top:1.5rem;position:relative;z-index:1">Tier 1: 0 zł (50 miejsc) · Tier 2: 50 + 11,50 vat zł (100 miejsc) · Max 150 uczestników łącznie</p>
 </div>
 
 <footer>
@@ -519,12 +519,12 @@ function render(t1Sold, t2Sold){
   if(T1_LEFT > 0)
     setText('ticker-count', T1_LEFT + ' DARMOWYCH MIEJSC ZOSTAŁO');
   else
-    setText('ticker-count', T2_LEFT > 0 ? T2_LEFT + ' MIEJSC (50 ZŁ)' : 'BRAK WOLNYCH MIEJSC');
+    setText('ticker-count', T2_LEFT > 0 ? T2_LEFT + ' MIEJSC (50 ZŁ + 11,50 vat)' : 'BRAK WOLNYCH MIEJSC');
 
   if(T1_LEFT > 0)
     setText('hero-total-left', T1_LEFT + ' darmowych');
   else if(T2_LEFT > 0)
-    setText('hero-total-left', 'brak — zostało ' + T2_LEFT + ' płatnych (50 zł)');
+    setText('hero-total-left', 'brak — zostało ' + T2_LEFT + ' płatnych (50 zł + 11,50 vat)');
   else
     setText('hero-total-left', 'brak');
 
@@ -555,7 +555,7 @@ function render(t1Sold, t2Sold){
   const swBtn = $('sw-cta');
   if(swBtn){
     if(at===1){ swBtn.className='sw-btn'; swBtn.textContent='Dołącz za darmo →'; swBtn.href='rejestracja.html'; }
-    else if(at===2){ swBtn.className='sw-btn paid'; swBtn.textContent='Kup dostęp za 50 zł →'; swBtn.href='register.html?tier=2'; }
+    else if(at===2){ swBtn.className='sw-btn paid'; swBtn.textContent='Kup dostęp za 50 zł + 11,50 vat →'; swBtn.href='register.html?tier=2'; }
     else { swBtn.className='sw-btn locked'; swBtn.textContent='🔒 Wszystkie miejsca zajęte'; }
   }
 
@@ -586,13 +586,13 @@ function render(t1Sold, t2Sold){
   const urgBtn=$('urg-cta');
   if(urgBtn){
     if(at===1){ urgBtn.textContent='Dołącz teraz — za darmo →'; urgBtn.style.background='var(--green)'; urgBtn.style.color='#000'; urgBtn.href='rejestracja.html'; }
-    else if(at===2){ urgBtn.textContent='Kup teraz — 50 zł →'; urgBtn.style.background='var(--orange)'; urgBtn.style.color='#fff'; urgBtn.href='register.html?tier=2'; }
+    else if(at===2){ urgBtn.textContent='Kup teraz — 50 zł + 11,50 vat →'; urgBtn.style.background='var(--orange)'; urgBtn.style.color='#fff'; urgBtn.href='register.html?tier=2'; }
     else { urgBtn.textContent='🔒 Wszystkie miejsca zajęte'; urgBtn.style.background='#333'; urgBtn.style.cursor='not-allowed'; urgBtn.style.pointerEvents='none'; }
   }
 
   setText('cta-left', T1_LEFT > 0 ? T1_LEFT : T2_LEFT);
   const bp=$('bottom-price');
-  if(bp){ bp.textContent = at===1?'darmo':at===2?'50 zł':'—'; }
+  if(bp){ bp.textContent = at===1?'darmo':at===2?'61,50 zł':'—'; }
   const bc=$('bottom-cta');
   if(bc){
     if(at===1){ bc.style.background='var(--green)'; bc.style.color='#000'; bc.href='rejestracja.html'; }
@@ -604,7 +604,7 @@ function render(t1Sold, t2Sold){
   const heroCta=$('hero-cta');
   if(at===2){
     if(navCta){ navCta.style.background='var(--orange)'; navCta.style.borderColor='var(--orange)'; navCta.style.color='#fff'; navCta.href='register.html?tier=2'; }
-    if(heroCta){ heroCta.textContent='Kup dostęp za 50 zł →'; heroCta.classList.add('orange'); heroCta.href='register.html?tier=2'; }
+    if(heroCta){ heroCta.textContent='Kup dostęp za 50 zł +11,50 vat →'; heroCta.classList.add('orange'); heroCta.href='register.html?tier=2'; }
   } else if(at===0){
     if(heroCta){ heroCta.textContent='🔒 Brak miejsc'; heroCta.style.background='#333'; heroCta.style.color='var(--muted2)'; heroCta.style.cursor='not-allowed'; heroCta.style.pointerEvents='none'; }
   }
