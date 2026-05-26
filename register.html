@@ -13,7 +13,7 @@
   --muted:#68687a;--muted2:#45454f;
   --orange:#ff5c2b;--orange2:#ff8457;
   --green:#00d68f;--green2:#00f5a0;
-  --red:#ff3b3b;--gold:#f5c518;
+  --red:#ff3b3b;
 }
 body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:1.5rem;position:relative}
 body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at 30% 20%,rgba(255,92,43,0.05) 0%,transparent 55%);pointer-events:none}
@@ -30,7 +30,7 @@ h2{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:.06em;mar
 .input{width:100%;background:var(--s3);border:1px solid var(--border);border-radius:7px;padding:.75rem 1rem;color:var(--text);font-family:'DM Sans',sans-serif;font-size:.9rem;outline:none;transition:border-color .2s}
 .input:focus{border-color:rgba(255,92,43,.5)}
 .input::placeholder{color:var(--muted2)}
-.btn{display:flex;align-items:center;justify-content:center;gap:.5rem;width:100%;padding:.9rem;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:.95rem;font-weight:700;cursor:pointer;border:none;transition:all .2s;letter-spacing:.01em}
+.btn{display:flex;align-items:center;justify-content:center;gap:.5rem;width:100%;padding:.9rem;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:.95rem;font-weight:700;cursor:pointer;border:none;transition:all .2s;letter-spacing:.01em;text-decoration:none}
 .btn-orange{background:var(--orange);color:#fff}
 .btn-orange:hover:not(:disabled){background:var(--orange2);box-shadow:0 6px 24px rgba(255,92,43,.3);transform:translateY(-1px)}
 .btn-outline{background:transparent;color:var(--muted);border:1px solid var(--border2)}
@@ -59,6 +59,8 @@ h2{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:.06em;mar
 .status-icon{font-size:3rem;text-align:center;margin-bottom:.75rem}
 .status-title{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:.06em;text-align:center;margin-bottom:.5rem}
 .status-sub{font-size:.85rem;color:var(--muted);line-height:1.65;text-align:center;margin-bottom:1.5rem}
+.info-box{background:var(--s3);border:1px solid var(--border2);border-radius:8px;padding:.9rem 1rem;font-size:.8rem;color:var(--muted);line-height:1.6;margin-bottom:1.25rem}
+.info-box strong{color:var(--text)}
 </style>
 </head>
 <body>
@@ -74,11 +76,11 @@ h2{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:.06em;mar
     <div class="step-dot" id="dot-3"></div>
   </div>
 
-  <!-- KROK 1: Dane konta -->
+  <!-- KROK 1: Dane -->
   <div class="step active" id="step-1">
-    <h2>UTWÓRZ KONTO</h2>
+    <h2>TWOJE DANE</h2>
     <p style="font-size:.84rem;color:var(--muted);margin-bottom:1.5rem;line-height:1.6">
-      Najpierw zakładasz konto. Dostęp do kursu zostanie aktywowany automatycznie po udanej płatności.
+      Podaj imię i e-mail. Konto zostanie utworzone automatycznie po potwierdzeniu płatności — otrzymasz e-mail z linkiem do ustawienia hasła.
     </p>
     <div class="alert alert-error" id="s1-alert"></div>
     <div class="field">
@@ -89,15 +91,11 @@ h2{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:.06em;mar
       <label>E-mail</label>
       <input class="input" type="email" id="reg-email" placeholder="twoj@email.com">
     </div>
-    <div class="field">
-      <label>Hasło (min. 8 znaków)</label>
-      <input class="input" type="password" id="reg-pass" placeholder="••••••••" minlength="8">
-    </div>
     <button class="btn btn-orange" id="btn-s1" onclick="goStep2()">Dalej → Podsumowanie zamówienia</button>
     <div class="card-foot">Masz już konto? <a href="login.html">Zaloguj się</a></div>
   </div>
 
-  <!-- KROK 2: Podsumowanie i płatność -->
+  <!-- KROK 2: Podsumowanie -->
   <div class="step" id="step-2">
     <h2>ZAMÓWIENIE</h2>
     <div class="price-box">
@@ -114,197 +112,158 @@ h2{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:.06em;mar
       <li>Materiały PDF do każdej lekcji</li>
       <li>Dostęp bezterminowy</li>
     </ul>
+    <div class="info-box">
+      💡 Po udanej płatności wyślemy Ci e-mail na <strong id="preview-email"></strong> z linkiem do ustawienia hasła. Konto aktywuje się automatycznie.
+    </div>
     <div class="alert alert-error" id="s2-alert"></div>
-    <button class="btn btn-orange" id="btn-s2" onclick="goStep3()">
-      Utwórz konto i przejdź do płatności →
+    <button class="btn btn-orange" id="btn-s2" onclick="goStripe()">
+      Przejdź do płatności →
     </button>
     <div class="secure-note">🔒 Płatność obsługiwana przez Stripe · SSL</div>
     <div class="card-foot" style="margin-top:.75rem">
-      <a href="#" onclick="document.getElementById('step-1').classList.add('active');document.getElementById('step-2').classList.remove('active');return false">← Wróć</a>
+      <a href="#" onclick="showStep(1);return false">← Wróć</a>
     </div>
   </div>
 
-  <!-- KROK 3: Oczekiwanie / sukces -->
+  <!-- KROK 3: Status -->
   <div class="step" id="step-3">
     <div class="status-icon" id="step3-icon">⏳</div>
     <div class="status-title" id="step3-title">PRZETWARZAM...</div>
-    <p class="status-sub" id="step3-sub">Tworzę konto i przygotowuję płatność Stripe...</p>
-    <div id="step3-btn-wrap" style="display:none">
-      <button class="btn btn-orange" id="btn-pay" onclick="redirectToStripe()">
-        Zapłać 50 zł przez Stripe →
-      </button>
-      <div class="secure-note" style="margin-top:.75rem">🔒 Bezpieczna płatność · Stripe · BLIK · Karta</div>
-    </div>
-    <div id="step3-success" style="display:none">
-      <a href="login.html" class="btn btn-outline" style="margin-top:.5rem">Zaloguj się do kursu →</a>
+    <p class="status-sub" id="step3-sub">Przygotowuję sesję płatności...</p>
+    <div id="step3-actions" style="display:none">
+      <a href="login.html" class="btn btn-outline">Zaloguj się do kursu →</a>
     </div>
   </div>
 
 </div>
 
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-<script src="app.js"></script>
 <script>
-if (!firebase.apps.length) firebase.initializeApp(FIREBASE_CONFIG)
-const db = firebase.firestore()
+// =============================================
+// KONFIGURACJA
+// =============================================
+const VERCEL_URL = 'https://aikursdlakazdego.vercel.app'
 
-const STRIPE_PAYMENT_LINK = 'https://buy.stripe.com/eVq8wI1Ca5HhflBg6MbV600'
-
-let stripeCheckoutUrl = null
-let createdUserUid = null
-
-function setDot(n) {
-  document.querySelectorAll('.step-dot').forEach((d,i) => {
+// =============================================
+// HELPERS
+// =============================================
+function showStep(n) {
+  document.querySelectorAll('.step').forEach(s => s.classList.remove('active'))
+  document.getElementById('step-' + n).classList.add('active')
+  document.querySelectorAll('.step-dot').forEach((d, i) => {
     d.classList.toggle('done', i < n)
   })
 }
 
-function showStep(n) {
-  document.querySelectorAll('.step').forEach(s => s.classList.remove('active'))
-  document.getElementById('step-' + n).classList.add('active')
-  setDot(n - 1)
-}
-
 function showAlert(id, msg) {
   const el = document.getElementById(id)
-  el.innerHTML = msg; el.classList.add('show')
+  el.innerHTML = msg
+  el.classList.add('show')
 }
-function hideAlert(id) { document.getElementById(id).classList.remove('show') }
 
+function hideAlert(id) {
+  document.getElementById(id).classList.remove('show')
+}
+
+// =============================================
+// KROK 1 → 2
+// =============================================
 function goStep2() {
   const name  = document.getElementById('reg-name').value.trim()
   const email = document.getElementById('reg-email').value.trim()
-  const pass  = document.getElementById('reg-pass').value
   hideAlert('s1-alert')
 
   if (!name)  { showAlert('s1-alert', 'Podaj imię i nazwisko.'); return }
   if (!email || !email.includes('@')) { showAlert('s1-alert', 'Podaj prawidłowy e-mail.'); return }
-  if (pass.length < 8) { showAlert('s1-alert', 'Hasło musi mieć min. 8 znaków.'); return }
 
+  document.getElementById('preview-email').textContent = email
   showStep(2)
 }
 
-async function goStep3() {
+// =============================================
+// KROK 2 → STRIPE
+// Wywołuje Vercel endpoint który tworzy Checkout Session
+// =============================================
+async function goStripe() {
   const name  = document.getElementById('reg-name').value.trim()
   const email = document.getElementById('reg-email').value.trim()
-  const pass  = document.getElementById('reg-pass').value
   const btn   = document.getElementById('btn-s2')
 
   hideAlert('s2-alert')
   btn.disabled = true
-  btn.innerHTML = '<span class="spinner"></span> Tworzę konto...'
-
-  showStep(3)
-  document.getElementById('step3-icon').textContent = '⏳'
-  document.getElementById('step3-title').textContent = 'TWORZĘ KONTO...'
-  document.getElementById('step3-sub').textContent = 'Zakładam konto i przygotowuję płatność...'
+  btn.innerHTML = '<span class="spinner"></span> Przygotowuję płatność...'
 
   try {
-    let userCred
-    try {
-      userCred = await firebase.auth().createUserWithEmailAndPassword(email, pass)
-    } catch (e) {
-      if (e.code === 'auth/email-already-in-use') {
-        userCred = await firebase.auth().signInWithEmailAndPassword(email, pass)
-      } else {
-        throw e
-      }
+    const response = await fetch(VERCEL_URL + '/api/create-checkout', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, email })
+    })
+
+    const data = await response.json()
+
+    if (!response.ok || !data.url) {
+      throw new Error(data.error || 'Błąd serwera')
     }
 
-    const user = userCred.user
-    createdUserUid = user.uid
-    await user.updateProfile({ displayName: name })
+    // Przekieruj do Stripe Checkout
+    window.location.href = data.url
 
-    await db.collection('uczniowie').doc(user.uid).set({
-      email,
-      name,
-      tier: 2,
-      paid: false,
-      approved: false,
-      completed: [],
-      streak: 0,
-      createdAt: firebase.firestore.FieldValue.serverTimestamp()
-    }, { merge: true })
-
-    stripeCheckoutUrl = STRIPE_PAYMENT_LINK +
-      (STRIPE_PAYMENT_LINK.includes('?') ? '&' : '?') +
-      'prefilled_email=' + encodeURIComponent(email) +
-      '&client_reference_id=' + user.uid
-
-    document.getElementById('step3-icon').textContent = '💳'
-    document.getElementById('step3-title').textContent = 'KONTO GOTOWE!'
-    document.getElementById('step3-sub').textContent =
-      'Konto zostało utworzone. Teraz przejdź do bezpiecznej płatności Stripe. Dostęp do kursu aktywuje się automatycznie po potwierdzeniu płatności.'
-    document.getElementById('step3-btn-wrap').style.display = 'block'
-
-  } catch (e) {
-    const msgs = {
-      'auth/email-already-in-use': 'Ten e-mail jest już zarejestrowany. Spróbuj się zalogować.',
-      'auth/invalid-email':        'Nieprawidłowy format e-maila.',
-      'auth/weak-password':        'Hasło jest za słabe. Użyj min. 8 znaków.',
-      'auth/wrong-password':       'Nieprawidłowe hasło dla istniejącego konta.',
-    }
-    showStep(2)
-    showAlert('s2-alert', msgs[e.code] || 'Błąd: ' + e.message)
+  } catch (err) {
+    showAlert('s2-alert', 'Błąd: ' + err.message)
     btn.disabled = false
-    btn.innerHTML = 'Utwórz konto i przejdź do płatności →'
+    btn.innerHTML = 'Przejdź do płatności →'
   }
 }
 
-function redirectToStripe() {
-  if (!stripeCheckoutUrl) {
-    alert('Błąd — brak linku płatności. Odśwież stronę.')
-    return
-  }
-  window.location.href = stripeCheckoutUrl
-}
-
+// =============================================
+// PO POWROCIE ZE STRIPE
+// =============================================
 window.addEventListener('load', async () => {
   const params = new URLSearchParams(window.location.search)
+  const payment = params.get('payment')
+  const sessionId = params.get('session_id')
 
-  if (params.get('payment') === 'success') {
+  if (payment === 'success' && sessionId) {
     showStep(3)
     document.getElementById('step3-icon').textContent = '⏳'
     document.getElementById('step3-title').textContent = 'WERYFIKUJĘ PŁATNOŚĆ...'
-    document.getElementById('step3-sub').textContent = 'Sprawdzam potwierdzenie płatności od Stripe...'
+    document.getElementById('step3-sub').textContent = 'Sprawdzam potwierdzenie od Stripe...'
 
-    await new Promise(r => setTimeout(r, 3000))
+    // Zweryfikuj sesję przez Vercel
+    try {
+      const res = await fetch(VERCEL_URL + '/api/verify-payment?session_id=' + sessionId)
+      const data = await res.json()
 
-    const user = firebase.auth().currentUser
-    if (user) {
-      const doc = await db.collection('uczniowie').doc(user.uid).get()
-      if (doc.exists && doc.data().paid === true) {
+      if (data.paid === true) {
         document.getElementById('step3-icon').textContent = '🎉'
         document.getElementById('step3-title').textContent = 'DOSTĘP AKTYWOWANY!'
-        document.getElementById('step3-sub').textContent = 'Płatność potwierdzona! Twój dostęp do kursu jest aktywny. Możesz się teraz zalogować.'
-        document.getElementById('step3-success').style.display = 'block'
+        document.getElementById('step3-sub').textContent =
+          'Płatność potwierdzona! Wysłaliśmy Ci e-mail z linkiem do ustawienia hasła. Po ustawieniu hasła możesz się zalogować.'
+        document.getElementById('step3-actions').style.display = 'block'
       } else {
         document.getElementById('step3-icon').textContent = '⏳'
         document.getElementById('step3-title').textContent = 'PRZETWARZAMY...'
-        document.getElementById('step3-sub').textContent = 'Płatność jest przetwarzana. Może to zająć kilka minut. Sprawdź e-mail lub spróbuj zalogować się za chwilę.'
-        document.getElementById('step3-success').style.display = 'block'
+        document.getElementById('step3-sub').textContent =
+          'Płatność jest weryfikowana. Sprawdź skrzynkę e-mail za kilka minut — wyślemy Ci link do ustawienia hasła.'
+        document.getElementById('step3-actions').style.display = 'block'
       }
-    } else {
+    } catch (e) {
       document.getElementById('step3-icon').textContent = '✅'
-      document.getElementById('step3-title').textContent = 'PRAWIE GOTOWE!'
-      document.getElementById('step3-sub').textContent = 'Płatność zarejestrowana. Zaloguj się — dostęp zostanie aktywowany automatycznie.'
-      document.getElementById('step3-success').style.display = 'block'
+      document.getElementById('step3-title').textContent = 'DZIĘKUJEMY!'
+      document.getElementById('step3-sub').textContent =
+        'Płatność zarejestrowana. Sprawdź skrzynkę e-mail — wyślemy Ci link do ustawienia hasła i aktywacji konta.'
+      document.getElementById('step3-actions').style.display = 'block'
     }
-  } else if (params.get('payment') === 'cancel') {
+
+  } else if (payment === 'cancel') {
     showStep(3)
     document.getElementById('step3-icon').textContent = '↩️'
     document.getElementById('step3-title').textContent = 'PŁATNOŚĆ ANULOWANA'
-    document.getElementById('step3-sub').textContent = 'Anulowałeś płatność. Twoje konto jest założone — możesz wrócić i zapłacić w dowolnym momencie.'
-    document.getElementById('step3-btn-wrap').style.display = 'block'
-    const user = firebase.auth().currentUser
-    if (user) {
-      stripeCheckoutUrl = STRIPE_PAYMENT_LINK +
-        (STRIPE_PAYMENT_LINK.includes('?') ? '&' : '?') +
-        'prefilled_email=' + encodeURIComponent(user.email) +
-        '&client_reference_id=' + user.uid
-    }
+    document.getElementById('step3-sub').textContent =
+      'Anulowałeś płatność. Możesz spróbować ponownie — żadna opłata nie została pobrana.'
+    document.getElementById('step3-actions').innerHTML =
+      '<button class="btn btn-orange" onclick="showStep(1)">Spróbuj ponownie →</button>'
+    document.getElementById('step3-actions').style.display = 'block'
   }
 })
 </script>
