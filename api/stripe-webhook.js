@@ -1,7 +1,13 @@
 // api/stripe-webhook.js
+// Odbiera potwierdzenie płatności od Stripe
+// i tworzy konto użytkownika w Firebase Auth + Firestore
+
 const https = require('https')
 const crypto = require('crypto')
 
+// =============================================
+// WERYFIKACJA PODPISU STRIPE
+// =============================================
 function verifyStripeSignature(payload, signature, secret) {
   const parts = signature.split(',')
   const timestamp = parts.find(p => p.startsWith('t=')).slice(2)
@@ -17,41 +23,16 @@ function verifyStripeSignature(payload, signature, secret) {
   )
 }
 
-async function firebaseRequest(method, path, data, token) {
-  return new Promise((resolve, reject) => {
-    const projectId = process.env.FIREBASE_PROJECT_ID
-    const body = data ? JSON.stringify(data) : null
-    const options = {
-      hostname: 'firestore.googleapis.com',
-      path: `/v1/projects/${projectId}/databases/(default)/documents${path}`,
-      method,
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
-        ...(body ? { 'Content-Length': Buffer.byteLength(body) } : {})
-      }
-    }
-    const req = https.request(options, res => {
-      let responseData = ''
-      res.on('data', chunk => responseData += chunk)
-      res.on('end', () => {
-        try { resolve({ status: res.statusCode, data: JSON.parse(responseData) })
-        } catch (e) { resolve({ status: res.statusCode, data: responseData }) }
-      })
-    })
-    req.on('error', reject)
-    if (body) req.write(body)
-    req.end()
-  })
-}
-
+// =============================================
+// FIREBASE TOKEN
+// =============================================
 async function getFirebaseToken() {
   const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT)
   const jwt = require('jsonwebtoken')
   const now = Math.floor(Date.now() / 1000)
   const payload = {
     iss: serviceAccount.client_email,
-    scope: 'https://www.googleapis.com/auth/datastore',
+    scope: 'https://www.googleapis.com/auth/datastore https://www.googleapis.com/auth/firebase',
     aud: 'https://oauth2.googleapis.com/token',
     iat: now,
     exp: now + 3600
@@ -83,10 +64,88 @@ async function getFirebaseToken() {
   })
 }
 
-async function findUserByEmail(email) {
-  const token = await getFirebaseToken()
-  const projectId = process.env.FIREBASE_PROJECT_ID
+// =============================================
+// FIRESTORE REQUEST
+// =============================================
+async function firestoreRequest(method, path, data, token) {
+  return new Promise((resolve, reject) => {
+    const projectId = process.env.FIREBASE_PROJECT_ID
+    const body = data ? JSON.stringify(data) : null
+    const options = {
+      hostname: 'firestore.googleapis.com',
+      path: `/v1/projects/${projectId}/databases/(default)/documents${path}`,
+      method,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+        ...(body ? { 'Content-Length': Buffer.byteLength(body) } : {})
+      }
+    }
+    const req = https.request(options, res => {
+      let responseData = ''
+      res.on('data', chunk => responseData += chunk)
+      res.on('end', () => {
+        try { resolve({ status: res.statusCode, data: JSON.parse(responseData) })
+        } catch (e) { resolve({ status: res.statusCode, data: responseData }) }
+      })
+    })
+    req.on('error', reject)
+    if (body) req.write(body)
+    req.end()
+  })
+}
 
+// =============================================
+// UTWÓRZ UŻYTKOWNIKA W FIREBASE AUTH (REST API)
+// =============================================
+async function createFirebaseUser(email, name, token) {
+  return new Promise((resolve, reject) => {
+    const projectId = process.env.FIREBASE_PROJECT_ID
+    const body = JSON.stringify({
+      email,
+      displayName: name,
+      // Tymczasowe losowe hasło — użytkownik zresetuje przez email
+      password: crypto.randomBytes(16).toString('hex'),
+      emailVerified: false,
+      disabled: false
+    })
+    const options = {
+      hostname: 'identitytoolkit.googleapis.com',
+      path: `/v1/projects/${projectId}/accounts`,
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+        'Content-Length': Buffer.byteLength(body)
+      }
+    }
+    const req = https.request(options, res => {
+      let data = ''
+      res.on('data', chunk => data += chunk)
+      res.on('end', () => {
+        try {
+          const parsed = JSON.parse(data)
+          if (parsed.localId) {
+            resolve({ uid: parsed.localId, exists: false })
+          } else if (parsed.error?.message === 'EMAIL_EXISTS') {
+            resolve({ uid: null, exists: true })
+          } else {
+            reject(new Error('Firebase Auth error: ' + data))
+          }
+        } catch (e) { reject(e) }
+      })
+    })
+    req.on('error', reject)
+    req.write(body)
+    req.end()
+  })
+}
+
+// =============================================
+// ZNAJDŹ UID PO EMAILU W FIRESTORE
+// =============================================
+async function findUidByEmail(email, token) {
+  const projectId = process.env.FIREBASE_PROJECT_ID
   return new Promise((resolve, reject) => {
     const body = JSON.stringify({
       structuredQuery: {
@@ -117,9 +176,8 @@ async function findUserByEmail(email) {
       res.on('end', () => {
         try {
           const results = JSON.parse(data)
-          if (results[0] && results[0].document) {
-            const name = results[0].document.name
-            const uid = name.split('/').pop()
+          if (results[0]?.document) {
+            const uid = results[0].document.name.split('/').pop()
             resolve(uid)
           } else {
             resolve(null)
@@ -133,41 +191,56 @@ async function findUserByEmail(email) {
   })
 }
 
-async function activateUser(uid, tier, paymentId) {
-  const token = await getFirebaseToken()
-  const now = new Date().toISOString()
-  const result = await firebaseRequest(
-    'PATCH',
-    `/uczniowie/${uid}?updateMask.fieldPaths=paid&updateMask.fieldPaths=approved&updateMask.fieldPaths=tier&updateMask.fieldPaths=paymentId&updateMask.fieldPaths=paidAt`,
-    {
-      fields: {
-        paid:      { booleanValue: true },
-        approved:  { booleanValue: true },
-        tier:      { integerValue: tier || 2 },
-        paymentId: { stringValue: paymentId || '' },
-        paidAt:    { timestampValue: now }
+// =============================================
+// WYŚLIJ RESET HASŁA PRZEZ FIREBASE AUTH
+// =============================================
+async function sendPasswordReset(email) {
+  return new Promise((resolve, reject) => {
+    const apiKey = process.env.FIREBASE_API_KEY
+    const body = JSON.stringify({
+      requestType: 'PASSWORD_RESET',
+      email
+    })
+    const options = {
+      hostname: 'identitytoolkit.googleapis.com',
+      path: `/v1/accounts:sendOobCode?key=${apiKey}`,
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Content-Length': Buffer.byteLength(body)
       }
-    },
-    token
-  )
-  return result
+    }
+    const req = https.request(options, res => {
+      let data = ''
+      res.on('data', chunk => data += chunk)
+      res.on('end', () => resolve(JSON.parse(data)))
+    })
+    req.on('error', reject)
+    req.write(body)
+    req.end()
+  })
 }
 
 // =============================================
-// GŁÓWNY HANDLER — format Vercel
+// GŁÓWNY HANDLER
 // =============================================
 export default async function handler(req, res) {
-
-  if (req.method !== 'POST') {
-    return res.status(405).send('Method Not Allowed')
-  }
+  if (req.method !== 'POST') return res.status(405).send('Method Not Allowed')
 
   const signature = req.headers['stripe-signature']
   const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET
 
+  // Odczyt raw body
+  let rawBody = ''
+  await new Promise((resolve, reject) => {
+    req.on('data', chunk => rawBody += chunk)
+    req.on('end', resolve)
+    req.on('error', reject)
+  })
+
+  // Weryfikacja podpisu Stripe
   let stripeEvent
   try {
-    const rawBody = await getRawBody(req)
     if (!verifyStripeSignature(rawBody, signature, webhookSecret)) {
       console.error('Nieprawidłowy podpis Stripe!')
       return res.status(401).send('Invalid signature')
@@ -178,67 +251,78 @@ export default async function handler(req, res) {
     return res.status(400).send('Webhook error: ' + err.message)
   }
 
-  if (stripeEvent.type !== 'checkout.session.completed' &&
-      stripeEvent.type !== 'payment_intent.succeeded') {
+  // Obsługujemy tylko checkout.session.completed
+  if (stripeEvent.type !== 'checkout.session.completed') {
     return res.status(200).send('Event ignored: ' + stripeEvent.type)
   }
 
+  const session = stripeEvent.data.object
+
+  // Pobierz dane z metadata Stripe
+  const email = session.metadata?.user_email || session.customer_email || session.customer_details?.email
+  const name  = session.metadata?.user_name || 'Użytkownik'
+
+  if (!email) {
+    console.error('Brak emaila w sesji:', session.id)
+    return res.status(200).send('No email in session')
+  }
+
+  console.log('✓ Płatność od:', email, '| Sesja:', session.id)
+
   try {
-    const session = stripeEvent.data.object
-    const email = session.customer_email ||
-                  session.customer_details?.email ||
-                  session.receipt_email
+    const token = await getFirebaseToken()
 
-    if (!email) {
-      console.error('Brak emaila w sesji:', session.id)
-      return res.status(200).send('No email in session')
-    }
-
-    console.log('Płatność od:', email, '| Sesja:', session.id)
-
-    const uid = await findUserByEmail(email)
+    // Sprawdź czy użytkownik już istnieje w Firestore
+    let uid = await findUidByEmail(email, token)
 
     if (!uid) {
-      console.warn('Nie znaleziono użytkownika dla emaila:', email)
-      const token = await getFirebaseToken()
-      await firebaseRequest('PATCH',
-        `/platnosci_oczekujace/${session.id}`,
-        {
-          fields: {
-            email:     { stringValue: email },
-            sessionId: { stringValue: session.id },
-            amount:    { integerValue: session.amount_total || 0 },
-            createdAt: { timestampValue: new Date().toISOString() },
-            status:    { stringValue: 'pending_user' }
-          }
-        },
-        token
-      )
-      return res.status(200).send('Payment saved, user not found yet')
+      // Utwórz nowe konto w Firebase Auth
+      const authResult = await createFirebaseUser(email, name, token)
+
+      if (authResult.exists) {
+        // Konto już istnieje w Auth ale nie w Firestore — znajdź uid inaczej
+        console.warn('Konto Auth istnieje ale brak w Firestore dla:', email)
+      } else {
+        uid = authResult.uid
+        console.log('✓ Utworzono konto Firebase Auth:', uid)
+      }
     }
 
-    const result = await activateUser(uid, 2, session.id)
-
-    if (result.status === 200) {
-      console.log('✓ Aktywowano:', uid, email)
-      return res.status(200).json({ success: true, uid, email })
-    } else {
-      console.error('Błąd Firestore:', result.data)
-      return res.status(500).send('Firestore error')
+    if (!uid) {
+      console.error('Nie udało się ustalić uid dla:', email)
+      return res.status(500).send('Could not determine user uid')
     }
+
+    // Zapisz/zaktualizuj dokument w Firestore
+    await firestoreRequest(
+      'PATCH',
+      `/uczniowie/${uid}?updateMask.fieldPaths=email&updateMask.fieldPaths=name&updateMask.fieldPaths=paid&updateMask.fieldPaths=approved&updateMask.fieldPaths=tier&updateMask.fieldPaths=paymentId&updateMask.fieldPaths=paidAt&updateMask.fieldPaths=completed&updateMask.fieldPaths=streak`,
+      {
+        fields: {
+          email:     { stringValue: email },
+          name:      { stringValue: name },
+          paid:      { booleanValue: true },
+          approved:  { booleanValue: true },
+          tier:      { integerValue: 2 },
+          paymentId: { stringValue: session.id },
+          paidAt:    { timestampValue: new Date().toISOString() },
+          completed: { arrayValue: { values: [] } },
+          streak:    { integerValue: 0 }
+        }
+      },
+      token
+    )
+
+    console.log('✓ Firestore zaktualizowany dla:', uid, email)
+
+    // Wyślij email z linkiem do ustawienia hasła
+    await sendPasswordReset(email)
+    console.log('✓ Wysłano email z resetem hasła do:', email)
+
+    return res.status(200).json({ success: true, uid, email })
 
   } catch (err) {
     console.error('Błąd handlera:', err)
     return res.status(500).send('Server error: ' + err.message)
   }
-}
-
-// Vercel wymaga raw body do weryfikacji podpisu Stripe
-async function getRawBody(req) {
-  return new Promise((resolve, reject) => {
-    let data = ''
-    req.on('data', chunk => data += chunk)
-    req.on('end', () => resolve(data))
-    req.on('error', reject)
-  })
 }
