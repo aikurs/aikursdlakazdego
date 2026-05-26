@@ -1,13 +1,8 @@
 // api/stripe-webhook.js
-// Odbiera potwierdzenie płatności od Stripe
-// i tworzy konto użytkownika w Firebase Auth + Firestore
 
 const https = require('https')
 const crypto = require('crypto')
 
-// =============================================
-// WERYFIKACJA PODPISU STRIPE
-// =============================================
 function verifyStripeSignature(payload, signature, secret) {
   const parts = signature.split(',')
   const timestamp = parts.find(p => p.startsWith('t=')).slice(2)
@@ -23,9 +18,6 @@ function verifyStripeSignature(payload, signature, secret) {
   )
 }
 
-// =============================================
-// FIREBASE TOKEN
-// =============================================
 async function getFirebaseToken() {
   const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT)
   const jwt = require('jsonwebtoken')
@@ -64,9 +56,6 @@ async function getFirebaseToken() {
   })
 }
 
-// =============================================
-// FIRESTORE REQUEST
-// =============================================
 async function firestoreRequest(method, path, data, token) {
   return new Promise((resolve, reject) => {
     const projectId = process.env.FIREBASE_PROJECT_ID
@@ -95,16 +84,13 @@ async function firestoreRequest(method, path, data, token) {
   })
 }
 
-// =============================================
-// UTWÓRZ UŻYTKOWNIKA W FIREBASE AUTH (REST API)
-// =============================================
-async function createFirebaseUser(email, name, token) {
+// Tworzy użytkownika w Firebase Auth i zwraca uid
+async function createFirebaseAuthUser(email, name, token) {
   return new Promise((resolve, reject) => {
     const projectId = process.env.FIREBASE_PROJECT_ID
     const body = JSON.stringify({
       email,
       displayName: name,
-      // Tymczasowe losowe hasło — użytkownik zresetuje przez email
       password: crypto.randomBytes(16).toString('hex'),
       emailVerified: false,
       disabled: false
@@ -126,11 +112,11 @@ async function createFirebaseUser(email, name, token) {
         try {
           const parsed = JSON.parse(data)
           if (parsed.localId) {
-            resolve({ uid: parsed.localId, exists: false })
+            resolve({ uid: parsed.localId, created: true })
           } else if (parsed.error?.message === 'EMAIL_EXISTS') {
-            resolve({ uid: null, exists: true })
+            resolve({ uid: null, created: false, exists: true })
           } else {
-            reject(new Error('Firebase Auth error: ' + data))
+            reject(new Error('Firebase Auth error: ' + JSON.stringify(parsed)))
           }
         } catch (e) { reject(e) }
       })
@@ -141,28 +127,14 @@ async function createFirebaseUser(email, name, token) {
   })
 }
 
-// =============================================
-// ZNAJDŹ UID PO EMAILU W FIRESTORE
-// =============================================
-async function findUidByEmail(email, token) {
-  const projectId = process.env.FIREBASE_PROJECT_ID
+// Pobierz uid istniejącego użytkownika po emailu z Firebase Auth
+async function getUidByEmail(email, token) {
   return new Promise((resolve, reject) => {
-    const body = JSON.stringify({
-      structuredQuery: {
-        from: [{ collectionId: 'uczniowie' }],
-        where: {
-          fieldFilter: {
-            field: { fieldPath: 'email' },
-            op: 'EQUAL',
-            value: { stringValue: email }
-          }
-        },
-        limit: 1
-      }
-    })
+    const projectId = process.env.FIREBASE_PROJECT_ID
+    const body = JSON.stringify({ email: [email] })
     const options = {
-      hostname: 'firestore.googleapis.com',
-      path: `/v1/projects/${projectId}/databases/(default)/documents:runQuery`,
+      hostname: 'identitytoolkit.googleapis.com',
+      path: `/v1/projects/${projectId}/accounts:lookup`,
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -175,10 +147,9 @@ async function findUidByEmail(email, token) {
       res.on('data', chunk => data += chunk)
       res.on('end', () => {
         try {
-          const results = JSON.parse(data)
-          if (results[0]?.document) {
-            const uid = results[0].document.name.split('/').pop()
-            resolve(uid)
+          const parsed = JSON.parse(data)
+          if (parsed.users && parsed.users[0]) {
+            resolve(parsed.users[0].localId)
           } else {
             resolve(null)
           }
@@ -191,10 +162,8 @@ async function findUidByEmail(email, token) {
   })
 }
 
-// =============================================
-// WYŚLIJ RESET HASŁA PRZEZ FIREBASE AUTH
-// =============================================
-async function sendPasswordReset(email) {
+// Wyślij email z resetem hasła przez Firebase Auth REST API
+async function sendPasswordResetEmail(email) {
   return new Promise((resolve, reject) => {
     const apiKey = process.env.FIREBASE_API_KEY
     const body = JSON.stringify({
@@ -213,24 +182,31 @@ async function sendPasswordReset(email) {
     const req = https.request(options, res => {
       let data = ''
       res.on('data', chunk => data += chunk)
-      res.on('end', () => resolve(JSON.parse(data)))
+      res.on('end', () => {
+        try {
+          const parsed = JSON.parse(data)
+          if (parsed.email) {
+            console.log('✓ Email z hasłem wysłany do:', email)
+            resolve(parsed)
+          } else {
+            console.error('Email error:', JSON.stringify(parsed))
+            resolve(null) // nie rzucaj błędu — konto już jest utworzone
+          }
+        } catch (e) { resolve(null) }
+      })
     })
-    req.on('error', reject)
+    req.on('error', e => { console.error('Email request error:', e); resolve(null) })
     req.write(body)
     req.end()
   })
 }
 
-// =============================================
-// GŁÓWNY HANDLER
-// =============================================
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).send('Method Not Allowed')
 
   const signature = req.headers['stripe-signature']
   const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET
 
-  // Odczyt raw body
   let rawBody = ''
   await new Promise((resolve, reject) => {
     req.on('data', chunk => rawBody += chunk)
@@ -238,7 +214,6 @@ export default async function handler(req, res) {
     req.on('error', reject)
   })
 
-  // Weryfikacja podpisu Stripe
   let stripeEvent
   try {
     if (!verifyStripeSignature(rawBody, signature, webhookSecret)) {
@@ -251,14 +226,11 @@ export default async function handler(req, res) {
     return res.status(400).send('Webhook error: ' + err.message)
   }
 
-  // Obsługujemy tylko checkout.session.completed
   if (stripeEvent.type !== 'checkout.session.completed') {
     return res.status(200).send('Event ignored: ' + stripeEvent.type)
   }
 
   const session = stripeEvent.data.object
-
-  // Pobierz dane z metadata Stripe
   const email = session.metadata?.user_email || session.customer_email || session.customer_details?.email
   const name  = session.metadata?.user_name || 'Użytkownik'
 
@@ -272,19 +244,21 @@ export default async function handler(req, res) {
   try {
     const token = await getFirebaseToken()
 
-    // Sprawdź czy użytkownik już istnieje w Firestore
-    let uid = await findUidByEmail(email, token)
+    // Sprawdź czy użytkownik już istnieje w Firebase Auth
+    let uid = await getUidByEmail(email, token)
+    let isNewUser = false
 
     if (!uid) {
-      // Utwórz nowe konto w Firebase Auth
-      const authResult = await createFirebaseUser(email, name, token)
-
-      if (authResult.exists) {
-        // Konto już istnieje w Auth ale nie w Firestore — znajdź uid inaczej
-        console.warn('Konto Auth istnieje ale brak w Firestore dla:', email)
-      } else {
-        uid = authResult.uid
+      // Utwórz nowe konto
+      const result = await createFirebaseAuthUser(email, name, token)
+      if (result.created) {
+        uid = result.uid
+        isNewUser = true
         console.log('✓ Utworzono konto Firebase Auth:', uid)
+      } else if (result.exists) {
+        // Konto istnieje — pobierz uid ponownie
+        uid = await getUidByEmail(email, token)
+        console.log('Konto już istnieje, uid:', uid)
       }
     }
 
@@ -293,8 +267,8 @@ export default async function handler(req, res) {
       return res.status(500).send('Could not determine user uid')
     }
 
-    // Zapisz/zaktualizuj dokument w Firestore
-    await firestoreRequest(
+    // Zapisz do Firestore
+    const firestoreResult = await firestoreRequest(
       'PATCH',
       `/uczniowie/${uid}?updateMask.fieldPaths=email&updateMask.fieldPaths=name&updateMask.fieldPaths=paid&updateMask.fieldPaths=approved&updateMask.fieldPaths=tier&updateMask.fieldPaths=paymentId&updateMask.fieldPaths=paidAt&updateMask.fieldPaths=completed&updateMask.fieldPaths=streak`,
       {
@@ -313,13 +287,16 @@ export default async function handler(req, res) {
       token
     )
 
-    console.log('✓ Firestore zaktualizowany dla:', uid, email)
+    console.log('✓ Firestore status:', firestoreResult.status, 'dla:', uid)
+
+    // Odczekaj 2 sekundy — Firebase musi "zarejestrować" nowe konto
+    // zanim będzie można wysłać email z resetem hasła
+    await new Promise(r => setTimeout(r, 2000))
 
     // Wyślij email z linkiem do ustawienia hasła
-    await sendPasswordReset(email)
-    console.log('✓ Wysłano email z resetem hasła do:', email)
+    await sendPasswordResetEmail(email)
 
-    return res.status(200).json({ success: true, uid, email })
+    return res.status(200).json({ success: true, uid, email, newUser: isNewUser })
 
   } catch (err) {
     console.error('Błąd handlera:', err)
